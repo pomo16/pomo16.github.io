@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>ElasticSearch | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">ElasticSearch</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">ElasticSearch</h1><div class="post-meta">Oct 18, 2019<span> | </span><span class="category"><a href="/categories/ElasticSearch/">ElasticSearch</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.4k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 8</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>”一个便于检索的数据库“</p>
+<p>基于 Lucene 的开源搜索引擎，分布式、可扩展、每个字段都能被索引。</p>
+<h2 id="能做什么？"><a href="#能做什么？" class="headerlink" title="能做什么？"></a>能做什么？</h2><ul>
+<li>海量搜索</li>
+<li>NoSQL 数据库</li>
+<li>对海量数据进行进实时的处理</li>
+<li>日志数据分析，ELK 技术，ES 进行复杂的数据分析</li>
+</ul>
+<h2 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h2><p>设计目标：为了更好的写入（索引）和查询（搜索）</p>
+<p><img style="height:400px" src="http://qnya.pomo16.club/265.png"></p>
+<p>自底向上：</p>
+<ol>
+<li>网关，es 索引的持久化存储方式</li>
+<li>Lucene，为 es 提供 api 工具包</li>
+<li>索引模块，搜索模块，字段映射，river 数据同步</li>
+<li>自动发现，es 的自动发现节点机制</li>
+<li>通信层，es 和客户端的交互方式</li>
+<li>Restful api，封装的一些 crud 操作</li>
+</ol>
+<h5 id="Restful-api"><a href="#Restful-api" class="headerlink" title="Restful api"></a>Restful api</h5><p>对于向 es 插入数据、检索数据、删除数据等操作，es 提供了 Java api 和 RESTful api 两种方式来与之通信。</p>
+<h5 id="transport"><a href="#transport" class="headerlink" title="transport"></a>transport</h5><p>通信模块，节点间数据传输都依赖于该模块，它有两种实现，一种是基于 netty 实现的 nettytransport，主要用于节点间的通信。另一种是 localtransport，主要是用于同一个 jvm 上的节点通信。</p>
+<h5 id="discovery-script"><a href="#discovery-script" class="headerlink" title="discovery script"></a>discovery script</h5><p>自动发现模块，集群中节点的自动发现和 Master 节点的选举。p2p 通信。</p>
+<p>Master 节点维护集群的全局状态（比如节点加入和离开时进行 shard 的重新分配）</p>
+<p>Master 节点选取，bully 算法+延迟选举+半数选票</p>
+<p>故障检测：主节点-&gt;其他节点，其他节点-&gt;主节点</p>
+<h5 id="重要模块"><a href="#重要模块" class="headerlink" title="重要模块"></a>重要模块</h5><p>Index 模块：对写入数据的管理和组织</p>
+<p>Search 模块：用来提供信息搜索</p>
+<p>Mapping映射模块：类似于数据库表字段的定义，并且它决定了各个字段能否被搜索，以及搜索方式</p>
+<p>River 模块：es 的一个数据源，向 es 同步数据。river data -&gt; es</p>
+<h5 id="Lucene"><a href="#Lucene" class="headerlink" title="Lucene"></a>Lucene</h5><p>一个全文检索引擎框架，java 类库，提供底层 api，每个 es 节点上都有一个 Lucene 引擎支持。</p>
+<h5 id="gateway"><a href="#gateway" class="headerlink" title="gateway"></a>gateway</h5><p>存储索引的文件系统，支持多种文件类型</p>
+<h2 id="核心原理"><a href="#核心原理" class="headerlink" title="核心原理"></a>核心原理</h2><h4 id="几个重要概念"><a href="#几个重要概念" class="headerlink" title="几个重要概念"></a>几个重要概念</h4><table>
+<thead>
+<tr>
+<th>index</th>
+<th>type</th>
+<th>document</th>
+<th>mapping</th>
+<th>node</th>
+<th>shard</th>
+<th>segment</th>
+<th>serach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>索引</td>
+<td>类型</td>
+<td>文档</td>
+<td>映射</td>
+<td>节点</td>
+<td>分片</td>
+<td>段</td>
+<td>倒排索引</td>
+</tr>
+</tbody>
+</table>
+<h4 id="从数据库角度来看"><a href="#从数据库角度来看" class="headerlink" title="从数据库角度来看"></a>从数据库角度来看</h4><table>
+<thead>
+<tr>
+<th>Relational database</th>
+<th>Elasticsearch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database</td>
+<td>Index</td>
+</tr>
+<tr>
+<td>Table</td>
+<td>Type</td>
+</tr>
+<tr>
+<td>Row</td>
+<td>Document</td>
+</tr>
+<tr>
+<td>Column</td>
+<td>Field</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>Mapping</td>
+</tr>
+<tr>
+<td>Index</td>
+<td>Everything can index</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>Query DSL</td>
+</tr>
+<tr>
+<td>SELECT * FROM table …</td>
+<td>GET http://…</td>
+</tr>
+<tr>
+<td>UPDATE table SET …</td>
+<td>PUT http://…</td>
+</tr>
+</tbody>
+</table>
+<h4 id="索引-index"><a href="#索引-index" class="headerlink" title="索引 index"></a>索引 index</h4><p>es 将数据存储于一个或多个索引中，索引是具有类似特性的<strong>文档的集合</strong>。类比传统的关系型数据库领域来说，索引相当于 SQL 中的一个<strong>数据库</strong>。</p>
+<h4 id="类型-type"><a href="#类型-type" class="headerlink" title="类型 type"></a>类型 type</h4><p>类型是索引内部的逻辑分类或分区（category/partition），一个索引内部可定义一个或多个类型（type）。通常，会为具有一组共同字段的文档定义一个类型。</p>
+<h4 id="文档-document"><a href="#文档-document" class="headerlink" title="文档 document"></a>文档 document</h4><p>文档是可被索引的基础信息单元，它是包含了一个或多个域的容器，基于 JSON 格式进行表示。</p>
+<p><img style="height:200px" src="http://qnya.pomo16.club/266.png"></p>
+<h4 id="映射-mapping"><a href="#映射-mapping" class="headerlink" title="映射 mapping"></a>映射 mapping</h4><p>用来定义一个文档以及其所包含的字段如何被存储和索引，可以在映射中事先定义字段的数据类型、分词器等属性。映射可以分为静态映射和动态映射。</p>
+<p>静态映射：事先定义字段的数据类型、分词器等属性。</p>
+<p>动态映射：根据写入的字段进行类型推测。</p>
+<h4 id="节点-node"><a href="#节点-node" class="headerlink" title="节点 node"></a>节点 node</h4><p>运行了单个实例的 es 主机称为节点（一个 es 实例就是一个 node），可以存储数据、参与集群索引及搜索操作。</p>
+<h4 id="分片-shard"><a href="#分片-shard" class="headerlink" title="分片 shard"></a>分片 shard</h4><p>es 提供了将<strong>索引划分</strong>成多少份的能力，这些份就叫做分片。相当于一桶水用了 N 个杯子装。每个分片其内部都是一个全功能且<strong>独立的索引</strong>（Lucene Index）。创建索引时，用户可指定其分片的数量，默认数量为5个，一个分片只能存放 2,147,483,519 个 docs。</p>
+<p>主分片和备分片：主分片和备分片不会出现在同一个节点上（防止单点故障）</p>
+<p>分片和节点的配合，让 es 的分布式愿望得以实现。</p>
+<h5 id="node-shard-实现-es-的扩容"><a href="#node-shard-实现-es-的扩容" class="headerlink" title="node + shard 实现 es 的扩容"></a>node + shard 实现 es 的扩容</h5><p><img style="height:200px" src="http://qnya.pomo16.club/267.png"></p>
+<p>Node 1 和 Node 2 上各有一个分片被迁移到了新的 Node 3 节点</p>
+<p>整体负载降低。性能提升</p>
+<p>我们这个拥有6个分片（3个主分片和3个副本分片）的索引可以最大扩容到6个节点，每个节点上存在一个分片，并且每个分片拥有所在节点的全部资源。</p>
+<p><strong>那如何实现更多的扩容？如果我们想要扩容超多6个节点怎么办呢？</strong></p>
+<p>主分片的数量是确定的，增加备分片的数量，实现更高的吞吐量。</p>
+<h4 id="段-segment"><a href="#段-segment" class="headerlink" title="段 segment"></a>段 segment</h4><p>Elasticsearch 中的<strong>每个分片包含多个 segment</strong>，每一个 segment 都是一个<strong>倒排索引</strong>；在查询时，会把所有的 segment 查询结果汇总归并后作为最终的分片查询结果，然后返回。</p>
+<h4 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h4><p>也常被称为反向索引，是一种索引方法，它是文档检索系统中最常用的数据结构。</p>
+<p><img src="http://qnya.pomo16.club/268.png" alt="image-20190916162714323"></p>
+<h2 id="索引原理"><a href="#索引原理" class="headerlink" title="索引原理"></a>索引原理</h2><p>es 索引本质：让数据安全快速写入，并且能快速搜索到。</p>
+<p>es 的索引过程：对文档的增删改查，以及文档对应的倒排索引的更新。</p>
+<h4 id="对原文档的操作（写、读、更新）"><a href="#对原文档的操作（写、读、更新）" class="headerlink" title="对原文档的操作（写、读、更新）"></a>对原文档的操作（写、读、更新）</h4><h5 id="写操作"><a href="#写操作" class="headerlink" title="写操作"></a>写操作</h5><p>写操作必须在 primary shard （主分片）完全成功后才能拷贝至其对应的 replicas （附属分片）上，默认情况下主分片等待所有备份完成索引后才返回客户端。</p>
+<p><img style="height:300px" src="http://qnya.pomo16.club/269.png"></p>
+<ol>
+<li>客户端向 Node 1 发送索引文档请求。</li>
+<li>Node 1 根据文档 ID (_id 字段) 计算(对 id 做哈希然后取模)出该文档应该属于 shard0，然后请求路由到 Node 3 的 P0 分片上。</li>
+<li>Node 3 在 P0 上执行了请求。如果请求成功，则将请求并行的路由至 Node 1，Node 2 的 R0 上。当所有的 Replicas 报告成功后，Node 3 向请求的 Node (Node 1) 发送成功报告，Node 1 再报告至 Client。</li>
+<li>当客户端收到执行成功后，操作已经在 Primary shard 和所有的 replicas shards 上执行成功了。</li>
+</ol>
+<h5 id="读操作"><a href="#读操作" class="headerlink" title="读操作"></a>读操作</h5><p>一个文档可以在 primary shard 和所有的 replica shards 上读取</p>
+<p><img style="height:300px" src="http://qnya.pomo16.club/270.png"></p>
+<ol>
+<li>客户端发送 Get 请求到 Node 1。</li>
+<li>Node 1 根据文档 ID (_id 字段) 计算出该文档应该属于 shard0，且 shard0 的所有拷贝存在于所有3个节点上。这次，他将路由至 Node 2。</li>
+<li>Node 2 将文档返回给 Node 1，Node 1 将文档返回给客户端。对于读请求，请求节点 (Node 1) 将在每次请求到来时选择一个不同的 replica shard 来达到负载均衡。使用轮询策略轮询所有的 replica shards。</li>
+</ol>
+<h5 id="更新操作"><a href="#更新操作" class="headerlink" title="更新操作"></a>更新操作</h5><p>结合了以上的两个操作：读、写</p>
+<p><img style="height:300px" src="http://qnya.pomo16.club/271.png"></p>
+<ol>
+<li>客户端发送更新操作请求至 Node 1。</li>
+<li>Node 1 将请求路由至 Node 3，Primary shard 所在的位置。</li>
+<li>Node 3 从 P0 读取文档，改变 source 字段的 JSON 内容，然后试图重新对修改后的数据在 P0 做索引。如果此时这个文档已经被其他的进程修改了，那么它将重新执行 3 步骤，这个过程如果超过了 retryon_conflict 设置的次数，就放弃。</li>
+<li>如果 Node 3 成功更新了文档，它将并行地把新版本的文档同步到 Node 1 和 Node 2 的 replica shards 重新建立索引。一旦所有的 replica shards 报告成功，Node 3 向被请求的节点(Node 1)返回成功，然后 Node 1 向客户端返回成功。</li>
+</ol>
+<h4 id="生成倒排索引"><a href="#生成倒排索引" class="headerlink" title="生成倒排索引"></a>生成倒排索引</h4><p>如果仅仅只是生成文档，那么 es 的搜索性能会很低，所以，在建立索引时，会产生一个对应的倒排索引（Inverted Index）。</p>
+<p>es 引擎把文档数据写入到倒排索引的数据结构中，建立起分词 (Term) -&gt; 文档 (Document) 的映射关系。</p>
+<p>这些倒排索引会存放在段 (segment) 中，段的写入会落盘，缓存 buffer 会实时更新。</p>
+<p><img src="http://qnya.pomo16.club/272.png" alt="image-20190916170640677"></p>
+<p>倒排索引包括两个部分：</p>
+<ol>
+<li>有序的数据字典 Dictionary（包括单词 Term 和它出现的频率）</li>
+<li>单词 Term 对应的 Postings（即存在这个单词的文件）</li>
+</ol>
+<p><img style="height:300px" src="http://qnya.pomo16.club/273.png"></p>
+<p>为了优化搜索，segment 不仅只提供了倒排，还提供了 document values field cache，解决：排序、聚合等问题。</p>
+<p>列式存储：将索引中某一个字段值全部读取到内存中进行操作，用空间换时间。</p>
+<p><img style="height:300px" src="http://qnya.pomo16.club/274.png"></p>
+<h2 id="es-的搜索机制"><a href="#es-的搜索机制" class="headerlink" title="es 的搜索机制"></a>es 的搜索机制</h2><h4 id="搜索过程"><a href="#搜索过程" class="headerlink" title="搜索过程"></a>搜索过程</h4><p><img src="http://qnya.pomo16.club/275.png" alt="image-20190916171659797"></p>
+<p>搜索过程由两个阶段组成：查询阶段，获取阶段</p>
+<p>查询阶段(Query Phase)：在此阶段，<strong>协调节点</strong>将搜索<strong>请求</strong>路由到索引(index)中的<strong>所有分片</strong>(shards)（包括：主要或副本）。分片独立执行搜索，并根据<strong>相关性分数</strong>创建一个优先级排序结果。所有分片将匹配的文档和相关分数的文档 ID 返回协调节点。协调节点创建一个新的<strong>优先级队列</strong>，并对全局结果进行排序。可以有很多文档匹配结果，但默认情况下，每个分片将前10个结果发送到协调节点，协调创建优先级队列。</p>
+<p>获取阶段(Fetch Phase)：在协调节点对所有结果进行排序，并通过文档 id，从分片中得到<strong>原始文档</strong>，再返回到协调节点。</p>
+<p><img src="http://qnya.pomo16.club/276.png" alt="image-20190916172347548"></p>
+<p>搜索相关性：</p>
+<ol>
+<li>文档指定字段，与 query 相关性越强，文档的得分越高</li>
+<li>评分默认算法：tf / idf（术语频率/逆文档频率）</li>
+</ol>
+<p><img src="http://qnya.pomo16.club/277.png" alt="image-20190916172838769"></p>
+</div><div class="tags"><a href="/tags/ElasticSearch/">ElasticSearch</a></div><div class="post-nav"><a class="pre" href="/2019/10/20/git/">git</a><a class="next" href="/2019/09/19/HTTP和RPC/">HTTP和RPC</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

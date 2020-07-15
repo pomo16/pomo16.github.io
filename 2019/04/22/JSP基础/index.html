@@ -1,0 +1,234 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>JSP基础 | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">JSP基础</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">JSP基础</h1><div class="post-meta">Apr 22, 2019<span> | </span><span class="category"><a href="/categories/java/">java</a><a href="/categories/java/jsp/">jsp</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 1.4k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 4</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="九大内置对象"><a href="#九大内置对象" class="headerlink" title="九大内置对象"></a>九大内置对象</h2><p><strong>request</strong></p>
+<p>该对象代表了客户端的请求信息，主要用于接受通过 HTTP 协议传送到服务器的数据。 request 对象的作用域为一次请求。</p>
+<p><strong>response</strong></p>
+<p>该对象是对客户端的响应，主要是将 JSP 容器处理过的对象传回到客户端。response 对象的作用域只在 JSP 页面内有效。</p>
+<p><strong>session 会话</strong></p>
+<p>该对象是客服端和服务器的一次会话。服务器为每个用户都生成一个 session 对象，用于保存该用户的信息，跟踪用户的操作状态。直到客户端断开连接或者，session 时间到期后断开。</p>
+<p><strong>application 全局对象</strong></p>
+<p>该对象是存在于整个应用中，开始于服务器启动，结束于服务器关闭。这个对象中可以保存信息在应用任何地方都可以用。</p>
+<p><strong>out 输出对象</strong></p>
+<p>该对象是 JspWriter 类的实例,是向客户端浏览器输出内容经常要用到的对象 。就只能作用在当前页面。用完过后要及时清除缓冲区的内容，腾出空间，还要记得关闭输出流。</p>
+<p><strong>pageContext JSP页面容器</strong></p>
+<p>该对象可以获取当前 jsp 页面任何范围的参数。比如 out、request、reponse、session、application 等对象。</p>
+<p><strong>config 配置对象</strong></p>
+<p>该对象的作用就是当一个 Servlet 初始化时，容器（Tomcat、JRun、Resin等）把某些信息；服务器的一些信息等通过 config 对象传递给这个 Servlet。 </p>
+<p><strong>page 当前JSP页面对象</strong></p>
+<p>该对象就是指向的当前 jsp 页面本身。</p>
+<p><strong>exception 异常对象</strong></p>
+<p>对象就是在页面运行过程中出了异常来显示异常信息的，但是必须在页面中设置 isErrorPage=”true” 才能使用。</p>
+<h2 id="四大作用域"><a href="#四大作用域" class="headerlink" title="四大作用域"></a>四大作用域</h2><p><strong>四大作用域范围从小到大</strong></p>
+<p>pageContext &lt; request &lt; session &lt; application</p>
+<p><strong>生命周期</strong></p>
+<p>pageContext：存在 page 中的变量，只作用于当前的 jsp 页面，当发生跳转、重定向、定时刷新时，将随之销毁。</p>
+<p>request：存在 request 中的变量，作用于一次 HTTP 请求到服务器处理结束，返回响应的整个过程，该变量可以随着 forward 的方式跳转到多个 jsp 中，一但刷新页面，它们将重新计算。</p>
+<p>session：存在 session 中的变量，作用于一次会话中，从打开浏览器到关闭浏览器过程中，将一直累加。（若想在再次打开浏览器时，变量仍然存在，则可以将 session 的 JSESSIONID 存到 cookie 中，在给 cookie 一个存活时间）</p>
+<p>application：存在 application 中的变量，作用于整个应用中，即从应用启动到应用结束，如果不进行手工删除，它们将一直可以使用，而且这些变量所有用户均可使用。</p>
+<p><strong>作用范围</strong></p>
+<p>pageContext：用户请求的当前页面。</p>
+<p>request：用户请求访问的当前组件，以及和当前 web 组件共享同一用户请求的 web 组件。</p>
+<p>session：同一个 Http 会话中的 web 组件共享。</p>
+<p>application：整个 web 应用的所有 web 组件共享，即只要是同一个服务器下的均可使用。</p>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><p><strong>out</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>println()</td>
+<td>向客户端输出各种类型的数据</td>
+</tr>
+<tr>
+<td>close()</td>
+<td>关闭输出流</td>
+</tr>
+<tr>
+<td>flush()</td>
+<td>输出缓冲区数据</td>
+</tr>
+<tr>
+<td>clearBuffer()</td>
+<td>清除缓冲区数据，并且把数据输出到客户端</td>
+</tr>
+<tr>
+<td>clear()</td>
+<td>清除缓冲区数据，但是不把数据输出到客户端</td>
+</tr>
+</tbody>
+</table>
+<p><strong>request</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getMethod()</td>
+<td>返回客户端向服务器端传送数据的方法</td>
+</tr>
+<tr>
+<td>getParameter(String paramName)</td>
+<td>返回客户端传向服务器端传递的参数值</td>
+</tr>
+<tr>
+<td>getParameterNames()</td>
+<td>获得客户端传递给服务器端的所有参数的名字</td>
+</tr>
+<tr>
+<td>getParameterValues(String name)</td>
+<td>获得指定参数的所有值</td>
+</tr>
+<tr>
+<td>getRequestURL()</td>
+<td>获得发出请求字符串的客户端地址</td>
+</tr>
+<tr>
+<td>getRemoteAddr()</td>
+<td>获取客户端 IP 地址</td>
+</tr>
+<tr>
+<td>getRemoteHost()</td>
+<td>获取客户端机器名称</td>
+</tr>
+<tr>
+<td>getServerName()</td>
+<td>获取服务器名字</td>
+</tr>
+<tr>
+<td>getSession()</td>
+<td>获取session对象</td>
+</tr>
+<tr>
+<td>getServerPort()</td>
+<td>获取服务器端端口</td>
+</tr>
+</tbody>
+</table>
+<p><strong>response</strong></p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>getCharacterEncoding()</td>
+<td>返回响应用的是何种字符编码</td>
+</tr>
+<tr>
+<td>getOutputStream()</td>
+<td>返回响应的一个二进制输出流</td>
+</tr>
+<tr>
+<td>getWriter()</td>
+<td>返回可以向客户端输出字符的一个对象</td>
+</tr>
+<tr>
+<td>setContentLength(int len)</td>
+<td>设置响应头长度</td>
+</tr>
+<tr>
+<td>addCookie(Cookie cookie)</td>
+<td>添加一个Cookie对象，用于在客户端保存特定的信息</td>
+</tr>
+<tr>
+<td>sendRedirect(String url)</td>
+<td>重新定向客户端的请求</td>
+</tr>
+<tr>
+<td>sendError(int)</td>
+<td>向客户端发送错误信息，int指服务器的错误码</td>
+</tr>
+<tr>
+<td>addHeader(String name, String value)</td>
+<td>添加HTTP头信息，该Header信息将发送到客户端</td>
+</tr>
+</tbody>
+</table>
+<h2 id="七大动作"><a href="#七大动作" class="headerlink" title="七大动作"></a>七大动作</h2><table>
+<thead>
+<tr>
+<th>动作</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>jsp:include</td>
+<td>在页面被请求的时候引入一个文件。</td>
+</tr>
+<tr>
+<td>jsp:useBean</td>
+<td>寻找或者实例化一个 JavaBean。</td>
+</tr>
+<tr>
+<td>jsp:setProperty</td>
+<td>设置 JavaBean 的属性。</td>
+</tr>
+<tr>
+<td>jsp:getProperty</td>
+<td>输出某个 JavaBean 的属性。</td>
+</tr>
+<tr>
+<td>jsp:forward</td>
+<td>把请求转到一个新的页面。</td>
+</tr>
+<tr>
+<td>jsp:plugin</td>
+<td>根据浏览器类型为 Java 插件生成 OBJECT 或 EMBED 标记。</td>
+</tr>
+<tr>
+<td>jsp:element</td>
+<td>定义动态 XML 元素</td>
+</tr>
+<tr>
+<td>jsp:attribute</td>
+<td>设置动态定义的 XML 元素属性。</td>
+</tr>
+<tr>
+<td>jsp:body</td>
+<td>设置动态定义的 XML 元素内容。</td>
+</tr>
+<tr>
+<td>jsp:text</td>
+<td>在 JSP 页面和文档中使用写入文本的模板</td>
+</tr>
+</tbody>
+</table>
+<h2 id="三大指令"><a href="#三大指令" class="headerlink" title="三大指令"></a>三大指令</h2><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;%@ page … %&gt;</td>
+<td>定义网页依赖属性，比如脚本语言、error页面、缓存需求等等</td>
+</tr>
+<tr>
+<td>&lt;%@ include … %&gt;</td>
+<td>包含其他文件</td>
+</tr>
+<tr>
+<td>&lt;%@ taglib … %&gt;</td>
+<td>引入标签库的定义</td>
+</tr>
+</tbody>
+</table>
+</div><div class="tags"><a href="/tags/java/">java</a><a href="/tags/jsp/">jsp</a></div><div class="post-nav"><a class="pre" href="/2019/04/27/Redis/">Redis</a><a class="next" href="/2019/04/14/Spring-AOP/">Spring AOP</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

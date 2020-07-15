@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>linux学习笔记之常用命令 | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">linux学习笔记之常用命令</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">linux学习笔记之常用命令</h1><div class="post-meta">Nov 6, 2018<span> | </span><span class="category"><a href="/categories/linux/">linux</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 13</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>总结了学习linux时的一些笔记,重新排版。</p>
+<a id="more"></a>
+<ul>
+<li><p><a href="#基础">基础</a></p>
+</li>
+<li><p><a href="#文件处理命令">文件处理命令</a></p>
+</li>
+<li><p><a href="#权限处理命令">权限处理命令</a></p>
+</li>
+<li><p><a href="#文件搜索命令">文件搜索命令</a></p>
+</li>
+<li><p><a href="#帮助命令">帮助命令</a></p>
+</li>
+<li><p><a href="#压缩解压命令">压缩解压命令</a></p>
+</li>
+<li><p><a href="#网络通信命令">网络通信命令</a></p>
+</li>
+<li><p><a href="#系统关机命令">系统关机命令</a></p>
+</li>
+<li><p><a href="#shell应用技巧">shell应用技巧</a></p>
+</li>
+</ul>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>文件命名规则:<br>1.除/以外,所有的字符都合法<br>2.有些字符最好不用,如空格符, 制表符, 退格符和字符@#$&amp;()-等<br>3.避免使用.作为普通文件名的第一个字符(避免被隐藏)<br>4.大小写敏感,严格区分大小写</p>
+<p>命令格式:命令 -选项 参数<br>说明:</p>
+<ol>
+<li>当有多个选项时,可以写在一起</li>
+<li>.和..分别代表当前目录和当前目录的父目录(上一级目录)</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ctrl+c</td>
+<td>终止指令</td>
+</tr>
+<tr>
+<td>Ctrl+d</td>
+<td>退出shell</td>
+</tr>
+<tr>
+<td>Ctrl+a</td>
+<td>光标移至行首</td>
+</tr>
+<tr>
+<td>Ctrl+e</td>
+<td>光标移至行末</td>
+</tr>
+</tbody>
+</table>
+<p><strong>转义符\可保留本意</strong></p>
+<table>
+<thead>
+<tr>
+<th>用户管理</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>改变用户</td>
+<td>su - 用户名</td>
+</tr>
+<tr>
+<td>添加用户</td>
+<td>useradd 用户名</td>
+</tr>
+<tr>
+<td>设置用户密码</td>
+<td>passwd 用户名</td>
+</tr>
+</tbody>
+</table>
+<p>由命令所在的路径可判断命令的权限:</p>
+<table>
+<thead>
+<tr>
+<th>权限</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>root</td>
+<td>/sbin ,/usr/sbin</td>
+</tr>
+<tr>
+<td>all user</td>
+<td>/bin,/usr/bin</td>
+</tr>
+</tbody>
+</table>
+<h2 id="文件处理命令"><a href="#文件处理命令" class="headerlink" title="文件处理命令"></a>文件处理命令</h2><p><strong>ls</strong><br>功能:显示目录文件<br>路径:/bin/ls<br>语法:<code>ls 选项[-ald] [文件或目录]</code></p>
+<ul>
+<li>-a 显示所有文件,包括隐藏文件(all)</li>
+<li>-d 查看目录属性(directory)(一般配合l,即-ld连用查看某个目录的属性)</li>
+<li>-l 详细信息显示(long)<br>例子:<code>drwxr-xr-x 2 root root 4096 12-01 20:52 bin</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>d</th>
+<th>rwxr-xr-x</th>
+<th>2</th>
+<th>root root</th>
+<th>4096</th>
+<th>12-01 20:52</th>
+<th>bin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件类型,常见文件类型有:<br>d:目录 directory<br>-: 二进制文件<br>l: 软链接文件 link</td>
+<td>代表权限( r-read 读, w-write 写, x-execute 执行), 所有者 u(user, owner) 权限 rwx, 所有组 g(group) 权限 r-x, 其他人 o(other)</td>
+<td>硬链接数</td>
+<td>管理者是root,管理组是root</td>
+<td>文件大小(不准确),linux一般用数据块大小来做储存文件大小的单位,即数据块是最小储存单位</td>
+<td>创建时间或最后修改时间</td>
+<td>文件名</td>
+</tr>
+</tbody>
+</table>
+<p><strong>cd</strong><br>功能:切换目录<br>路径:shell内置命令<br>权限:所有用户<br>语法:<code>cd [目录]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 切换到根目录</span><br><span class="line">cd / </span><br><span class="line">// 回到上一级目录</span><br><span class="line">cd ..</span><br></pre></td></tr></table></figure></p>
+<p><strong>pwd</strong><br>功能:显示当前所在的工作目录<br>路径:/bin/pwd<br>语法:<code>pwd</code></p>
+<p><strong>touch</strong><br>功能:创建空文件<br>路径:/bin/touch<br>语法:<code>touch [文件名]</code><br>例子:<code>touch newfile</code></p>
+<p><strong>mkdir</strong><br>功能:创建新目录<br>路径:/bin/mkdir<br>语法:<code>mkdir [目录名]</code><br>例子:<code>mkdir newdir</code></p>
+<p><strong>cp</strong><br>功能:复制文件或目录<br>路径:/bin/cp<br>语法:<code>cp -R [源文件或目录][目的目录]</code></p>
+<ul>
+<li>-R 复制目录</li>
+<li>-p 拷贝之后不改变时间值</li>
+</ul>
+<p>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 将文件file1, file2复制到目录dir1</span><br><span class="line">cp file1 file2 dir1</span><br><span class="line">// 将目录dir1下的所有文件复制到目录dir2下</span><br><span class="line">cp -R dir1 dir2</span><br></pre></td></tr></table></figure></p>
+<p><strong>mv</strong><br>功能:移动文件, 更名<br>路径:/bin/mv<br>语法:<code>mv [源文件或目录][目的目录]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 将当前目录下文件file1更名为file3</span><br><span class="line">mv file1 file3</span><br><span class="line">// 将文件file2移动到目录dir2下</span><br><span class="line">mv file2 dir2</span><br><span class="line">// 改名和移动可同时操作</span><br><span class="line">mv /dir1/file1 /dir2/file2</span><br></pre></td></tr></table></figure></p>
+<p><strong>rm</strong><br>功能:删除文件<br>路径:/bin/rm<br>语法:<code>rm -r [文件或目录]</code></p>
+<ul>
+<li>-r 删除目录</li>
+<li>-f 强制删除(避开询问)</li>
+</ul>
+<p>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 删除文件file1</span><br><span class="line">rm file1</span><br><span class="line">// 删除目录dir1</span><br><span class="line">rm -r dir1</span><br></pre></td></tr></table></figure></p>
+<p><strong>cat</strong><br>功能:显示文件内容(显示大文件的话不完整)<br>路径:/bin/cat<br>语法:<code>cat [文件名]</code><br>例子:<code>cat /etc/issue</code></p>
+<p><strong>more</strong><br>功能:分页显示文件内容(可以完整显示文件)<br>路径:/bin/more<br>语法:<code>more [文件名]</code></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(空格)或 f</td>
+<td>显示下一页</td>
+</tr>
+<tr>
+<td>(Enter)</td>
+<td>显示下一行</td>
+</tr>
+<tr>
+<td>q 或 Q</td>
+<td>退出</td>
+</tr>
+</tbody>
+</table>
+<p>例子:<code>more /etc/services</code></p>
+<p><strong>head</strong><br>功能:查看文件前几行<br>路径:/bin/head<br>语法:<code>head -num [文件名]</code></p>
+<ul>
+<li>-num 显示文件的前num行</li>
+</ul>
+<p>例子:<code>head -20 etc/services</code></p>
+<p><strong>tail</strong><br>功能:查看文件后几行<br>路径: bin/tail<br>语法:<code>tail -num [文件名]</code></p>
+<ul>
+<li>-num 显示文件后num行</li>
+<li>-f 动态显示文件内容</li>
+</ul>
+<p>例子:<code>tail -30 /etc/services</code></p>
+<p><strong>ln</strong><br>功能:产生链接文件<br>路径:/bin/ln<br>语法:<code>ln -s [源文件][目标文件]</code></p>
+<ul>
+<li>-s 创建软链接</li>
+</ul>
+<p>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 创建文件/etc/issue的软链接/issue.soft</span><br><span class="line">ln -s /etc/issue/issue.soft</span><br><span class="line">// 创建文件/etc/issue的硬链接/issue.hard</span><br><span class="line">ln /etc/issue/issue.hard</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>链接类型</th>
+<th>等价理解</th>
+<th>特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>软链接</td>
+<td>类似于快捷方式</td>
+<td>文件很小,若源文件消失,软链接失效。</td>
+</tr>
+<tr>
+<td>硬链接</td>
+<td>cp -p + 同步更新</td>
+<td>与源文件有相同的inode,不能跨文件系统(不能跨系统文件分区),若源文件消失,硬链接不变。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="权限处理命令"><a href="#权限处理命令" class="headerlink" title="权限处理命令"></a>权限处理命令</h2><p><strong>chmod</strong><br>功能:改变文件或目录权限<br>路径:/bin/chmod<br>语法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod u + r</span><br><span class="line">chmod g - w</span><br><span class="line">chmod o = x</span><br></pre></td></tr></table></figure></p>
+<p>关于权限值:<br>u-所有者, g-所属组, o-其他人<br>rwx: 可写可读可执行<br>r-4, w-2, x-1(重点掌握)<br>例如:rwxr-xr– 等价于 754, 752 等价于 rwxr-x-w-</p>
+<p>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 赋予文件file1所属组写权限</span><br><span class="line">chmod g+w file1</span><br><span class="line">// 设定目录dir1为所有用户具有全部权限</span><br><span class="line">chmod 777 dir1</span><br></pre></td></tr></table></figure></p>
+<p>对于权限的理解:<br>对文件:<br>r(可以查看文件内容)cat, more, head, tail<br>w(可以修改文件内容)echo, vi<br>x(可以执行文件)命令, 脚本<br>对目录:<br>r(可以列出目录中的内容)ls<br>w(可以在目录中创建, 删除文件)touch, mkdir, rm<br>x(可以进入目录)cd</p>
+<p><strong>chown</strong><br>功能:改变文件或目录的所有者<br>路径:/bin/chown<br>语法:<code>chown [用户][文件或目录]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 改变文件file1的所有者为nobody</span><br><span class="line">chown nobody file1</span><br></pre></td></tr></table></figure></p>
+<p><strong>chgrp</strong><br>功能:改变文件或目录的所属组<br>路径:/bin/chgrp<br>语法:<code>chgrp [用户组][文件或目录]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 改变文件file1的所属组为adm</span><br><span class="line">chgrp adm file1</span><br></pre></td></tr></table></figure></p>
+<p><strong>umask</strong><br>功能:显示, 设置文件的缺省权限<br>路径:/bin/umask<br>语法:<code>umask -S</code></p>
+<ul>
+<li>-S 以rwx形式显示新建文件或目录缺省权限</li>
+</ul>
+<p>例子:umask<br>直观写法:umask -S</p>
+<p>假如umask得到0022<br>0-特殊权限位<br>022-用户权限位,权限掩码值<br>777 - 022 = 755<br>755表示权限</p>
+<p>改变默认权限:<code>umask 权限掩码值</code></p>
+<p>Linux权限规则:<br><strong>缺省创建的文件不能授予可执行x权限</strong></p>
+<h2 id="文件搜索命令"><a href="#文件搜索命令" class="headerlink" title="文件搜索命令"></a>文件搜索命令</h2><p><strong>which</strong><br>功能:显示系统命令所在目录<br>路径:/usr/bin/which<br>语法:<code>which [命令名称]</code><br>例子:<code>which ls</code></p>
+<p><strong>find</strong><br>功能:查找文件或目录<br>路径:/usr/bin/find<br>语法:<code>find [搜索路径] [搜寻关键字]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">// 在目录/etc中查找文件init,注:*,匹配任意字符,若查找init开头的文件则init*; ?,匹配单个字符,若查找带有init的七个字母的文件则init???</span><br><span class="line">find /etc -name init</span><br><span class="line"></span><br><span class="line">// 在根目录下查找大于100MB的文件,以数据块为单位512字节,注:大于+,小于-</span><br><span class="line">find / -size +204800</span><br><span class="line"></span><br><span class="line">// 在根目录下查找所有者为sanlee的文件</span><br><span class="line">find /home -user samlee</span><br><span class="line"></span><br><span class="line">// 120分钟以内被修改的文件</span><br><span class="line">find /etc -mmin -120</span><br><span class="line">/*时间:</span><br><span class="line">- 1.天 ctime, atime, mtime</span><br><span class="line">- 2.分钟 cmin, amin, mmin</span><br><span class="line">- c-change改变,表示文件属性被修改过,所有者, 所属组, 权限</span><br><span class="line">- a-access访问</span><br><span class="line">- m-modify修改,表示文件内容被修改过</span><br><span class="line">- -之内,+超过</span><br><span class="line">*/　　　  </span><br><span class="line"></span><br><span class="line">// 在/etc下查找大于80MB小于100MB的文件,注:连接符-a表示and逻辑与,-o表示or逻辑或</span><br><span class="line">find /etc -size +163840 -a -size -204800    </span><br><span class="line"></span><br><span class="line">// 在/etc下查找inittab文件并显示其详细信息</span><br><span class="line">find /etc -name inittab -exec ls -l &#123;&#125; \;</span><br><span class="line">　　　</span><br><span class="line">// 在/etc下查找用户名为samlee的文件并删除</span><br><span class="line">find /etc -user samlee -exec rm -rf &#123;&#125; \;</span><br><span class="line"></span><br><span class="line">// find .... -exec 命令 &#123;&#125; \;(若用-ok代替-exec则会询问确认)</span><br><span class="line">　　　</span><br><span class="line">// 在/etc下查找软链接文件(f二进制文件, l软链接文件, d目录)</span><br><span class="line">find /etc -type l</span><br><span class="line"></span><br><span class="line">// 在当前目录寻找i节点为16的文件</span><br><span class="line">find . -inum 16</span><br></pre></td></tr></table></figure></p>
+<p><strong>locate</strong><br>功能:寻找文件或目录(在updatedb数据库里寻找,速度快)<br>路径:/usr/bin/locate<br>语法:<code>locate [搜索关键字]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 列出所有跟file相关的文件</span><br><span class="line">locate file</span><br></pre></td></tr></table></figure></p>
+<p><strong>updatedb</strong><br>功能:建立整个系统目录文件的数据库<br>路径:/usr/bin/updatedb<br>例子:<code>updatedb</code></p>
+<p><strong>grep</strong><br>功能:在文件中搜寻字符匹配的行并输出<br>路径:/usr/bin/grep<br>语法:<code>grep [指定字母][源文件]</code><br>例子:<code>grep ftp /etc/services</code></p>
+<h2 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令:"></a>帮助命令:</h2><p><strong>man</strong><br>功能:获取帮助信息(遵循more的指令来换行换页和退出)<br>路径:/usr/bin/man<br>语法:<code>man [命令或配置文件]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 查看ls命令的帮助信息</span><br><span class="line">man ls</span><br><span class="line">// 查看配置文件services的帮助信息</span><br><span class="line">man services</span><br></pre></td></tr></table></figure></p>
+<p>若命令与配置文件同名则优先查看命令的帮助,通过man 5 […]来查看,即帮助有很多种,第五种为配置文件帮助。</p>
+<p><strong>info</strong><br>功能:获取帮助信息(与man功能完全相同,只是呈现方式不同)<br>路径:/usr/bin/info<br>语法:<code>info [任何关键字]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 查看ls指令的帮助信息</span><br><span class="line">info ls</span><br></pre></td></tr></table></figure></p>
+<p><strong>whatis</strong>和<strong>apropos</strong><br>功能:获得索引的简短说明信息<br>路径:/usr/bin/whatis /usr/bin/apropos<br>语法:<br><code>whatis [任何关键字]</code><br><code>apropos [任何关键字]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">whatis ls</span><br><span class="line">//相当于man -k</span><br><span class="line">apropos fstab</span><br></pre></td></tr></table></figure></p>
+<p>注:与locate类似,需要用makewhatis指令建立whatis和apropos搜索使用的数据库(例子:makewhatis)</p>
+<p><strong>help</strong><br>功能:查看shell内置命令的帮助</p>
+<h2 id="压缩解压命令-gz-tar-gz-zip-bz2"><a href="#压缩解压命令-gz-tar-gz-zip-bz2" class="headerlink" title="压缩解压命令:(.gz,.tar.gz,.zip,.bz2)"></a>压缩解压命令:(.gz,.tar.gz,.zip,.bz2)</h2><p><strong>gzip</strong><br>功能:压缩文件<br>路径:/bin/gzip<br>语法:<code>gzip 选项[文件]</code><br>压缩后文件格式:.gz<br>1.只能压缩文件,不能压缩目录<br>2.不保留原文件</p>
+<p><strong>gunzip</strong><br>功能:解压缩.gz的压缩文件(同gzip -d)<br>路径:/bin/gunzip<br>语法:<code>gunzip 选项[压缩文件]</code><br>例子:<code>gunzip file1.gz</code></p>
+<p><strong>tar</strong><br>功能:打包目录<br>路径:/bin/tar<br>压缩语法:<code>tar 选项 [目录]</code></p>
+<ul>
+<li>-c 产生tar打包文件</li>
+<li>-v 显示详细信息</li>
+<li>-f 指定压缩后的文件名</li>
+<li>-z 打包同时压缩</li>
+</ul>
+<p>压缩后文件格式:.tar.gz<br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 将目录dir1压缩成一个打包并压缩的文件</span><br><span class="line">tar -zcvf dir.tar.gz dir1</span><br></pre></td></tr></table></figure></p>
+<p>注:老系统不支持打包压缩一起进行</p>
+<p>解压缩语法:<code>tar 选项 [压缩文件]</code></p>
+<ul>
+<li>-x 解包.tar文件</li>
+<li>-v 显示详细信息</li>
+<li>-f 指定解压文件</li>
+<li>-z 解压缩</li>
+</ul>
+<p>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 将dir1解压到当前目录下</span><br><span class="line">tar -zxvf dir1.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p><strong>file</strong>指令<br>功能:判断文件类型<br>语法:<code>file [文件名]</code></p>
+<p><strong>zip</strong><br>(默认的win和linux通用格式)<br>功能:压缩文件或目录(保留原文件)<br>路径:/usr/bin/zip<br>语法:<code>zip 选项[-r] [压缩后文件名称] [文件或目录]</code></p>
+<ul>
+<li>-r 压缩目录</li>
+</ul>
+<p>压缩后文件格式:.zip<br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 压缩文件</span><br><span class="line">zip services.zip /etc/services</span><br><span class="line">// 压缩目录</span><br><span class="line">zip -r test.zip /test</span><br></pre></td></tr></table></figure></p>
+<p><strong>unzip</strong><br>功能:解压.zip的压缩文件<br>路径:/usr/bin/unzip<br>语法:<code>unzip [压缩文件]</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 解压文件</span><br><span class="line">unzip test.zip</span><br></pre></td></tr></table></figure></p>
+<p><strong>bzip2</strong><br>功能:压缩文件<br>路径:/usr/bin/bzip2<br>语法:<code>bzip2 选项[-k] [文件]</code></p>
+<ul>
+<li>-k 产生压缩文件后保留文件</li>
+</ul>
+<p>压缩后文件格式:.bz2<br>例子:<code>bzip2 -k file1</code></p>
+<p><strong>bunzip2</strong><br>功能:解压缩<br>路径:/usr/bin/bunzip2<br>语法:<code>bunzip2 选项[-k] [压缩文件]</code></p>
+<ul>
+<li>-k 解压缩后保留文件</li>
+</ul>
+<p>例子:<code>bunzip2 -k file1.bz2</code></p>
+<h2 id="网络通信指令"><a href="#网络通信指令" class="headerlink" title="网络通信指令:"></a>网络通信指令:</h2><p><strong>write</strong><br>功能:向另一个用户发信息,以ctrl+D作为结束(实时)<br>路径:/usr/bin/write<br>语法:<code>write &lt;用户&gt;</code><br>例子:<code>write samlee</code></p>
+<p><strong>wall</strong><br>功能:向所有用户广播信息<br>路径:/usr/bin/wall<br>语法:<code>wall [message] [文件名]</code><br>例子:<code>wall Happy new year!</code></p>
+<p><strong>ping</strong><br>功能:测试网络连通性<br>路径:/usr/sbin/ping<br>语法:<code>ping 选项 IP地址</code></p>
+<ul>
+<li>-c [num]  pingnum次(类似windows的ping)</li>
+<li>-s [num]  用num大小的数据包来测试(num不能大于65507)</li>
+</ul>
+<p>例子:<code>ping 192.168.1.1</code><br>用ifconfig可查看本机IP地址</p>
+<p><strong>ifconfig</strong><br>功能:查看网络设置信息<br>路径:/usr/sbin/ifconfig<br>语法:<code>ifconfig 选项[-a] [网卡设备标识]</code></p>
+<ul>
+<li>-a 显示所有网卡信息</li>
+</ul>
+<p>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 显示所有网卡信息</span><br><span class="line">ifconfig -a</span><br><span class="line">// 查看关键网卡信息</span><br><span class="line">ifconfig eth0</span><br><span class="line">// 临时改变IP地址为192.168.9.6,若不写入配置文件,则仅在此会话中生效</span><br><span class="line">ifconfig eth0 192.168.9.6</span><br></pre></td></tr></table></figure></p>
+<h2 id="系统关机命令"><a href="#系统关机命令" class="headerlink" title="系统关机命令:"></a>系统关机命令:</h2><p><strong>shutdown</strong><br>功能:关机<br>路径:/usr/sbin/shutdown<br>语法:<code>shutdown</code><br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 马上关机</span><br><span class="line">shutdown -h now</span><br></pre></td></tr></table></figure></p>
+<p><strong>reboot</strong><br>功能:重启系统<br>路径:/usr/sbin/reboot<br>语法:<code>reboot</code><br>例子:<code>reboot</code></p>
+<h2 id="shell应用技巧"><a href="#shell应用技巧" class="headerlink" title="shell应用技巧:"></a>shell应用技巧:</h2><h3 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧:"></a>小技巧:</h3><p>1.命令补全<br>输入文件名起始的若干个字母后,按<tab>补齐文件名<br>2.清空屏幕<br>clear指令,或 ctrl + L<br>3.快速删除<br>ctrl + U 可以快速删除当前命令行光标前的所有内容<br>4.命令历史<br>history 指令:列出敲过的所有指令<br>上下箭头键可以查找以前执行过的命令</tab></p>
+<h3 id="大技巧"><a href="#大技巧" class="headerlink" title="大技巧:"></a>大技巧:</h3><p>1.命令别名<br>定义别名例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alias copy=cp</span><br><span class="line">// 带选项时要加双引号</span><br><span class="line">alisa xrm=&quot;rm -f&quot;</span><br></pre></td></tr></table></figure></p>
+<p>删除别名:<code>unalias copy</code></p>
+<p>2.输入/输出重定向<br>shell对于每一个进程预先定义三个文件描述字(0,1,2)<br>0(STDIN)   标准输入<br>1(STDOUT)  标准输出<br>2(STDERR)  标准错误输出</p>
+<p><code>&gt;</code>或<code>&gt;&gt;</code> 输出重定向<br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// tmp的内容输出到文件中,并替代原内容</span><br><span class="line">ls -l /tmp &gt; /tmp.msg</span><br><span class="line">// data输出到文件内,并追加在原内容后面</span><br><span class="line">date &gt;&gt; /tmp.msg</span><br></pre></td></tr></table></figure></p>
+<p><code>&lt;</code> 输入重定向<br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 把文件作为输入端</span><br><span class="line">wall &lt; /etc/motd</span><br></pre></td></tr></table></figure></p>
+<p><code>2&gt;</code> 错误输出重定向<br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 错误信息输出到文件/bak.error内</span><br><span class="line">cp -R /usr /backup/usr.bak 2&gt; /bak.error</span><br></pre></td></tr></table></figure></p>
+<p>3.管道<br>管道:将一个命令的输出传送给另一个命令,作为另一个命令的输入。<br>使用方法:命令1|命令2|命令3……|命令n<br>例子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls -l /etc | more</span><br><span class="line">ls -l /etc | grep init</span><br></pre></td></tr></table></figure></p>
+<p>4.命令连接符</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>;</em>　</td>
+<td>用<em>;</em>间隔的各命令按顺序依次执行</td>
+</tr>
+<tr>
+<td><code>&amp;&amp;</code></td>
+<td>前后命令的执行存在逻辑与关系,前面的命令执行成功后,它后面的命令才被执行。</td>
+</tr>
+<tr>
+<td>&#124;&#124;</td>
+<td>前后命令的执行存在逻辑或关系,若前面的命令执行成功,则后面不执行；若前面的命令执行失败,则后面才会执行。</td>
+</tr>
+</tbody>
+</table>
+<p>5.命令替换符<br>命令替换:将一个命令的输出作为另一个命令的参数<br>格式:命令1 `命令2`(注意不是单引号,而是键盘按键1旁边的替换符)<br>例子:ls -l `which touch`</p>
+</div><div class="tags"><a href="/tags/linux/">linux</a></div><div class="post-nav"><a class="pre" href="/2018/11/06/七牛云融合CDN加速域名/">七牛云融合CDN加速域名</a><a class="next" href="/2018/11/06/linux学习笔记之vim/">linux学习笔记之vim</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

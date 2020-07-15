@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（一） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（一）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（一）</h1><div class="post-meta">Mar 18, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 2.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 8</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h1 id="操作系统概述"><a href="#操作系统概述" class="headerlink" title="操作系统概述"></a>操作系统概述</h1><h3 id="什么是操作系统？"><a href="#什么是操作系统？" class="headerlink" title="什么是操作系统？"></a>什么是操作系统？</h3><p>没有公认定义，可以理解为起协助作用的控制程序，或者是介于软硬件之间的资源管理器。</p>
+<h3 id="操作系统软件组成"><a href="#操作系统软件组成" class="headerlink" title="操作系统软件组成"></a>操作系统软件组成</h3><ol>
+<li>Shell 命令行接口<ul>
+<li>通过键盘操纵</li>
+<li>方便用户进行命令输入</li>
+</ul>
+</li>
+<li>GUI 图形用户接口<ul>
+<li>WIMP<br>视窗（windows）、t图标（icon）、选单（menu）、指标（pointer）</li>
+<li>直接操作、所见即所得</li>
+</ul>
+</li>
+<li>Kernel 操作系统内核<ul>
+<li>执行各种资源管理等功能</li>
+</ul>
+</li>
+</ol>
+<h3 id="操作系统内核"><a href="#操作系统内核" class="headerlink" title="操作系统内核"></a>操作系统内核</h3><ul>
+<li>并发：计算机系统中同时存在多个运行的程序，需要 OS 管理和调度</li>
+<li>共享：“同时”访问（宏观），互斥共享（微观：对资源进行隔离保护）</li>
+<li>虚拟：高频率交替（多道程序设计技术），使用户感觉在专用系统</li>
+<li>异步：程序执行时间难于预测，运行环境相同时，OS 需要保证输出结果相同</li>
+</ul>
+<h3 id="系统类型"><a href="#系统类型" class="headerlink" title="系统类型"></a>系统类型</h3><ol>
+<li>UNIX(开放)：UNIX BSD、Mac OS等</li>
+<li>Linux(与 UNIX 同一类,API 兼容或类似，开放程度更完整)：Ubuntu、安卓等</li>
+<li>Windows(专用和封闭，图形用户接口，易用) </li>
+</ol>
+<h3 id="操作系统主要功能：硬件抽象和协调管理"><a href="#操作系统主要功能：硬件抽象和协调管理" class="headerlink" title="操作系统主要功能：硬件抽象和协调管理"></a>操作系统主要功能：硬件抽象和协调管理</h3><h3 id="操作系统的演变"><a href="#操作系统的演变" class="headerlink" title="操作系统的演变"></a>操作系统的演变</h3><ul>
+<li>单用户系统</li>
+<li>批处理系统</li>
+<li>多程序系统</li>
+<li>分时</li>
+<li>个人计算机：每个用户一个系统</li>
+<li>分布式计算：每个用户多个系统</li>
+</ul>
+<h3 id="操作系统结构"><a href="#操作系统结构" class="headerlink" title="操作系统结构"></a>操作系统结构</h3><ol>
+<li>简单结构：无模块划分，主要汇编，不可移植</li>
+<li>分层结构：<ul>
+<li>将操作系统分为多层（levels）<ul>
+<li>每层建立在底层之上</li>
+<li>最底层（layer 0）是硬件</li>
+<li>最高层（layer N）是用户界面</li>
+</ul>
+</li>
+<li>每一层仅使用更低一层的功能（操作）和服务</li>
+</ul>
+</li>
+<li>微内核结构（Microkernel）:<ul>
+<li>尽可能把内核功能移到用户空间</li>
+<li>用户模块间的通信使用消息传递</li>
+<li>好处：灵活、安全</li>
+<li>缺点：性能</li>
+</ul>
+</li>
+<li>外核结构（Exokernel）:<ul>
+<li>内核少放东西，资源管理由应用态代码完成，一个系统支起不同的操作系统服务</li>
+<li>让内核分配机器的物理资源给多个应用程序，并让每个程序决定如何处理这些资源</li>
+<li>程序能链接到操作系统库（libOS）实现了操作系统抽象</li>
+<li>保护和控制隔离</li>
+</ul>
+</li>
+<li>VMM（虚拟机管理器，非操作系统结构）:<ul>
+<li>负责和硬件接触（隔离资源），操作系统负责资源管理</li>
+<li>虚拟机管理器将单独的机器接口转换成很多的虚拟机，每个虚拟机都是一个原始计算机系统的有效副本，并能完成所有的处理器指令</li>
+</ul>
+</li>
+</ol>
+<h3 id="对于主流操作系统的结构分析"><a href="#对于主流操作系统的结构分析" class="headerlink" title="对于主流操作系统的结构分析"></a>对于主流操作系统的结构分析</h3><ul>
+<li><p>Windows<br>Windows 属于比较接近微内核的混合内核结构，这样的结构有一个特点，那就是驱动是单独分发的，并不会和 Windows 的微内核混合在一起。因此，其驱动配置比较简单，无需改动 Windows 内核代码。</p>
+</li>
+<li><p>Linux<br>Linux 是一个宏内核的结构，在保留了微内核结构优点的基础上进行了优化。Linux 的驱动和内核是整合在一起的，要适配某种硬件，得把驱动都整合进 Linux 内核。它是模块化的、多线程的以及内核本身可调度的操作系统。Linux 仅仅是一个单块内核，单个内核负责管理 CPU、内存、进程间通信、设备驱动程序、文件系统和系统服务器调用。</p>
+</li>
+<li><p>Mac OS<br>Mac OS 的内核（XNU）结合了微内核（Mach）和单片内核的（BSD）的特性。根据苹果公司的 Github 页面，XNU 是将卡耐基梅隆大学开发的 Mach 内核和 FreeBSD 组件整合而成的混合内核，加上用于编写驱动程序的 C++ API。代码的 BSD 子系统部分在微内核系统中，通常实现为用户空间的服务。Mach 部分负责底层工作，例如多任务、内存保护、虚拟内存管理、内核调试支持和控制台 I/O。</p>
+</li>
+</ul>
+<h1 id="启动、中断、异常和系统调用"><a href="#启动、中断、异常和系统调用" class="headerlink" title="启动、中断、异常和系统调用"></a>启动、中断、异常和系统调用</h1><h3 id="BIOS启动固件"><a href="#BIOS启动固件" class="headerlink" title="BIOS启动固件"></a>BIOS启动固件</h3><p>基本功能：</p>
+<ul>
+<li>基本输入输出的程序</li>
+<li>系统设置信息</li>
+<li>开机后自检程序</li>
+<li>系统自启程序等</li>
+</ul>
+<p>BIOS 系统调用：</p>
+<ul>
+<li>BIOS 以中断调用的方式提供了基本的 I/O 功能<ul>
+<li>INT 10h：字符显示</li>
+<li>INT 13h：磁盘扇区读写</li>
+<li>INT 15h：检测内存大小</li>
+<li>INT 16h：键盘输入</li>
+</ul>
+</li>
+<li>只能在 x86 的实模式下访问</li>
+</ul>
+<h3 id="系统启动流程"><a href="#系统启动流程" class="headerlink" title="系统启动流程"></a>系统启动流程</h3><p><img src="http://qnya.pomo16.club/45.png" alt></p>
+<ol>
+<li>CPU 初始化<ul>
+<li>CPU 加电稳定后从 0XFFFF0 读第一条指令<ul>
+<li>CS:IP = 0xf000:fff0</li>
+<li>第一条指令是跳转指令</li>
+</ul>
+</li>
+<li>CPU 初始状态为16位实模式<ul>
+<li>CS:IP 是16位寄存器</li>
+<li>指令指针 PC = 16 * CS + IP</li>
+<li>最大地址空间是 1MB</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BIOS 初始化<ul>
+<li>硬件自检 POST</li>
+<li>检测系统中内存和显卡等关键部件的存在和工作状态</li>
+<li>查找并执行显卡等接口卡 BIOS ，进行设备初始化</li>
+<li>执行系统 BIOS ，进行系统检测，检测和配置系统中安装的即插即用设备</li>
+<li>更新 CMOS 中的扩展系统配置数据 ESCD</li>
+<li>按指定启动顺序从软盘、硬盘或光驱启动</li>
+</ul>
+</li>
+<li>主引导记录 MBR 格式<ul>
+<li>启动代码：446字节<ul>
+<li>检查分区表正确性</li>
+<li>加载并跳转到磁盘上的引导程序</li>
+</ul>
+</li>
+<li>硬盘分区表：64字节<ul>
+<li>描述分区状态和位置</li>
+<li>每个分区描述信息占据16字节</li>
+</ul>
+</li>
+<li>结束标志字：2字节 (55AA)<ul>
+<li>主引导记录的有效标志</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>分区引导扇区格式<ul>
+<li>跳转指令：跳转到启动代码<ul>
+<li>与平台相关代码</li>
+</ul>
+</li>
+<li>文件卷头：文件系统描述信息</li>
+<li>启动代码：跳转到加载程序</li>
+<li>结束标志：55AA</li>
+</ul>
+</li>
+<li>加载程序(bootloader)</li>
+</ol>
+<h3 id="系统启动规范"><a href="#系统启动规范" class="headerlink" title="系统启动规范"></a>系统启动规范</h3><ul>
+<li>BIOS<ul>
+<li>固化到计算机主板上的程序</li>
+<li>包括系统设置、自检程序和系统自启动程序</li>
+<li>BIOS-MBR、BIOS-GPT、PXE</li>
+</ul>
+</li>
+<li>UEFI<ul>
+<li>接口标准</li>
+<li>在所有平台上一致的操作系统启动服务</li>
+</ul>
+</li>
+</ul>
+<h3 id="中断、异常和系统调用"><a href="#中断、异常和系统调用" class="headerlink" title="中断、异常和系统调用"></a>中断、异常和系统调用</h3><ul>
+<li>系统调用 (system call)<ul>
+<li>应用程序主动向操作系统发出的服务请求</li>
+</ul>
+</li>
+<li>异常<ul>
+<li>非法指令或者其他原因导致当前指令执行失败 (如：内存出错)后的处理请求</li>
+</ul>
+</li>
+<li>中断<ul>
+<li>来自硬件设备的处理请求</li>
+</ul>
+</li>
+<li>区别：<ul>
+<li>源头<ul>
+<li>中断：外设</li>
+<li>异常：应用程序意想不到的行为</li>
+<li>系统调用：应用程序请求操作提供服务</li>
+</ul>
+</li>
+<li>响应方式<ul>
+<li>中断：异步</li>
+<li>异常：同步</li>
+<li>系统调用：同步或异步</li>
+</ul>
+</li>
+<li>处理机制<ul>
+<li>中断：持续，对用户应用程序是透明的</li>
+<li>异常：杀死或者重新执行意想不到的应用程序指令</li>
+<li>系统调用：等待和持续</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="中断处理机制"><a href="#中断处理机制" class="headerlink" title="中断处理机制"></a>中断处理机制</h3><ul>
+<li>硬件处理<ul>
+<li>在 CPU 初始化时设置中断使能的标志<ul>
+<li>依据内部或外部事件设置中断标志</li>
+<li>依据中断向量调用相应中断的服务例程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>软件<ul>
+<li>现场保存(编译器)</li>
+<li>中断服务处理(服务例程)</li>
+<li>清除中断标记(服务例程)</li>
+<li>现场恢复(编译器)</li>
+</ul>
+</li>
+<li>中断嵌套<ul>
+<li>硬件中断服务例程可被打断<ul>
+<li>不同硬件中断源可能硬件中断处理时出现</li>
+<li>硬件中断服务例程中需要临时禁止中断请求</li>
+<li>中断请求会保持到 CPU 做出响应</li>
+</ul>
+</li>
+<li>异常处理例程可被打断<ul>
+<li>异常服务例程执行时可能出现硬件中断</li>
+</ul>
+</li>
+<li>异常服务例程可嵌套<ul>
+<li>异常服务例程可能出现缺页</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="系统调用的外界使用"><a href="#系统调用的外界使用" class="headerlink" title="系统调用的外界使用"></a>系统调用的外界使用</h3><ul>
+<li>操作系统服务的编程接口</li>
+<li>通常由高级语言编写 (C 或者 C++)</li>
+<li>程序访问通常是通过高层次的 API 接口而不是直接进行系统调用</li>
+<li>三种最常用的应用程序编程接口 (API)<ul>
+<li>Win32 API 用于 Windows</li>
+<li>POSIX API 用于 POSIX-based systems (包括 UNIX, LINUX, Mac OS X的所有版本)</li>
+<li>Java API 用于 JAVA 虚拟机 (JVM)</li>
+</ul>
+</li>
+</ul>
+<h3 id="系统调用的内部实现"><a href="#系统调用的内部实现" class="headerlink" title="系统调用的内部实现"></a>系统调用的内部实现</h3><ul>
+<li>每个系统调用对应一个系统调用号<ul>
+<li>系统调用接口根据系统调用号来维护表的索引</li>
+</ul>
+</li>
+<li>系统调用接口调用内核态中的系统调用功能实现，并返回系统调用的状态和结果</li>
+<li>用户不需要知道系统调用的实现<ul>
+<li>需要设置调用参数和获取返回结果</li>
+<li>操作系统接口的细节大部分都隐藏在应用编程接口后<ul>
+<li>通过运行程序支持的库来管理</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="函数调用和系统调用的不同处"><a href="#函数调用和系统调用的不同处" class="headerlink" title="函数调用和系统调用的不同处"></a>函数调用和系统调用的不同处</h3><ul>
+<li>系统调用<ul>
+<li>INT 和 IRET 指令用于系统调用<ul>
+<li>系统调用时，堆栈切换和特权级的转换</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>函数调用<ul>
+<li>CALL 和 RET 用于常规调用<ul>
+<li>常规调用时没有堆栈切换</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="中断、异常和系统调用的开销"><a href="#中断、异常和系统调用的开销" class="headerlink" title="中断、异常和系统调用的开销"></a>中断、异常和系统调用的开销</h3><p>系统调用比函数调用更安全，但是系统调用的开销超过函数调用。<br>中断、异常和系统调用具体开销：</p>
+<ul>
+<li>引导机制</li>
+<li>建立内核堆栈</li>
+<li>验证参数</li>
+<li>内核态映射到用户态的地址空间<ul>
+<li>更新页面映射权限</li>
+</ul>
+</li>
+<li>内核态独立地址空间<ul>
+<li>TLB</li>
+</ul>
+</li>
+</ul>
+<h3 id="内存层次"><a href="#内存层次" class="headerlink" title="内存层次"></a>内存层次</h3><p><img src="http://qnya.pomo16.club/46.png" alt></p>
+<h3 id="操作系统的内存管理"><a href="#操作系统的内存管理" class="headerlink" title="操作系统的内存管理"></a>操作系统的内存管理</h3><p><img src="http://qnya.pomo16.club/47.png" alt></p>
+<h3 id="操作系统的内存管理方式"><a href="#操作系统的内存管理方式" class="headerlink" title="操作系统的内存管理方式"></a>操作系统的内存管理方式</h3><ul>
+<li>操作系统中采用的内存管理方式<ul>
+<li>重定位 ( relocation )</li>
+<li>分段 ( segmentation )</li>
+<li>分页 ( paging )</li>
+<li>虚拟存储 ( virtual memory )<ul>
+<li>目前多数系统(如 Linux )采用按需页式虚拟存储</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实现高度依赖硬件<ul>
+<li>与计算机存储架构紧耦合</li>
+<li>MMU(内存管理单元)：处理 CPU 存储访问请求的硬件</li>
+</ul>
+</li>
+</ul>
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/18/操作系统（二）/">操作系统（二）</a><a class="next" href="/2019/03/15/JSR303校验/">JSR-303校验</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

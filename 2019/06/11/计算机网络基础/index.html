@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>计算机网络基础 | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">计算机网络基础</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">计算机网络基础</h1><div class="post-meta">Jun 11, 2019<span> | </span><span class="category"><a href="/categories/web/">web</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 6.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 22</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><p>总结自 <a href="https://juejin.im/post/5b7be0b2e51d4538db34a51e" target="_blank" rel="noopener">SnailClimb</a> 和 <a href="https://github.com/frank-lam/fullstack-tutorial/blob/master/notes/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.md#5-tcp%E5%92%8Cudp%E5%8C%BA%E5%88%AB%E5%A6%82%E4%BD%95%E6%94%B9%E8%BF%9Btcp" target="_blank" rel="noopener">frank-lam</a> 的博文。</p>
+<a id="more"></a>
+<h2 id="一、OSI七层模型、TCP-IP四层模型和五层协议"><a href="#一、OSI七层模型、TCP-IP四层模型和五层协议" class="headerlink" title="一、OSI七层模型、TCP/IP四层模型和五层协议"></a>一、OSI七层模型、TCP/IP四层模型和五层协议</h2><p><img src="http://qnya.pomo16.club/236.png" alt></p>
+<h3 id="1-五层协议"><a href="#1-五层协议" class="headerlink" title="1. 五层协议"></a>1. 五层协议</h3><h4 id="1-应用层"><a href="#1-应用层" class="headerlink" title="(1) 应用层"></a>(1) 应用层</h4><p>提供用户接口，特指能够发起网络流量的程序，比如客户端程序：QQ，MSN，浏览器等；服务器程序：web 服务器，邮件服务器，流媒体服务器等等。</p>
+<p>在互联网中应用层协议很多，如域名系统 DNS，支持万维网应用的 HTTP 协议，支持电子邮件的 SMTP 协议等等。数据单位为报文。</p>
+<p><strong>域名系统</strong></p>
+<blockquote>
+<p>域名系统 (Domain Name System 缩写 DNS，Domain Name 被译为域名)是因特网的一项核心服务，它作为可以将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便的访问互联网，而不用去记住能够被机器直接读取的 IP 数串。（百度百科）例如：一个公司的 Web  网站可看作是它在网上的门户，而域名就相当于其门牌地址，通常域名都使用该公司的名称或简称。例如上面提到的微软公司的域名，类似的还有：IBM 公司的域名是 <a href="https://link.juejin.im?target=http%3A%2F%2Fwww.ibm.com" target="_blank" rel="noopener">www.ibm.com</a>、Oracle 公司的域名是 <a href="https://link.juejin.im?target=http%3A%2F%2Fwww.oracle.com" target="_blank" rel="noopener">www.oracle.com</a>、Cisco公司的域名是 <a href="https://link.juejin.im?target=http%3A%2F%2Fwww.cisco.com" target="_blank" rel="noopener">www.cisco.com</a> 等。</p>
+</blockquote>
+<p><strong>HTTP 协议</strong></p>
+<blockquote>
+<p>超文本传输协议（HTTP，HyperText Transfer Protocol) 是互联网上应用最为广泛的一种网络协议。所有的 WWW（万维网） 文件都必须遵守这个标准。设计 HTTP 最初的目的是为了提供一种发布和接收 HTML 页面的方法。</p>
+</blockquote>
+<h4 id="2-传输层"><a href="#2-传输层" class="headerlink" title="(2) 传输层"></a>(2) 传输层</h4><p>负责向两台主机进程之间的通信提供通用的数据传输服务。由于应用层协议很多，定义通用的传输层协议就可以支持不断增多的应用层协议。传输层向用户提供可靠的端到端服务，透明地传送报文。</p>
+<p><strong>传输层主要两种协议</strong></p>
+<ul>
+<li><strong>传输控制协议 TCP</strong>提供<strong>面向连接的，</strong>可靠的数据传输服务。</li>
+<li><strong>用户数据协议 UDP</strong>提供<strong>无连接</strong>的，尽最大努力的数据传输服务（<strong>不保证数据传输的可靠性</strong>）。</li>
+<li>TCP 主要提供完整性服务，UDP 主要提供及时性服务。</li>
+</ul>
+<p><strong>UDP 的主要特点</strong></p>
+<ol>
+<li>UDP 是无连接的；</li>
+<li>UDP 使用尽最大努力交付，即不保证可靠交付，因此主机不需要维持复杂的链接状态（这里面有许多参数）；</li>
+<li>UDP 是面向报文的；</li>
+<li>UDP 没有拥塞控制，因此网络出现拥塞不会使源主机的发送速率降低（对实时应用很有用，如直播，实时视频会议等）；</li>
+<li>UDP 支持一对一、一对多、多对一和多对多的交互通信；</li>
+<li>UDP 的首部开销小，只有8个字节，比 TCP 的20个字节的首部要短。</li>
+</ol>
+<p><strong>TCP 的主要特点</strong></p>
+<ol>
+<li>TCP 是面向连接的。（就好像打电话一样，通话前需要先拨号建立连接，通话结束后要挂机释放连接）；</li>
+<li>每一条 TCP 连接只能有两个端点，每一条 TCP 连接只能是点对点的（一对一）；</li>
+<li>TCP 提供可靠交付的服务。通过 TCP 连接传送的数据，无差错、不丢失、不重复、并且按序到达；</li>
+<li>TCP 提供全双工通信。TCP 允许通信双方的应用进程在任何时候都能发送数据。TCP 连接的两端都设有发送缓存和接收缓存，用来临时存放双方通信的数据；</li>
+<li>面向字节流。TCP 中的 “流”（Stream）指的是流入进程或从进程流出的字节序列。“面向字节流”的含义是：虽然应用程序和 TCP 的交互是一次一个数据块（大小不等），但 TCP 把应用程序交下来的数据仅仅看成是一连串的无结构的字节流。</li>
+</ol>
+<h4 id="3-网络层"><a href="#3-网络层" class="headerlink" title="(3) 网络层"></a>(3) 网络层</h4><p>为主机间提供数据传输服务，而运输层协议是为主机中的进程提供服务。网络层把运输层传递下来的报文段或者用户数据报封装成分组和包进行传送。（负责选择最佳路径规划 IP 地址）</p>
+<p>在 TCP/IP 体系结构中，由于网络层使用 <strong>IP 协议</strong>，因此分组也叫 <strong>IP 数据报</strong> ，简称<strong>数据报</strong>。</p>
+<p>网络层的另一个任务就是选择合适的路由，使源主机运输层所传下来的分株，能通过网络层中的路由器找到目的主机。路由器查看数据包目标 IP 地址，根据路由表为数据包选择路径。路由表中的类目可以人工添加（静态路由）也可以动态生成（动态路由）。</p>
+<h4 id="4-数据链路层"><a href="#4-数据链路层" class="headerlink" title="(4) 数据链路层"></a>(4) 数据链路层</h4><p>不同的网络类型，发送数据的机制不同，数据链路层就是将数据包封装成能够在不同的网络传输的帧。能够进行差错检验，但不纠错，监测出错误丢掉该帧。如果需要改正数据在链路层传输时出现差错（这就是说，数据链路层不仅要检错，而且还要纠错），那么就要采用可靠性传输协议来纠正出现的差错。这种方法会使链路层的协议复杂些。</p>
+<h4 id="5-物理层"><a href="#5-物理层" class="headerlink" title="(5) 物理层"></a>(5) 物理层</h4><p>在物理层上所传送的数据单位是比特。物理层的作用是实现相邻计算机节点之间比特流的透明传送，尽可能屏蔽掉具体传输介质和物理设备的差异。 </p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>在互联网使用的各种协中最重要和最著名的就是 TCP/IP 两个协议。现在人们经常提到的 TCP/IP 并不一定单指 TCP 和 IP 这两个具体的协议，而往往表示互联网所使用的整个 TCP/IP 协议族。</p>
+<h3 id="2-ISO-七层模型中表示层和会话层功能是什么？"><a href="#2-ISO-七层模型中表示层和会话层功能是什么？" class="headerlink" title="2. ISO 七层模型中表示层和会话层功能是什么？"></a>2. ISO 七层模型中表示层和会话层功能是什么？</h3><ul>
+<li><strong>表示层</strong> ：数据压缩、加密以及数据描述。这使得应用程序不必担心在各台主机中表示/存储的内部格式（二进制、ASCII，比如乱码）不同的问题。</li>
+<li><strong>会话层</strong> ：建立会话，如 session 认证、断点续传。通信的应用程序之间建立、维护和释放面向用户的连接。通信的应用程序之间建立会话，需要传输层建立1个或多个连接。</li>
+<li>说明：五层协议没有表示层和会话层，而是将这些功能留给应用程序开发者处理。</li>
+</ul>
+<h4 id="3-数据在各层之间的传递过程"><a href="#3-数据在各层之间的传递过程" class="headerlink" title="3. 数据在各层之间的传递过程"></a>3. 数据在各层之间的传递过程</h4><p>在向下的过程中，需要添加下层协议所需要的首部或者尾部，而在向上的过程中不断拆开首部和尾部。</p>
+<ol>
+<li>路由器只有下面三层协议，因为路由器位于网络核心中，不需要为进程或者应用程序提供服务，因此也就不需要运输层和应用层。</li>
+<li>交换机只有下面两层协议</li>
+</ol>
+<h2 id="二、TCP-三次握手和四次挥手"><a href="#二、TCP-三次握手和四次挥手" class="headerlink" title="二、TCP 三次握手和四次挥手"></a>二、TCP 三次握手和四次挥手</h2><h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="http://qnya.pomo16.club/237.png" alt></p>
+<p>为了准确无误地把数据送达目标处，TCP协议采用了三次握手策略。</p>
+<ol>
+<li>客户端–发送带有 SYN 标志的数据包</li>
+<li>服务端–发送带有 SYN/ACK 标志的数据包</li>
+<li>客户端–发送带有 ACK 标志的数据包</li>
+</ol>
+<h4 id="为什么要三次握手？"><a href="#为什么要三次握手？" class="headerlink" title="为什么要三次握手？"></a>为什么要三次握手？</h4><p>三次握手的目的是建立可靠的通信信道，说到通讯，简单来说就是数据的发送与接收，而三次握手最主要的目的就是双方确认自己与对方的发送与接收是正常的。</p>
+<p>第一次握手：Client 什么都不能确认；Server 确认了对方发送正常</p>
+<p>第二次握手：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：自己接收正常，对方发送正常</p>
+<p>第三次握手：Client 确认了：自己发送、接收正常，对方发送、接收正常；Server 确认了：自己发送、接收正常，对方发送接收正常</p>
+<p>所以三次握手就能确认双发收发功能都正常，缺一不可。</p>
+<h4 id="为什么要传回-SYN？"><a href="#为什么要传回-SYN？" class="headerlink" title="为什么要传回 SYN？"></a>为什么要传回 SYN？</h4><p>接收端传回发送端所发送的 SYN 是为了告诉发送端，我接收到的信息确实就是你所发送的信号了。</p>
+<h4 id="传了-SYN-为啥还要传-ACK？"><a href="#传了-SYN-为啥还要传-ACK？" class="headerlink" title="传了 SYN,为啥还要传 ACK？"></a>传了 SYN,为啥还要传 ACK？</h4><p>双方通信无误必须是两者互相发送信息都无误。传了 SYN，证明发送方到接收方的通道没有问题，但是接收方到发送方的通道还需要 ACK 信号来进行验证。</p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="http://qnya.pomo16.club/238.png" alt></p>
+<blockquote>
+<p>MSL 是 Maximum Segment Lifetime 英文的缩写，中文可以译为 “报文最大生存时间”，他是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。2MSL = 2*2mins = 4mins</p>
+</blockquote>
+<p>断开一个 TCP 连接则需要“四次挥手”。</p>
+<ol>
+<li>客户端-发送一个 FIN，用来关闭客户端到服务器的数据传送</li>
+<li>服务器-收到这个 FIN，它发回一 个 ACK，确认序号为收到的序号加1 。和 SYN 一样，一个 FIN 将占用一个序号</li>
+<li>服务器-关闭与客户端的连接，发送一个 FIN 给客户端</li>
+<li>客户端-发回 ACK 报文确认，并将确认序号设置为收到序号加1</li>
+</ol>
+<h4 id="为什么要四次挥手？"><a href="#为什么要四次挥手？" class="headerlink" title="为什么要四次挥手？"></a>为什么要四次挥手？</h4><p>客户端发送了 FIN 连接释放报文之后，服务器收到了这个报文，就进入了 CLOSE-WAIT 状态。这个状态是为了让服务器端发送还未传送完毕的数据，传送完毕之后，服务器会发送 FIN 连接释放报文。</p>
+<h4 id="TIME-WAIT"><a href="#TIME-WAIT" class="headerlink" title="TIME_WAIT"></a>TIME_WAIT</h4><p>客户端接收到服务器端的 FIN 报文后进入此状态，此时并不是直接进入 CLOSED 状态，还需要等待一个时间计时器设置的时间 2MSL。这么做有两个理由：</p>
+<ul>
+<li>确保最后一个确认报文段能够到达。如果 B 没收到 A 发送来的确认报文段，那么就会重新发送连接释放请求报文段，A 等待一段时间就是为了处理这种情况的发生。</li>
+<li>等待一段时间是为了让本连接持续时间内所产生的所有报文段都从网络中消失，使得下一个新的连接不会出现旧的连接请求报文段。</li>
+</ul>
+<h2 id="三、TCP-和-UDP-的区别"><a href="#三、TCP-和-UDP-的区别" class="headerlink" title="三、TCP 和 UDP 的区别"></a>三、TCP 和 UDP 的区别</h2><p><img src="http://qnya.pomo16.club/239.png" alt></p>
+<p>UDP 在传送数据之前不需要先建立连接，远地主机在收到 UDP 报文后，不需要给出任何确认。虽然 UDP 不提供可靠交付，但在某些情况下 UDP 确是一种最有效的工作方式（一般用于即时通信），比如： QQ 语音、 QQ 视频 、直播等等。</p>
+<p>TCP 提供面向连接的服务。在传送数据之前必须先建立连接，数据传送结束后要释放连接。 TCP 不提供广播或多播服务。由于 TCP 要提供可靠的，面向连接的运输服务（TCP 的可靠体现在 TCP 在传递数据之前，会有三次握手来建立连接，而且在数据传递时，有确认、窗口、重传、拥塞控制机制，在数据传完后，还会断开连接用来节约系统资源），这一难以避免增加了许多开销，如确认，流量控制，计时器以及连接管理等。这不仅使协议数据单元的首部增大很多，还要占用许多处理机资源。TCP 一般用于文件传输、发送和接收邮件、远程登录等场景。</p>
+<h2 id="四、TCP-协议如何保证可靠传输"><a href="#四、TCP-协议如何保证可靠传输" class="headerlink" title="四、TCP 协议如何保证可靠传输"></a>四、TCP 协议如何保证可靠传输</h2><ul>
+<li>应用数据被分割成 TCP 认为最适合发送的数据块。 </li>
+<li>TCP 给发送的每一个包进行编号，接收方对数据包进行排序，把有序数据传送给应用层。 </li>
+<li>TCP的接收端会丢弃重复的数据。</li>
+<li><strong>校验和：</strong> TCP 将保持它首部和数据的检验和。这是一个端到端的检验和，目的是检测数据在传输过程中的任何变化。如果收到段的检验和有差错，TCP 将丢弃这个报文段和不确认收到此报文段。</li>
+<li><strong>拥塞控制</strong>：当网络拥塞时，减少数据的发送。</li>
+<li><strong>停止等待协议</strong> 也是为了实现可靠传输的，它的基本原理就是每发完一个分组就停止发送，等待对方确认。在收到确认后再发下一个分组。<strong>超时重传</strong>：当 TCP 发出一个段后，它启动一个定时器，等待目的端确认收到这个报文段。如果不能及时收到一个确认，将重发这个报文段。</li>
+<li><strong>流量控制</strong>：TCP 连接的每一方都有固定大小的缓冲空间，TCP 的接收端只允许发送端发送接收端缓冲区能接纳的数据。当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。TCP 使用的流量控制协议是可变大小的滑动窗口协议。</li>
+</ul>
+<h3 id="停止等待协议"><a href="#停止等待协议" class="headerlink" title="停止等待协议"></a>停止等待协议</h3><ul>
+<li>停止等待协议是为了实现可靠传输的，它的基本原理就是每发完一个分组就停止发送，等待对方确认。在收到确认后再发下一个分组；</li>
+<li>在停止等待协议中，若接收方收到重复分组，就丢弃该分组，但同时还要发送确认；</li>
+</ul>
+<p><strong>1. 无差错情况</strong></p>
+<p><img src="http://qnya.pomo16.club/240.png" style="height:400px"></p>
+<p><strong>2. 出现差错情况（超时重传）</strong></p>
+<p><img src="http://qnya.pomo16.club/241.png" alt></p>
+<p>停止等待协议中超时重传是指只要超过一段时间仍然没有收到确认，就重传前面发送过的分组（认为刚才发送过的分组丢失了）。因此每发送完一个分组需要设置一个超时计时器，其重转时间应比数据在分组传输的平均往返时间更长一些。这种自动重传方式常称为 <strong>自动重传请求 ARQ</strong> 。另外在停止等待协议中若收到重复分组，就丢弃该分组，但同时还要发送确认。<strong>连续 ARQ 协议</strong> 可提高信道利用率。发送维持一个发送窗口，凡位于发送窗口内的分组可连续发送出去，而不需要等待对方确认。接收方一般采用累积确认，对按序到达的最后一个分组发送确认，表明到这个分组位置的所有分组都已经正确收到了。</p>
+<p><strong>3. 确认丢失和确认迟到</strong></p>
+<ul>
+<li><strong>确认丢失</strong>：确认消息在传输过程丢失</li>
+</ul>
+<p><img src="http://qnya.pomo16.club/242.png" alt></p>
+<p>当 A 发送 M1 消息，B 收到后，B 向 A 发送了一个 M1 确认消息，但却在传输过程中丢失。而A 并不知道，在超时计时过后，A 重传 M1 消息，B 再次收到该消息后采取以下两点措施：</p>
+<ol>
+<li>丢弃这个重复的M1消息，不向上层交付。</li>
+<li>向A发送确认消息。（不会认为已经发送过了，就不再发送。A能重传，就证明B的确认消息丢失）。</li>
+</ol>
+<ul>
+<li><strong>确认迟到</strong> ：确认消息在传输过程中迟到</li>
+</ul>
+<p><img src="http://qnya.pomo16.club/243.png" alt></p>
+<p>A 发送 M1 消息，B 收到并发送确认。在超时时间内没有收到确认消息，A 重传 M1 消息，B 仍然收到并继续发送确认消息（B 收到了 2 份 M1）。此时 A 收到了 B 第二次发送的确认消息。接着发送其他数据。过了一会，A 收到了 B 第一次发送的对 M1 的确认消息（A 也收到了2份确认消息）。处理如下：</p>
+<ol>
+<li>A 收到重复的确认后，直接丢弃。</li>
+<li>B 收到重复的 M1 后，也直接丢弃重复的 M1。</li>
+</ol>
+<h3 id="自动重传请求-ARQ-协议"><a href="#自动重传请求-ARQ-协议" class="headerlink" title="自动重传请求 ARQ 协议"></a>自动重传请求 ARQ 协议</h3><p>停止等待协议中超时重传是指只要超过一段时间仍然没有收到确认，就重传前面发送过的分组（认为刚才发送过的分组丢失了）。因此每发送完一个分组需要设置一个超时计时器，其重转时间应比数据在分组传输的平均往返时间更长一些。这种自动重传方式常称为自动重传请求 ARQ。</p>
+<p><strong>优点</strong>：简单。</p>
+<p><strong>缺点</strong>：信道利用率低。</p>
+<h3 id="连续-ARQ-协议"><a href="#连续-ARQ-协议" class="headerlink" title="连续 ARQ 协议"></a>连续 ARQ 协议</h3><p>连续 ARQ 协议可提高信道利用率。发送方维持一个发送窗口，凡位于发送窗口内的分组可以连续发送出去，而不需要等待对方确认。接收方一般采用累计确认，对按序到达的最后一个分组发送确认，表明到这个分组为止的所有分组都已经正确收到了。</p>
+<p><strong>优点：</strong> 信道利用率高，容易实现，即使确认丢失，也不必重传。</p>
+<p><strong>缺点：</strong> 不能向发送方反映出接收方已经正确收到的所有分组的信息。 比如：发送方发送了 5条消息，中间第三条丢失（3号），这时接收方只能对前两个发送确认。发送方无法知道后三个分组的下落，而只好把后三个全部重传一次。这也叫 Go-Back-N（回退 N），表示需要退回来重传已经发送过的 N 个消息。</p>
+<h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><ul>
+<li>TCP 利用滑动窗口实现流量控制的机制。</li>
+<li>滑动窗口（Sliding window）是一种流量控制技术。早期的网络通信中，通信双方不会考虑网络的拥挤情况直接发送数据。由于大家不知道网络拥塞状况，同时发送数据，导致中间节点阻塞掉包，谁也发不了数据，所以就有了滑动窗口机制来解决此问题。</li>
+<li>TCP 中采用滑动窗口来进行传输控制，滑动窗口的大小意味着接收方还有多大的缓冲区可以用于接收数据。发送方可以通过滑动窗口的大小来确定应该发送多少字节的数据。当滑动窗口为 0 时，发送方一般不能再发送数据报，但有两种情况除外，一种情况是可以发送紧急数据，例如，允许用户终止在远端机上的运行进程。另一种情况是发送方可以发送一个 1 字节的数据报来通知接收方重新声明它希望接收的下一字节及发送方的滑动窗口大小。</li>
+</ul>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><ul>
+<li>TCP 利用滑动窗口实现流量控制。</li>
+<li>流量控制是为了控制发送方发送速率，保证接收方来得及接收。</li>
+<li>接收方发送的确认报文中的窗口字段可以用来控制发送方窗口大小，从而影响发送方的发送速率。将窗口字段设置为 0，则发送方不能发送数据。</li>
+</ul>
+<h3 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h3><ul>
+<li>在某段时间，若对网络中某资源的需求超过了该资源所能提供的可用部分，网络的性能就要变坏——产生拥塞(congestion)。</li>
+<li>出现资源拥塞的条件：对资源需求的总和 &gt; 可用资源</li>
+<li>若网络中有许多资源同时产生拥塞，网络的性能就要明显变坏，整个网络的吞吐量将随输入负荷的增大而下降。</li>
+<li>拥塞控制就是为了防止过多的数据注入到网络中，这样就可以使网络中的路由器或链路不致过载。</li>
+<li>拥塞控制是一个全局性的过程，涉及到所有的主机，所有的路由器，以及与降低网络传输性能有关的所有因素。相反，流量控制往往是点对点通信量的控制，是个端到端的问题。</li>
+</ul>
+<p>为了进行拥塞控制，TCP 发送方要维持一个 <strong>拥塞窗口(cwnd)</strong> 的状态变量。拥塞控制窗口的大小取决于网络的拥塞程度，并且动态变化。发送方让自己的发送窗口取为拥塞窗口和接收方的接受窗口中较小的一个。</p>
+<p>TCP 的拥塞控制采用了四种算法，即 <strong>慢开始</strong> 、 <strong>拥塞避免</strong> 、<strong>快重传</strong> 和 <strong>快恢复</strong>。在网络层也可以使路由器采用适当的分组丢弃策略（如主动队列管理 AQM），以减少网络拥塞的发生。</p>
+<ul>
+<li><p>慢开始</p>
+<p>慢开始算法的思路是当主机开始发送数据时，如果立即把大量数据字节注入到网络，那么可能会引起网络阻塞，因为现在还不知道网络的符合情况。经验表明，较好的方法是先探测一下，即由小到大逐渐增大发送窗口，也就是由小到大逐渐增大拥塞窗口数值。cwnd 初始值为1，每经过一个传播轮次，cwnd 加倍。 </p>
+</li>
+<li><p>拥塞避免</p>
+<p>拥塞避免算法的思路是让拥塞窗口 cwnd 缓慢增大，即每经过一个往返时间 RTT 就把发送放的 cwnd 加1。</p>
+</li>
+<li><p>快重传和快恢复</p>
+<p>在 TCP/IP 中，快速重传和恢复（fast retransmit and recovery，FRR）是一种拥塞控制算法，它能快速恢复丢失的数据包。没有 FRR，如果数据包丢失了，TCP 将会使用定时器来要求传输暂停。在暂停的这段时间内，没有新的或复制的数据包被发送。有了 FRR，如果接收机接收到一个不按顺序的数据段，它会立即给发送机发送一个重复确认。如果发送机接收到三个重复确认，它会假定确认件指出的数据段丢失了，并立即重传这些丢失的数据段。有了 FRR，就不会因为重传时要求的暂停被耽误。  当有单独的数据包丢失时，快速重传和恢复（FRR）能最有效地工作。当有多个数据信息包在某一段很短的时间内丢失时，它则不能很有效地工作。 </p>
+</li>
+</ul>
+<h2 id="五、在浏览器中输入url地址-gt-显示主页的过程"><a href="#五、在浏览器中输入url地址-gt-显示主页的过程" class="headerlink" title="五、在浏览器中输入url地址 -&gt; 显示主页的过程"></a>五、在浏览器中输入url地址 -&gt; 显示主页的过程</h2><p><img src="http://qnya.pomo16.club/244.png" alt></p>
+<h2 id="六、状态码"><a href="#六、状态码" class="headerlink" title="六、状态码"></a>六、状态码</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>类别</th>
+<th>原因短语</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1xx</td>
+<td>Informational (信息性状态码)</td>
+<td>接收的请求正在处理</td>
+</tr>
+<tr>
+<td>2xx</td>
+<td>Success (成功状态码)</td>
+<td>请求正常处理完毕</td>
+</tr>
+<tr>
+<td>3xx</td>
+<td>Redirection (重定向状态码)</td>
+<td>需要进行附加操作以完成请求</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>Client Error (客户端错误状态码)</td>
+<td>服务器无法处理请求</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>Server Error (服务器错误状态码)</td>
+<td>服务器处理请求出错</td>
+</tr>
+</tbody>
+</table>
+<p>详见博文 <a href="[https://pomo16.github.io/2018/11/19/HTTP%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81/](https://pomo16.github.io/2018/11/19/HTTP中常用的状态码/">HTTP中常用的状态码</a>)</p>
+<h2 id="七、各协议与-HTTP-协议之间的关系"><a href="#七、各协议与-HTTP-协议之间的关系" class="headerlink" title="七、各协议与 HTTP 协议之间的关系"></a>七、各协议与 HTTP 协议之间的关系</h2><p><img src="http://qnya.pomo16.club/245.png" alt></p>
+<h2 id="八、HTTP-的长连接和短连接"><a href="#八、HTTP-的长连接和短连接" class="headerlink" title="八、HTTP 的长连接和短连接"></a>八、HTTP 的长连接和短连接</h2><p>在 HTTP/1.0 中默认使用短连接。也就是说，客户端和服务器每进行一次 HTTP 操作，就建立一次连接，任务结束就中断连接。当客户端浏览器访问的某个 HTML 或其他类型的 Web 页中包含有其他的 Web 资源（如 JavaScript 文件、图像文件、CSS 文件等），每遇到这样一个 Web 资源，浏览器就会重新建立一个 HTTP 会话。</p>
+<p>而从 HTTP/1.1 起，默认使用长连接，用以保持连接特性。使用长连接的 HTTP 协议，会在响应头加入这行代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Connection:keep-alive</span><br></pre></td></tr></table></figure>
+<p>在使用长连接的情况下，当一个网页打开完成后，客户端和服务器之间用于传输 HTTP 数据的 TCP 连接不会关闭，客户端再次访问这个服务器时，会继续使用这一条已经建立的连接。 Keep-Alive 不会永久保持连接，它有一个保持时间，可以在不同的服务器软件（如 Apache）中设定这个时间。实现长连接需要客户端和服务端都支持长连接。</p>
+<p><strong>HTTP 协议的长连接和短连接，实质上是 TCP 协议的长连接和短连接。</strong></p>
+<h2 id="九、HTTP-和-HTTPS-的区别"><a href="#九、HTTP-和-HTTPS-的区别" class="headerlink" title="九、HTTP 和 HTTPS 的区别"></a>九、HTTP 和 HTTPS 的区别</h2><ul>
+<li>https 协议需要到 ca 申请证书，一般免费证书较少，因而需要一定费用。</li>
+<li>http 是超文本传输协议，信息是明文传输，https 则是具有安全性的 ssl 加密传输协议。</li>
+<li>http 和 https 使用的是完全不同的连接方式，用的端口也不一样，前者是80，后者是443。</li>
+<li>http 的连接很简单，是无状态的；https 协议是由 SSL + http 协议构建的可进行加密传输、身份认证的网络协议，比 http 协议安全。</li>
+</ul>
+<h2 id="十、SSL-的四次握手"><a href="#十、SSL-的四次握手" class="headerlink" title="十、SSL 的四次握手"></a>十、SSL 的四次握手</h2><ol>
+<li><p>客户端请求建立 SSL 链接，并向服务端发送一个随机数（client random）和客户端支持的加密方法（比如 RSA），此时是明文传输的。 </p>
+</li>
+<li><p>服务端选择客户端支持的一种加密算法并生成另一个随机数（server random），并将授信的服务端证书和公钥下发给客户端。 </p>
+</li>
+<li><p>客户端收到服务端的回复，会校验服务端证书的合法性，若合法，则生成一个新的随机数 premaster secret 并通过服务端下发的公钥及加密方法进行加密，然后发送给服务端。 </p>
+</li>
+<li><p>服务端收到客户端的回复，利用已知的加解密方式进行解密，同时利用 client random、server random 和 premater secret 通过一定算法生成对称加密 key - session key。</p>
+</li>
+</ol>
+<p>此后，数据传输即通过对称加密方式进行加密传输。 </p>
+<p>从以上过程可以看到 https 实际上是用了对称加密技术和非对称加密技术，非对称加密解密速度慢，但安全性高，用来加密对称加密的密钥；而对称加密虽然安全性低，但解密速度快，可以用于传输数据的加密。</p>
+</div><div class="tags"><a href="/tags/http/">http</a></div><div class="post-nav"><a class="pre" href="/2019/06/11/mysql/">mysql</a><a class="next" href="/2019/06/09/Spring-基础知识/">Spring 基础知识</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Redis | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Redis</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Redis</h1><div class="post-meta">Apr 27, 2019<span> | </span><span class="category"><a href="/categories/java/">java</a><a href="/categories/java/Redis/">Redis</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 8.8k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 33</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><ul>
+<li><a href="#一、概述">一、概述</a></li>
+<li><a href="#二、数据类型">二、数据类型</a></li>
+<li><a href="#三、常用基本操作">三、常用基本操作</a></li>
+<li><a href="#四、配置文件">四、配置文件</a></li>
+<li><a href="#五、持久化">五、持久化</a></li>
+<li><a href="#六、事务">六、事务</a></li>
+<li><a href="#七、发布订阅">七、发布订阅</a></li>
+<li><a href="#八、复制">八、复制</a></li>
+<li><a href="#九、Jedis">九、Jedis</a></li>
+</ul>
+<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>Redis 是速度非常快的非关系型（NoSQL）内存键值数据库，可以存储键和五种不同类型的值之间的映射。</p>
+<p>键的类型只能为字符串，值支持五种数据类型：字符串、列表、集合、散列表、有序集合。</p>
+<p>Redis 支持很多特性，例如将内存中的数据持久化到硬盘中，使用复制来扩展读性能，使用分片来扩展写性能。</p>
+<h2 id="二、数据类型"><a href="#二、数据类型" class="headerlink" title="二、数据类型"></a>二、数据类型</h2><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>可以存储的值</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STRING</td>
+<td>字符串、整数或者浮点数</td>
+<td>对整个字符串或者字符串的其中一部分执行操作 对整数和浮点数执行自增或者自减操作</td>
+</tr>
+<tr>
+<td>LIST</td>
+<td>列表</td>
+<td>从两端压入或者弹出元素  对单个或者多个元素 进行修剪，只保留一个范围内的元素</td>
+</tr>
+<tr>
+<td>SET</td>
+<td>无序集合</td>
+<td>添加、获取、移除单个元素 检查一个元素是否存在于集合中 计算交集、并集、差集 从集合里面随机获取元素</td>
+</tr>
+<tr>
+<td>HASH</td>
+<td>包含键值对的无序散列表</td>
+<td>添加、获取、移除单个键值对 获取所有键值对 检查某个键是否存在</td>
+</tr>
+<tr>
+<td>ZSET</td>
+<td>有序集合</td>
+<td>添加、获取、删除元素 根据分值范围或者成员来获取元素 计算一个键的排名</td>
+</tr>
+</tbody>
+</table>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p><img src="http://qnya.pomo16.club/206.png" width="60%"></p>
+<p>string 是 redis 最基本的类型，你可以理解成与 Memcached 一模一样的类型，一个 key 对应一个 value。</p>
+<p>string 类型是二进制安全的。意思是 redis 的 string 可以包含任何数据。比如 jpg 图片或者序列化的对象 。</p>
+<p>string 类型是 Redis 最基本的数据类型，一个 redis 中字符串 value 最多可以是 512M。</p>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p><img src="http://qnya.pomo16.club/207.png" width="60%"></p>
+<p>Redis 列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素导列表的头部（左边）或者尾部（右边）。它的底层实际是个链表。</p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p><img src="http://qnya.pomo16.club/208.png" width="60%"></p>
+<p>Redis 的 set 是 string 类型的无序集合。它是通过 HashTable 实现实现的。</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p><img src="http://qnya.pomo16.club/209.png" width="60%"></p>
+<p>Redis hash 是一个键值对集合。</p>
+<p>Redis hash 是一个 string 类型的 field 和 value 的映射表，hash 特别适合用于存储对象。</p>
+<p>类似 Java 里面的 Map&lt;String,Object&gt;。</p>
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><p><img src="http://qnya.pomo16.club/210.png" width="60%"></p>
+<p>sorted set：有序集合。</p>
+<p>Redis zset 和 set 一样也是 string 类型元素的集合,且不允许重复的成员。</p>
+<p>不同的是每个元素都会关联一个 double 类型的分数。</p>
+<p>redis 正是通过分数来为集合中的成员进行从小到大的排序。zset 的成员是唯一的,但分数 (score) 却可以重复。</p>
+<h3 id="Redis常见数据结构操作命令"><a href="#Redis常见数据结构操作命令" class="headerlink" title="Redis常见数据结构操作命令"></a>Redis常见数据结构操作命令</h3><p><a href="http://redisdoc.com/" target="_blank" rel="noopener">http://redisdoc.com/</a></p>
+<h2 id="三、常用基本操作"><a href="#三、常用基本操作" class="headerlink" title="三、常用基本操作"></a>三、常用基本操作</h2><h3 id="key"><a href="#key" class="headerlink" title="key"></a>key</h3><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>keys *</td>
+<td>查看所有 key</td>
+</tr>
+<tr>
+<td>exists key的名字</td>
+<td>判断某个 key 是否存在</td>
+</tr>
+<tr>
+<td>move key db</td>
+<td>移动 key 到 db</td>
+</tr>
+<tr>
+<td>expire key 秒数</td>
+<td>为 key 设置过期时间</td>
+</tr>
+<tr>
+<td>ttl key</td>
+<td>查看还有所少秒过期，-1表示永不过期，-2表示已过期</td>
+</tr>
+<tr>
+<td>type key</td>
+<td>查看 key 的类型</td>
+</tr>
+</tbody>
+</table>
+<h3 id="string-单值单-value"><a href="#string-单值单-value" class="headerlink" title="string (单值单 value)"></a>string (单值单 value)</h3><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>set/get/del/append/strlen</td>
+<td>增、查、删、追加、返回长度</td>
+</tr>
+<tr>
+<td>lncr/decr/incrby/decrby</td>
+<td>加1，减1，加n，减n(数字才能加减，n路:incrby k1 n)</td>
+</tr>
+<tr>
+<td>getrange/setrange</td>
+<td>getrange: 获取指定区间范围内的值，从零到负一表示全部。<br>setrange: 设置指定区间范围内的值，格式是setrange key 开始位 值(例:setrange k1 0 xxx)</td>
+</tr>
+<tr>
+<td>setex key 秒数 值</td>
+<td>即 set with expire，设置带过期时间的 key，动态设置</td>
+</tr>
+<tr>
+<td>setnx key value</td>
+<td>即 set if not exist，只有在 key 不存在时设置 key 的值</td>
+</tr>
+<tr>
+<td>mset/mget/msetnx</td>
+<td>mset: 同时设置一个或多个 key-value 对。<br>mget: 获取所有(一个或多个)给定 key 的值。<br>msetnx: 同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在。</td>
+</tr>
+<tr>
+<td>getset</td>
+<td>即先 get 再 set，将给定 key 的值设为 value ，并返回 key 的旧值(old value)。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="list-单值多-value"><a href="#list-单值多-value" class="headerlink" title="list (单值多 value)"></a>list (单值多 value)</h3><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lpush/rpush/lrange</td>
+<td>lpush: 从左侧按顺序添加(例: lpush list01 1 2 3 4 5)<br>rpush: 从右侧按顺序添加(例: rpush list02 1 2 3 4 5)<br>lrange: 按范围查询(lrange 列表名 0 -1 查询全部)</td>
+</tr>
+<tr>
+<td>lpop/rpop</td>
+<td>lpop: 左出；rpop: 右出(lpop/rpop 列表名)</td>
+</tr>
+<tr>
+<td>lindex</td>
+<td>通过索引获取列表中的元素 lindex key index</td>
+</tr>
+<tr>
+<td>llen</td>
+<td>返回列表 key 的长度</td>
+</tr>
+<tr>
+<td>lerm key count value</td>
+<td>删除 count 个等于 value 的 key，如果 count 为0则删除全部</td>
+</tr>
+<tr>
+<td>ltrim key startindex endindex</td>
+<td>截取指定索引区间的元素</td>
+</tr>
+<tr>
+<td>rpoplpush 源列表 目的列表</td>
+<td>移除列表的最后一个元素，并将该元素添加到另一个列表并返回</td>
+</tr>
+<tr>
+<td>lset key index value</td>
+<td>通过索引设置列表元素的值</td>
+</tr>
+<tr>
+<td>linsert key before/after value1 value2</td>
+<td>在 list 某个已有值的前后再添加具体值</td>
+</tr>
+</tbody>
+</table>
+<p><strong>性能分析</strong></p>
+<p>它是一个字符串链表，left、right 都可以插入添加；<br>如果键不存在，创建新的链表；<br>如果键已存在，新增内容；<br>如果值全移除，对应的键也就消失了。<br>链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就很惨淡了。</p>
+<h3 id="set-单值多-value"><a href="#set-单值多-value" class="headerlink" title="set (单值多 value)"></a>set (单值多 value)</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sadd/smembers/sismember</td>
+<td>添加、返回集合中的所有的成员(smembers key)、判断成员元素是否是集合的成员(sismember key value)</td>
+</tr>
+<tr>
+<td>scard key</td>
+<td>返回集合中元素的数量</td>
+</tr>
+<tr>
+<td>srem key value1…valueN</td>
+<td>移除集合中的一个或多个成员元素，不存在的成员元素会被忽略。</td>
+</tr>
+<tr>
+<td>srandmember key [count]</td>
+<td>返回集合中的一个随机元素。如果 count 为正数，且小于集合基数，那么命令返回一个包含 count 个元素的数组，数组中的元素各不相同。如果 count 大于等于集合基数，那么返回整个集合。如果 count 为负数，那么命令返回一个数组，数组中的元素可能会重复出现多次，而数组的长度为 count 的绝对值。</td>
+</tr>
+<tr>
+<td>spop key [count]</td>
+<td>用于移除集合中的指定 key 的一个或多个随机元素，移除后会返回移除的元素。</td>
+</tr>
+<tr>
+<td>smove key1 key2 在key1里某个值</td>
+<td>作用是将 key1 里的某个值赋给 key2</td>
+</tr>
+<tr>
+<td>sdiff FIRST_KEY OTHER_KEY1..OTHER_KEYN</td>
+<td>返回给定集合之间的差集。差集的结果来自前面的 FIRST_KEY ,而不是后面的 OTHER_KEY1，也不是整个 FIRST_KEY OTHER_KEY1..OTHER_KEYN 的差集。</td>
+</tr>
+<tr>
+<td>sunion KEY KEY1..KEYN</td>
+<td>返回给定集合的并集。不存在的集合 key 被视为空集。</td>
+</tr>
+<tr>
+<td>sinter KEY KEY1..KEYN</td>
+<td>返回给定所有给定集合的交集。 不存在的集合 key 被视为空集。 当给定集合当中有一个空集时，结果也为空集(根据集合运算定律)。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hash-KV-模式不变，但-V-是一个键值对"><a href="#hash-KV-模式不变，但-V-是一个键值对" class="headerlink" title="hash (KV 模式不变，但 V 是一个键值对)"></a>hash (KV 模式不变，但 V 是一个键值对)</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hset/hget/hmset/hmget/hgetall/hdel</td>
+<td>设值、获取、同时设值多个、获取所有给定字段的值、获取在哈希表中指定 key 的所有字段和值、删除一个或多个哈希表字段</td>
+</tr>
+<tr>
+<td>hlen key</td>
+<td>获取哈希表中字段的数量</td>
+</tr>
+<tr>
+<td>hexists key field</td>
+<td>查看哈希表 key 中，指定的字段是否存在</td>
+</tr>
+<tr>
+<td>hkeys key/hvals key</td>
+<td>获取所有哈希表中的字段、获取哈希表中所有值</td>
+</tr>
+<tr>
+<td>hincrby key field increment/hincrbyfloatkey field increment</td>
+<td>为哈希表 key 中的指定字段的整数值加上增量 increment 、为哈希表 key 中的指定字段的浮点数值加上增量 increment 。</td>
+</tr>
+<tr>
+<td>hsetnx key field value</td>
+<td>只有在字段 field 不存在时，设置哈希表字段的值。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zset-sorted-set，在set基础上，加一个score值。之前set是k1-v1-v2-v3，现在zset是k1-score1-v1-score2-v2"><a href="#zset-sorted-set，在set基础上，加一个score值。之前set是k1-v1-v2-v3，现在zset是k1-score1-v1-score2-v2" class="headerlink" title="zset (sorted set，在set基础上，加一个score值。之前set是k1 v1 v2 v3，现在zset是k1 score1 v1 score2 v2)"></a>zset (sorted set，在set基础上，加一个score值。之前set是k1 v1 v2 v3，现在zset是k1 score1 v1 score2 v2)</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>zadd/zrange</td>
+<td>向有序集合添加一个或多个成员，或者更新已存在成员的分数、通过索引区间返回有序集合成指定区间内的成员</td>
+</tr>
+<tr>
+<td>zrangebyscore key min max [WITHSCORES] [LIMIT]</td>
+<td>返回有序集合中指定分数区间的成员列表。</td>
+</tr>
+<tr>
+<td>zrem key member [member …]</td>
+<td>移除有序集中的一个或多个成员，不存在的成员将被忽略。</td>
+</tr>
+<tr>
+<td>zcard key/zcount key min max/zrank key member/zscore key member</td>
+<td>获取有序集合的成员数、计算在有序集合中指定区间分数的成员数、返回有序集合中指定成员的索引、返回有序集中，成员的分数值</td>
+</tr>
+<tr>
+<td>zrevrank key member</td>
+<td>返回有序集合中指定成员的排名，有序集成员按分数值递减(从大到小)排序</td>
+</tr>
+<tr>
+<td>zrevrange key start stop [WITHSCORES]</td>
+<td>返回有序集中指定区间内的成员，通过索引，分数从高到底</td>
+</tr>
+<tr>
+<td>zrevrangebyscore key max min [WITHSCORES]</td>
+<td>返回有序集中指定分数区间内的成员，分数从高到低排序</td>
+</tr>
+</tbody>
+</table>
+<h2 id="四、配置文件"><a href="#四、配置文件" class="headerlink" title="四、配置文件"></a>四、配置文件</h2><ol>
+<li>Redis默认不是以守护进程的方式运行，可以通过该配置项修改，使用yes启用守护进程<br>daemonize no</li>
+<li>当Redis以守护进程方式运行时，Redis默认会把pid写入/var/run/redis.pid文件，可以通过pidfile指定<br>pidfile /var/run/redis.pid</li>
+<li>指定Redis监听端口，默认端口为6379，作者在自己的一篇博文中解释了为什么选用6379作为默认端口，因为6379在手机按键上MERZ对应的号码，而MERZ取自意大利歌女Alessia Merz的名字<br>port 6379</li>
+<li>绑定的主机地址<br>bind 127.0.0.1</li>
+<li>当客户端闲置多长时间后关闭连接，如果指定为0，表示关闭该功能<br>timeout 300</li>
+<li>指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为verbose<br>loglevel verbose</li>
+<li>日志记录方式，默认为标准输出，如果配置Redis为守护进程方式运行，而这里又配置为日志记录方式为标准输出，则日志将会发送给/dev/null<br>logfile stdout</li>
+<li>设置数据库的数量，默认数据库为0，可以使用SELECT <dbid>命令在连接上指定数据库id<br>databases 16</dbid></li>
+<li>指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合<br>save <seconds> <changes><br>Redis默认配置文件中提供了三个条件：<br>save 900 1<br>save 300 10<br>save 60 10000<br>分别表示900秒（15分钟）内有1个更改，300秒（5分钟）内有10个更改以及60秒内有10000个更改。</changes></seconds></li>
+<li>指定存储至本地数据库时是否压缩数据，默认为yes，Redis采用LZF压缩，如果为了节省CPU时间，可以关闭该选项，但会导致数据库文件变的巨大<br>rdbcompression yes</li>
+<li>指定本地数据库文件名，默认值为dump.rdb<br>dbfilename dump.rdb</li>
+<li>指定本地数据库存放目录<br>dir ./</li>
+<li>设置当本机为slav服务时，设置master服务的IP地址及端口，在Redis启动时，它会自动从master进行数据同步<br>slaveof <masterip> <masterport></masterport></masterip></li>
+<li>当master服务设置了密码保护时，slav服务连接master的密码<br>masterauth <master-password></master-password></li>
+<li>设置Redis连接密码，如果配置了连接密码，客户端在连接Redis时需要通过AUTH <password>命令提供密码，默认关闭<br>requirepass foobared</password></li>
+<li>设置同一时间最大客户端连接数，默认无限制，Redis可以同时打开的客户端连接数为Redis进程可以打开的最大文件描述符数，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis会关闭新的连接并向客户端返回max number of clients reached错误信息<br>maxclients 128</li>
+<li>指定Redis最大内存限制，Redis在启动时会把数据加载到内存中，达到最大内存后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理 后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis新的vm机制，会把Key存放内存，Value会存放在swap区<br>maxmemory <bytes></bytes></li>
+<li>指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为 redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为no<br>appendonly no</li>
+<li>指定更新日志文件名，默认为appendonly.aof<br>appendfilename appendonly.aof</li>
+<li>指定更新日志条件，共有3个可选值：<br>no：表示等操作系统进行数据缓存同步到磁盘（快）<br>always：表示每次更新操作后手动调用fsync()将数据写到磁盘（慢，安全）<br>everysec：表示每秒同步一次（折衷，默认值）<br>appendfsync everysec</li>
+<li>指定是否启用虚拟内存机制，默认值为no，简单的介绍一下，VM机制将数据分页存放，由Redis将访问量较少的页即冷数据swap到磁盘上，访问多的页面由磁盘自动换出到内存中（在后面的文章我会仔细分析Redis的VM机制）<br>vm-enabled no</li>
+<li>虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享<br>vm-swap-file /tmp/redis.swap</li>
+<li>将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的(Redis的索引数据 就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0<br>vm-max-memory 0</li>
+<li>Redis swap文件分成了很多的page，一个对象可以保存在多个page上面，但一个page上不能被多个对象共享，vm-page-size是要根据存储的 数据大小来设定的，作者建议如果存储很多小对象，page大小最好设置为32或者64bytes；如果存储很大大对象，则可以使用更大的page，如果不 确定，就使用默认值<br>vm-page-size 32</li>
+<li>设置swap文件中的page数量，由于页表（一种表示页面空闲或使用的bitmap）是在放在内存中的，，在磁盘上每8个pages将消耗1byte的内存。<br>vm-pages 134217728</li>
+<li>设置访问swap文件的线程数,最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的，可能会造成比较长时间的延迟。默认值为4<br>vm-max-threads 4</li>
+<li>设置在向客户端应答时，是否把较小的包合并为一个包发送，默认为开启<br>glueoutputbuf yes</li>
+<li>指定在超过一定的数量或者最大的元素超过某一临界值时，采用一种特殊的哈希算法<br>hash-max-zipmap-entries 64<br>hash-max-zipmap-value 512</li>
+<li>指定是否激活重置哈希，默认为开启（后面在介绍Redis的哈希算法时具体介绍）<br>activerehashing yes</li>
+<li>指定包含其它的配置文件，可以在同一主机上多个Redis实例之间使用同一份配置文件，而同时各个实例又拥有自己的特定配置文件<br>include /path/to/local.conf</li>
+</ol>
+<h2 id="五、持久化"><a href="#五、持久化" class="headerlink" title="五、持久化"></a>五、持久化</h2><p> Redis 是内存型数据库，为了保证数据在断电后不会丢失，需要将内存中的数据持久化到硬盘上。</p>
+<h3 id="RDB-Redis-DataBase"><a href="#RDB-Redis-DataBase" class="headerlink" title="RDB (Redis DataBase)"></a>RDB (Redis DataBase)</h3><h4 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h4><p>在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的 Snapshot 快照，它恢复时是将快照文件直接读到内存里。(rdb 保存的是 dump.rdb 文件)</p>
+<p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。</p>
+<p>整个过程中，主进程是不进行任何 IO 操作的，这就确保了极高的性能。</p>
+<p>如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那 RDB 方式要比AOF 方式更加的高效。RDB 的缺点是最后一次持久化后的数据可能丢失。</p>
+<h4 id="fork"><a href="#fork" class="headerlink" title="fork"></a>fork</h4><p>fork 的作用是复制一个与当前进程一样的进程。新进程的所有数据（变量、环境变量、程序计数器等）数值都和原进程一致，但是是一个全新的进程，并作为原进程的子进程。</p>
+<h4 id="如何触发-RDB-快照"><a href="#如何触发-RDB-快照" class="headerlink" title="如何触发 RDB 快照"></a>如何触发 RDB 快照</h4><ol>
+<li><p>配置文件中默认的快照配置，1分钟改1w次或5分钟改10次或15分钟改1次(可以冷拷贝后重新使用cp dump.rdb dump_new.rdb)</p>
+</li>
+<li><p>命令 save 或者 bgsave</p>
+<p>Save：save 时只管保存，其它不管，全部阻塞。</p>
+<p>BGSAVE：Redis 会在后台异步进行快照操作，快照同时还可以响应客户端请求。可以通过 lastsave 命令获取最后一次成功执行快照的时间</p>
+</li>
+<li><p>执行 flushall 命令，也会产生 dump.rdb 文件，但里面是空的，无意义</p>
+</li>
+</ol>
+<h4 id="如何恢复"><a href="#如何恢复" class="headerlink" title="如何恢复"></a>如何恢复</h4><p>将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可</p>
+<p>CONFIG GET dir 获取目录</p>
+<h4 id="优劣"><a href="#优劣" class="headerlink" title="优劣"></a>优劣</h4><p>优势：适合大规模的数据恢复，对数据完整性和一致性要求不高</p>
+<p>劣势：在一定间隔时间做一次备份，所以如果 redis 意外 down 掉的话，就</p>
+<p>会丢失最后一次快照后的所有修改；fork 的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑</p>
+<h4 id="如何停止"><a href="#如何停止" class="headerlink" title="如何停止"></a>如何停止</h4><p>动态停止所有 RDB 保存规则的方法：redis-cli config set save “”</p>
+<h3 id="AOF-Append-Only-File"><a href="#AOF-Append-Only-File" class="headerlink" title="AOF (Append Only File)"></a>AOF (Append Only File)</h3><h4 id="是什么-1"><a href="#是什么-1" class="headerlink" title="是什么"></a>是什么</h4><p>以日志的形式来记录每个写操作，将 redis 执行过的所有写指令记录下来(读操作不记录)，只许追加文件但不可以改写文件，redis 启动之初会读取该文件重新构建数据，换言之，redis 重启的话就根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。(AOF 保存的是 appendonly.aof 文件)</p>
+<h4 id="AOF-启动-修复-恢复"><a href="#AOF-启动-修复-恢复" class="headerlink" title="AOF 启动/修复/恢复"></a>AOF 启动/修复/恢复</h4><h4 id="正常恢复"><a href="#正常恢复" class="headerlink" title="正常恢复"></a>正常恢复</h4><ol>
+<li>启动：修改默认的 appendonly no，改为 yes</li>
+<li>将有数据的 AOF 文件复制一份保存到对应目录( config get dir )</li>
+<li>恢复：重启 redis 然后重新加载</li>
+</ol>
+<h4 id="异常恢复"><a href="#异常恢复" class="headerlink" title="异常恢复"></a>异常恢复</h4><ol>
+<li>启动：修改默认的 appendonly no，改为 yes</li>
+<li>备份被写坏的 AOF 文件</li>
+<li>修复：redis-check-aof –fix 进行修复</li>
+<li>恢复：重启 redis 然后重新加载</li>
+</ol>
+<h4 id="rewrite"><a href="#rewrite" class="headerlink" title="rewrite"></a>rewrite</h4><p><strong>是什么</strong></p>
+<p>AOF 采用文件追加方式，文件会越来越大为避免出现此种情况，新增了重写机制，当 AOF 文件的大小超过所设定的阈值时，Redis 就会启动 AOF 文件的内容压缩，只保留可以恢复数据的最小指令集。可以使用命令 bgrewriteaof。</p>
+<p><strong>重写原理</strong></p>
+<p>AOF 文件持续增长而过大时，会 fork 出一条新进程来将文件重写(也是先写临时文件最后再 rename)，遍历新进程的内存中数据，每条记录有一条的 Set 语句。重写 AOF 文件的操作，并没有读取旧的 AOF 文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的 AOF 文件，这点和快照有点类似。</p>
+<p><strong>触发机制</strong></p>
+<p>redis 会记录上次重写时的 AOF 大小，默认配置是当 AOF 文件大小是上次 rewrite 后大小的一倍且文件大于 64M 时触发。</p>
+<h4 id="优劣-1"><a href="#优劣-1" class="headerlink" title="优劣"></a>优劣</h4><p>优势：每修改同步：appendfsync always 同步持久化 每次发生数据变更会被立即记录到磁盘  性能较差但数据完整性比较好；每秒同步：appendfsync everysec    异步操作，每秒记录   如果一秒内宕机，有数据丢失；不同步：appendfsync no   从不同步。</p>
+<p>劣势：相同数据集的数据而言 aof 文件要远大于 rdb 文件，恢复速度慢于 rdb；aof 运行效率要慢于 rdb，每秒同步策略效率较好，不同步效率和 rdb 相同。</p>
+<h3 id="总结-用哪个"><a href="#总结-用哪个" class="headerlink" title="总结(用哪个)"></a>总结(用哪个)</h3><ol>
+<li>RDB 持久化方式能够在指定的时间间隔能对你的数据进行快照存储</li>
+<li>AOF 持久化方式记录每次对服务器写的操作，当服务器重启的时候会重新执行这些命令来恢复原始的数据，AOF 命令以 redis 协议追加保存每次写的操作到文件末尾。redis 还能对 AOF 文件进行后台重写，使得 AOF 文件的体积不至于过大。</li>
+<li>只做缓存：如果你只希望你的数据在服务器运行的时候存在，你也可以不使用任何持久化方式。</li>
+<li>同时开启两种持久化方式<ul>
+<li>在这种情况下，当 redis 重启的时候会优先载入 AOF 文件来恢复原始的数据，因为在通常情况下 AOF 文件保存的数据集要比 RDB 文件保存的数据集要完整。</li>
+<li>RDB 的数据不实时，同时使用两者时服务器重启也只会找 AOF 文件。那要不要只使用 AOF 呢？作者建议不要，因为 RDB 更适合用于备份数据库(AOF 在不断变化不好备份)，快速重启，而且不会有 AOF 可能潜在的 bug，留着作为一个万一的手段。</li>
+</ul>
+</li>
+<li>性能建议<ul>
+<li>因为 RDB 文件只用作后备用途，建议只在 Slave 上持久化 RDB 文件，而且只要15分钟备份一次就够了，只保留 save 900 1 这条规则。</li>
+<li>如果 Enalbe AOF，好处是在最恶劣情况下也只会丢失不超过两秒数据，启动脚本较简单只 load 自己的 AOF 文件就可以了。代价一是带来了持续的 IO，二是 AOF rewrite 的最后将 rewrite 过程中产生的新数据写到新文件造成的阻塞几乎是不可避免的。只要硬盘许可，应该尽量减少 AOF rewrite 的频率，AOF 重写的基础大小默认值64M 太小了，可以设到 5G 以上。默认超过原大小 100% 大小时重写可以改到适当的数值。</li>
+<li>如果不 Enable AOF ，仅靠 Master-Slave Replication 实现高可用性也可以。能省掉一大笔 IO 也减少了 rewrite 时带来的系统波动。代价是如果 Master/Slave 同时倒掉，会丢失十几分钟的数据，启动脚本也要比较两个 Master/Slave 中的 RDB 文件，载入较新的那个。新浪微博就选用了这种架构。</li>
+</ul>
+</li>
+</ol>
+<h2 id="六、事务"><a href="#六、事务" class="headerlink" title="六、事务"></a>六、事务</h2><h3 id="是什么-2"><a href="#是什么-2" class="headerlink" title="是什么"></a>是什么</h3><p>可以一次执行多个命令，本质是一组命令的集合。一个事务中的所有命令都会序列化，按顺序地串行化执行而不会被其它命令插入，不许加塞。</p>
+<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><p>一个队列中，一次性、顺序性、排他性的执行一系列命令。</p>
+<h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><ol>
+<li>正常执行</li>
+<li>放弃事务</li>
+<li>全体连坐(一条有错，全军覆没)</li>
+<li>冤头债主(exec 才发现的错误，不影响事务中其他语句的执行)</li>
+<li>watch 监控<ul>
+<li>场景：初始化信用卡可用余额和欠额<ul>
+<li>无加塞篡改，先监控再开启 multi，保证两笔金额变动在同一个事务内。</li>
+<li>有加塞篡改，监控了 key，如果 key 被修改了，后面一个事务的执行失效。</li>
+<li>unwatch</li>
+<li>一旦执行了 exec 之前加的监控锁都会被取消掉了</li>
+</ul>
+</li>
+<li>小结<ul>
+<li>Watch 指令，类似乐观锁，事务提交时，如果 Key 的值已被别的客户端改变，比如某个 list 已被别的客户端 push/pop 过了，整个事务队列都不会被执行。</li>
+<li>通过 WATCH 命令在事务执行之前监控了多个 Keys，倘若在 WATCH 之后有任何 Key 的值发生了变化，EXEC 命令执行的事务都将被放弃，同时返回 Nullmulti-bulk 应答以通知调用者事务执行失败。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h3><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DISCARD</td>
+<td>取消事务，放弃执行事务块内的所有命令。</td>
+</tr>
+<tr>
+<td>EXEC</td>
+<td>执行所有事务块内的命令。</td>
+</tr>
+<tr>
+<td>MULTI</td>
+<td>标记一个事务块的开始。</td>
+</tr>
+<tr>
+<td>UNWATCH</td>
+<td>取消 WATCH 命令对所有 key 的监视。</td>
+</tr>
+<tr>
+<td>WATCH key [key …]</td>
+<td>监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="三阶段"><a href="#三阶段" class="headerlink" title="三阶段"></a>三阶段</h3><p>开启：以 MULTI 开始一个事务。</p>
+<p>入队：将多个命令入队到事务中，接到这些命令并不会立即执行，而是放到等待执行的事务队列里面。</p>
+<p>执行：由 EXEC 命令触发事务。</p>
+<h3 id="三特性"><a href="#三特性" class="headerlink" title="三特性"></a>三特性</h3><p>单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。</p>
+<p>没有隔离级别的概念：队列中的命令没有提交之前都不会实际的被执行，因为事务提交前任何指令都不会被实际执行，也就不存在”事务内的查询要看到事务里的更新，在事务外查询不能看到”这个让人万分头痛的问题。</p>
+<p>不保证原子性：redis 同一个事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚。(部分支持事务：全体连坐和冤头债主)</p>
+<h2 id="七、发布订阅"><a href="#七、发布订阅" class="headerlink" title="七、发布订阅"></a>七、发布订阅</h2><h3 id="是什么-3"><a href="#是什么-3" class="headerlink" title="是什么"></a>是什么</h3><p>进程间的一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。</p>
+<p>下图展示了频道 channel1 ， 以及订阅这个频道的三个客户端 —— client2 、 client5 和 client1 之间的关系：</p>
+<p><img src="http://qnya.pomo16.club/211.png" alt></p>
+<p>当有新消息通过 PUBLISH 命令发送给频道 channel1 时， 这个消息就会被发送给订阅它的三个客户端：</p>
+<p><img src="http://qnya.pomo16.club/212.png" alt></p>
+<p>实际中不会用 redis 做消息中间件</p>
+<h2 id="八、复制"><a href="#八、复制" class="headerlink" title="八、复制"></a>八、复制</h2><h3 id="是什么-4"><a href="#是什么-4" class="headerlink" title="是什么"></a>是什么</h3><p>行话：也就是我们所说的主从复制，主机数据更新后根据配置和策略，自动同步到备机的 master/slaver 机制，Master以写为主，Slave以读为主。</p>
+<h3 id="能干嘛-1"><a href="#能干嘛-1" class="headerlink" title="能干嘛"></a>能干嘛</h3><p>读写分离、容灾恢复</p>
+<h3 id="怎么玩"><a href="#怎么玩" class="headerlink" title="怎么玩"></a>怎么玩</h3><ol>
+<li><p>配从(库)不配主(库)</p>
+</li>
+<li><p>从库配置：slaveof 主库IP 主库端口</p>
+<ul>
+<li>每次与 master 断开之后，都需要重新连接，除非你配置进 redis.conf 文件</li>
+<li>info replication</li>
+</ul>
+</li>
+<li><p>修改配置文件细节操作</p>
+<ul>
+<li>拷贝多个 redis.conf 文件</li>
+<li>开启 daemonize yes</li>
+<li>pid 文件名字 (pidfile)</li>
+<li>指定端口 (port)</li>
+<li>log 文件名字 (logfile)</li>
+<li>dump.rdb 名字 (dbfilename)</li>
+</ul>
+</li>
+<li><p>常用技能</p>
+<ul>
+<li><p>一主二仆</p>
+<ul>
+<li><p>Init</p>
+</li>
+<li><p>一个 Master 两个 Slave</p>
+</li>
+<li><p>日志查看：主机日志、备机日志、info replication(查看状态)</p>
+</li>
+<li><p>一些问题</p>
+<p>1 切入点问题？slave1、slave2 是从头开始复制还是从切入点开始复制?比如从 k4 进来，那之前的123是否也可以复制？（✔️）</p>
+<p>2 从机是否可以写？set可否？（❌，读写分离呀，从机不可写。）</p>
+<p>3 主机 shutdown 后情况如何？从机是上位还是原地待命？（从机原地待命。）</p>
+<p>4 主机又回来了后，主机新增记录，从机还能否顺利复制？(可以，主机回来自动恢复)</p>
+<p>5 其中一台从机 down 后情况如何？依照原有它能跟上大部队吗？(从机只要和 master 断开就要重连)</p>
+</li>
+</ul>
+</li>
+<li><p>薪火相传</p>
+<ul>
+<li>上一个 Slave 可以是下一个 Slave 的 Master，Slave 同样可以接收其他 Slaves 的连接和同步请求，那么该 Slave 作为了链条中下一个的 Master，可以有效减轻 Master 的写压力。</li>
+<li>中途变更转向:会清除之前的数据，重新建立拷贝最新的。</li>
+<li>slaveof 新主库IP 新主库端口</li>
+</ul>
+</li>
+<li><p>反客为主</p>
+<ul>
+<li>SLAVEOF no one</li>
+<li>使当前数据库停止与其他数据库的同步，转成主数据库</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="复制原理"><a href="#复制原理" class="headerlink" title="复制原理"></a>复制原理</h3><ol>
+<li>slave 启动成功连接到 master 后会发送一个 sync 命令。</li>
+<li>Master 接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令，在后台进程执行完毕之后，master 将传送整个数据文件到 slave，以完成一次完全同步。</li>
+<li>全量复制：而 slave 服务在接收到数据库文件数据后，将其存盘并加载到内存中。</li>
+<li>增量复制：Master 继续将新的所有收集到的修改命令依次传给 slave,完成同步。</li>
+<li>但是只要是重新连接 master，一次完全同步（全量复制）将被自动执行。</li>
+</ol>
+<h3 id="哨兵模式-sentinel"><a href="#哨兵模式-sentinel" class="headerlink" title="哨兵模式 (sentinel)"></a>哨兵模式 (sentinel)</h3><p>反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库。一组 sentinel 能同时监控多个 Master。</p>
+<p><strong>使用步骤</strong></p>
+<ol>
+<li>调整结构，6379带着80、81</li>
+<li>自定义的 /myredis 目录下新建 sentinel.conf 文件，名字绝不能错</li>
+<li>配置哨兵，填写内容<ul>
+<li>sentinel monitor 被监控数据库名字(自己起名字) 127.0.0.1 6379 1</li>
+<li>上面最后一个数字1，表示主机挂掉后 salve 投票看让谁接替成为主机，得票数多少后成为主机</li>
+</ul>
+</li>
+<li>启动哨兵<ul>
+<li>redis-sentinel /myredis/sentinel.conf </li>
+<li>上述目录依照各自的实际情况配置，可能目录不同</li>
+</ul>
+</li>
+<li>正常主从演示，原有的master挂了，投票新选</li>
+<li>重新主从继续开工，info replication查查看</li>
+<li>问题：如果之前的 master 重启回来，会不会双 master 冲突？(❌，和反客为主不大一样，老 master 回来会变成新 master 的 slave)</li>
+</ol>
+<h3 id="复制的缺点"><a href="#复制的缺点" class="headerlink" title="复制的缺点"></a>复制的缺点</h3><p>复制延时：由于所有的写操作都是先在 Master 上操作，然后同步更新到 Slave 上，所以从 Master 同步到 Slave 机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave 机器数量的增加也会使这个问题更加严重。</p>
+<h2 id="九、Jedis"><a href="#九、Jedis" class="headerlink" title="九、Jedis"></a>九、Jedis</h2><h3 id="package"><a href="#package" class="headerlink" title="package"></a>package</h3><p>commons-pool-1.6.jar、jedis-2.1.0.jar</p>
+<h3 id="连通性测试"><a href="#连通性测试" class="headerlink" title="连通性测试"></a>连通性测试</h3><p>返回 pong 则为连通</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//连接本地的 Redis 服务</span></span><br><span class="line">        Jedis jedis = <span class="keyword">new</span> Jedis(<span class="string">"127.0.0.1"</span>,<span class="number">6379</span>);</span><br><span class="line">        <span class="comment">// 查看服务是否运行，打出pong表示OK</span></span><br><span class="line">        System.out.println(<span class="string">"connection is OK==========&gt;: "</span> + jedis.ping());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="日常使用"><a href="#日常使用" class="headerlink" title="日常使用"></a>日常使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestAPI</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		Jedis jedis = <span class="keyword">new</span> Jedis(<span class="string">"127.0.0.1"</span>,<span class="number">6379</span>);</span><br><span class="line">		</span><br><span class="line">		jedis.set(<span class="string">"k1"</span>,<span class="string">"v1"</span>);</span><br><span class="line">		jedis.set(<span class="string">"k2"</span>,<span class="string">"v2"</span>);</span><br><span class="line">		jedis.set(<span class="string">"k3"</span>,<span class="string">"v3"</span>);</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		System.out.println(jedis.get(<span class="string">"k3"</span>));</span><br><span class="line">		</span><br><span class="line">		Set&lt;String&gt; sets = jedis.keys(<span class="string">"*"</span>);</span><br><span class="line">		System.out.println(sets.size());</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//后续请参考脑图，家庭作业，敲一遍......</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>加锁事务场景模拟</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.Transaction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestTX</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">transMethod</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        Jedis jedis = <span class="keyword">new</span> Jedis(<span class="string">"127.0.0.1"</span>, <span class="number">6379</span>);</span><br><span class="line">        <span class="keyword">int</span> balance;<span class="comment">// 可用余额100元（set balance 100）</span></span><br><span class="line">        <span class="keyword">int</span> debt;<span class="comment">// 欠额(set debt 0)</span></span><br><span class="line">        <span class="keyword">int</span> amtToSubtract = <span class="number">10</span>;<span class="comment">// 实刷额度10元</span></span><br><span class="line"></span><br><span class="line">        jedis.watch(<span class="string">"balance"</span>);</span><br><span class="line">        <span class="comment">// jedis.set("balance","5");</span></span><br><span class="line">        <span class="comment">// 此句不该出现，模拟其他程序已经修改了该条目</span></span><br><span class="line">        <span class="comment">// 模拟系统停顿7秒，期间若有改动，则该程序能够监控到变化</span></span><br><span class="line">        Thread.sleep(<span class="number">7000</span>);</span><br><span class="line">        balance = Integer.parseInt(jedis.get(<span class="string">"balance"</span>));</span><br><span class="line">        <span class="keyword">if</span> (balance &lt; amtToSubtract) &#123;</span><br><span class="line">            jedis.unwatch();</span><br><span class="line">            System.out.println(<span class="string">"modify"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"***********transaction"</span>);</span><br><span class="line">            Transaction transaction = jedis.multi();</span><br><span class="line">            transaction.decrBy(<span class="string">"balance"</span>, amtToSubtract);</span><br><span class="line">            transaction.incrBy(<span class="string">"debt"</span>, amtToSubtract);</span><br><span class="line">            transaction.exec();</span><br><span class="line">            balance = Integer.parseInt(jedis.get(<span class="string">"balance"</span>));</span><br><span class="line">            debt = Integer.parseInt(jedis.get(<span class="string">"debt"</span>));</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"*******"</span> + balance);</span><br><span class="line">            System.out.println(<span class="string">"*******"</span> + debt);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 通俗点讲，watch命令就是标记一个键，如果标记了一个键，</span></span><br><span class="line"><span class="comment">     * 在提交事务前如果该键被别人修改过，那事务就会失败，这种情况通常可以在程序中</span></span><br><span class="line"><span class="comment">     * 重新再尝试一次。</span></span><br><span class="line"><span class="comment">     * 首先标记了键balance，然后检查余额是否足够，不足就取消标记，并不做扣减；</span></span><br><span class="line"><span class="comment">     * 足够的话，就启动事务进行更新操作，</span></span><br><span class="line"><span class="comment">     * 如果在此期间键balance被其它人修改， 那在提交事务（执行exec）时就会报错，</span></span><br><span class="line"><span class="comment">     * 程序中通常可以捕获这类错误再重新执行一次，直到成功。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> InterruptedException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        TestTX test = <span class="keyword">new</span> TestTX();</span><br><span class="line">        <span class="keyword">boolean</span> retValue = test.transMethod();</span><br><span class="line">        System.out.println(<span class="string">"main retValue-------: "</span> + retValue);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><p>6379,6380启动，先各自先独立，主写从读。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestMS</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Jedis jedis_M = <span class="keyword">new</span> Jedis(<span class="string">"127.0.0.1"</span>,<span class="number">6379</span>);</span><br><span class="line">		Jedis jedis_S = <span class="keyword">new</span> Jedis(<span class="string">"127.0.0.1"</span>,<span class="number">6380</span>);</span><br><span class="line">		</span><br><span class="line">		jedis_S.slaveof(<span class="string">"127.0.0.1"</span>,<span class="number">6379</span>);</span><br><span class="line">		</span><br><span class="line">		jedis_M.set(<span class="string">"class"</span>,<span class="string">"1122V2"</span>);</span><br><span class="line">		</span><br><span class="line">		String result = jedis_S.get(<span class="string">"class"</span>);</span><br><span class="line">		System.out.println(result);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="JedisPool"><a href="#JedisPool" class="headerlink" title="JedisPool"></a>JedisPool</h3><p>获取 Jedis 实例需要从 JedisPool 中获取。</p>
+<p>用完 Jedis 实例需要返还给 JedisPool。</p>
+<p>如果 Jedis 在使用过程中出错，则也需要还给 JedisPool。</p>
+<p>连接池（懒汉式单例）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPoolConfig;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisPoolUtil</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> JedisPool jedisPool = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">JedisPoolUtil</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> JedisPool <span class="title">getJedisPoolInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == jedisPool)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">synchronized</span> (JedisPoolUtil.class)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span>(<span class="keyword">null</span> == jedisPool)</span><br><span class="line">				&#123;</span><br><span class="line">					JedisPoolConfig poolConfig = <span class="keyword">new</span> JedisPoolConfig();</span><br><span class="line">					poolConfig.setMaxActive(<span class="number">1000</span>);</span><br><span class="line">					poolConfig.setMaxIdle(<span class="number">32</span>);</span><br><span class="line">					poolConfig.setMaxWait(<span class="number">100</span>*<span class="number">1000</span>);</span><br><span class="line">					poolConfig.setTestOnBorrow(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">					jedisPool = <span class="keyword">new</span> JedisPool(poolConfig,<span class="string">"127.0.0.1"</span>,<span class="number">6379</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> jedisPool;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">release</span><span class="params">(JedisPool jedisPool,Jedis jedis)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> != jedis)</span><br><span class="line">		&#123;</span><br><span class="line">			jedisPool.returnResourceObject(jedis);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试连接池：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis.clients.jedis.Jedis;</span><br><span class="line"><span class="keyword">import</span> redis.clients.jedis.JedisPool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestPool</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		JedisPool jedisPool = JedisPoolUtil.getJedisPoolInstance();</span><br><span class="line">		JedisPool jedisPool2 = JedisPoolUtil.getJedisPoolInstance();</span><br><span class="line">		</span><br><span class="line">		System.out.println(jedisPool == jedisPool2);</span><br><span class="line">		</span><br><span class="line">		Jedis jedis = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			jedis = jedisPool.getResource();</span><br><span class="line">			jedis.set(<span class="string">"aa"</span>,<span class="string">"bb"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">			JedisPoolUtil.release(jedisPool, jedis);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>配置</strong></p>
+<p>JedisPool 的配置参数大部分是由 JedisPoolConfig 的对应项来赋值的。</p>
+<p><strong>maxActive</strong>：控制一个 pool 可分配多少个 jedis 实例，通过 pool.getResource() 来获取；如果赋值为 -1，则表示不限制；如果 pool 已经分配了 maxActive 个 jedis 实例，则此时 pool 的状态为 exhausted。</p>
+<p><strong>maxIdle</strong>：控制一个 pool 最多有多少个状态为 idle(空闲) 的 jedis 实例。</p>
+<p>whenExhaustedAction：表示当 pool 中的 jedis 实例都被 allocated 完时，pool 要采取的操作，默认有三种：</p>
+<ul>
+<li>WHEN_EXHAUSTED_FAIL –&gt; 表示无jedis实例时，直接抛出 NoSuchElementException</li>
+<li>WHEN_EXHAUSTED_BLOCK –&gt; 则表示阻塞住，或者达到 maxWait 时抛出JedisConnectionException</li>
+<li>WHEN_EXHAUSTED_GROW –&gt; 则表示新建一个jedis实例，也就说设置的maxActive无用；</li>
+</ul>
+<p><strong>maxWait</strong>：表示当 borrow 一个 jedis 实例时，最大的等待时间，如果超过等待时间，则直接抛 JedisConnectionException。</p>
+<p><strong>testOnBorrow</strong>：获得一个 jedis 实例的时候是否检查连接可用性（ping()）；如果为 true，则得到的 jedis 实例均是可用的。</p>
+<p>testOnReturn：return  一个 jedis 实例给 pool 时，是否检查连接可用性（ping()）；</p>
+<p>testWhileIdle：如果为 true，表示有一个 idle object evitor 线程对 idle object 进行扫描，如果 validate 失败，此 object 会被从 pool 中 drop 掉；这一项只有在 timeBetweenEvictionRunsMillis 大于0时才有意义。</p>
+<p>timeBetweenEvictionRunsMillis：表示 idle object evitor 两次扫描之间要 sleep 的毫秒数。</p>
+<p>numTestsPerEvictionRun：表示 idle object evitor 每次扫描的最多的对象数。</p>
+<p>minEvictableIdleTimeMillis：表示一个对象至少停留在 idle 状态的最短时间，然后才能被 idle object evitor 扫描并驱逐；这一项只有在 timeBetweenEvictionRunsMillis 大于0时才有意义。</p>
+<p>softMinEvictableIdleTimeMillis：在 minEvictableIdleTimeMillis 基础上，加入了至少 minIdle 个对象已经在 pool 里面了。如果为 -1，evicted 不会根据 idle time 驱逐任何对象。如果 minEvictableIdleTimeMillis&gt;0，则此项设置无意义，且只有在 timeBetweenEvictionRunsMillis 大于0时才有意义；</p>
+<p>lifo：borrowObject 返回对象时，是采用 DEFAULT_LIFO（last in first out，即类似cache的最频繁使用队列），如果为 False，则表示 FIFO 队列；</p>
+<hr>
+<p>其中 JedisPoolConfig 对一些参数的默认设置如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">testWhileIdle = <span class="keyword">true</span></span><br><span class="line">minEvictableIdleTimeMills = <span class="number">60000</span></span><br><span class="line">timeBetweenEvictionRunsMillis = <span class="number">30000</span></span><br><span class="line">numTestsPerEvictionRun = -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+</div><div class="tags"><a href="/tags/java/">java</a><a href="/tags/Redis/">Redis</a></div><div class="post-nav"><a class="pre" href="/2019/05/20/BIO-NIO和AIO/">BIO,NIO和AIO</a><a class="next" href="/2019/04/22/JSP基础/">JSP基础</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

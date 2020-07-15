@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Java网络通信 | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Java网络通信</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Java网络通信</h1><div class="post-meta">Apr 2, 2019<span> | </span><span class="category"><a href="/categories/java/">java</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.6k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 14</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="Java-Socket-和网络模型"><a href="#Java-Socket-和网络模型" class="headerlink" title="Java Socket 和网络模型"></a>Java Socket 和网络模型</h2><p> Java Socket 是 JVM 通过操作系统操控 CPU、网卡与外界通信的一个组件，包括 BIO、NIO、AIO 等网络 IO 组件的底层也是 Socket。在了解 Java Socket 之前最好先了解一下网络模型的相关概念：</p>
+<h3 id="OSI-七层模型"><a href="#OSI-七层模型" class="headerlink" title="OSI 七层模型"></a>OSI 七层模型</h3><ul>
+<li>应用层:主机中的各个进程，提供端口号供访问</li>
+<li>表示层:将主机中的进程传递的数据通过不同的OS编译/转换/加密处理后交给硬件(网卡)</li>
+<li>会话层:标识相互通讯的主机间正在进行的回话，负责建立、管理、终止会话</li>
+<li>传输层:数据脱离网卡后即进入传输层，记录了即将访问的端口号(TCP/UDP)，将数据分段</li>
+<li>网络层:通过网线寻找目标主机(TCP/IP)</li>
+<li>链路层:将比特组合成字节进而组合成帧，用MAC地址访问介质，错误发现但不能纠正。</li>
+<li>物理层:建立、维护、断开物理连接。</li>
+</ul>
+<h3 id="TCP-IP-四层模型"><a href="#TCP-IP-四层模型" class="headerlink" title="TCP/IP 四层模型"></a>TCP/IP 四层模型</h3><ul>
+<li><p>主机到网络层</p>
+<ul>
+<li>实际上 TCP/IP 参考模型没有真正描述这一层的实现，只是要求能够提供给其上层-网络互连层一个访问接口，以便在其上传递 IP 分组。由于这一层次未被定义，所以其具体的实现方法将随着网络类型的不同而不同。</li>
+</ul>
+</li>
+<li><p>网络互连层</p>
+<ul>
+<li><p>网络互连层是整个 TCP/IP 协议栈的核心。它的功能是把分组发往目标网络或主机。同时，为了尽快地发送分组，可能需要沿不同的路径同时进行分组传递。因此，分组到达的顺序和发送的顺序可能不同，这就需要上层必须对分组进行排序。</p>
+</li>
+<li><p>网络互连层定义了分组格式和协议，即 IP 协议（Internet Protocol）。</p>
+</li>
+<li>网络互连层除了需要完成路由的功能外，也可以完成将不同类型的网络（异构网）互连的任务。除此之外，网络互连层还需要完成拥塞控制的功能。</li>
+</ul>
+</li>
+<li><p>传输层</p>
+<ul>
+<li>在 TCP/IP 模型中，传输层的功能是使源端主机和目标端主机上的对等实体可以进行会话。在传输层定义了两种服务质量不同的协议。即：传输控制协议 TCP（transmission control protocol）和用户数据报协议 UDP（user datagram protocol）。</li>
+<li>TCP 协议是一个面向连接的、可靠的协议。它将一台主机发出的字节流无差错地发往互联网上的其他主机。在发送端，它负责把上层传送下来的字节流分成报文段并传递给下层。在接收端，它负责把收到的报文进行重组后递交给上层。</li>
+<li>TCP 协议还要处理端到端的流量控制，以避免缓慢接收的接收方没有足够的缓冲区接收发送方发送的大量数据。</li>
+<li>UDP协议是一个不可靠的、无连接协议，主要适用于不需要对报文进行排序和流量控制的场合。</li>
+</ul>
+</li>
+<li><p>应用层</p>
+<ul>
+<li>TCP/IP 模型将 OSI 参考模型中的会话层和表示层的功能合并到应用层实现。</li>
+<li>应用层面向不同的网络应用引入了不同的应用层协议。其中，有基于 TCP 协议的，如文件传输协议（File Transfer Protocol，FTP）、虚拟终端协议（TELNET）、超文本链接协议（Hyper Text Transfer Protocol，HTTP），也有基于 UDP 协议的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="OSI-和-TCP-IP-的区别"><a href="#OSI-和-TCP-IP-的区别" class="headerlink" title="OSI 和 TCP/IP 的区别"></a>OSI 和 TCP/IP 的区别</h3><p>OSI和TCP/IP都是概念，TCP/IP是OSI的合并，简化</p>
+<p><img src="http://qnya.pomo16.club/154.png" alt></p>
+<h2 id="Java-网络-IO-模型"><a href="#Java-网络-IO-模型" class="headerlink" title="Java 网络 IO 模型"></a>Java 网络 IO 模型</h2><ul>
+<li><p>一个输入操作通常包括两个阶段：</p>
+<ul>
+<li>等待数据准备好</li>
+<li>从内核向进程复制数据</li>
+</ul>
+</li>
+<li><p>对于一个套接字上的输入操作，第一步通常涉及等待数据从网络中到达。当所等待数据到达时，它被复制到内核中的某个缓冲区。第二步就是把数据从内核缓冲区复制到应用进程缓冲区。</p>
+</li>
+<li>Unix 有五种 I/O 模型：<ul>
+<li><a href="#阻塞式-I-O">阻塞式 I/O</a></li>
+<li><a href="#非阻塞式-I-O">非阻塞式 I/O</a></li>
+<li><a href="#I-O-复用">I/O 复用（select 和 poll）</a></li>
+<li><a href="#信号驱动-I-O">信号驱动式 I/O（SIGIO）</a></li>
+<li><a href="#异步-I-O">异步 I/O（AIO）</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="阻塞式-I-O"><a href="#阻塞式-I-O" class="headerlink" title="阻塞式 I/O"></a>阻塞式 I/O</h3><ul>
+<li><p>应用进程被阻塞，直到数据从内核缓冲区复制到应用进程缓冲区中才返回。</p>
+</li>
+<li><p>应该注意到，在阻塞的过程中，其它应用进程还可以执行，因此阻塞不意味着整个操作系统都被阻塞。因为其它应用进程还可以执行，所以不消耗 CPU 时间，这种模型的 CPU 利用率效率会比较高。</p>
+</li>
+<li><p>下图中，recvfrom() 用于接收 Socket 传来的数据，并复制到应用进程的缓冲区 buf 中。这里把 recvfrom() 当成系统调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ssize_t <span class="title">recvfrom</span><span class="params">(<span class="keyword">int</span> sockfd, <span class="keyword">void</span> *buf, size_t len, <span class="keyword">int</span> flags, struct sockaddr *src_addr, socklen_t *addrlen)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><img src="http://qnya.pomo16.club/155.png" alt></p>
+</li>
+</ul>
+<h3 id="非阻塞式-I-O"><a href="#非阻塞式-I-O" class="headerlink" title="非阻塞式 I/O"></a>非阻塞式 I/O</h3><ul>
+<li>应用进程执行系统调用之后，内核返回一个错误码。应用进程可以继续执行，但是需要不断的执行系统调用来获知 I/O 是否完成，这种方式称为轮询（polling）。</li>
+<li>由于 CPU 要处理更多的系统调用，因此这种模型的 CPU 利用率比较低。</li>
+<li><img src="http://qnya.pomo16.club/156.png" alt></li>
+</ul>
+<h3 id="I-O-复用"><a href="#I-O-复用" class="headerlink" title="I/O 复用"></a>I/O 复用</h3><ul>
+<li>使用 select 或者 poll 等待数据，并且可以等待多个套接字中的任何一个变为可读。这一过程会被阻塞，当某一个套接字可读时返回，之后再使用 recvfrom 把数据从内核复制到进程中。</li>
+<li>它可以让单个进程具有处理多个 I/O 事件的能力。又被称为 Event Driven I/O，即事件驱动 I/O。</li>
+<li><p>如果一个 Web 服务器没有 I/O 复用，那么每一个 Socket 连接都需要创建一个线程去处理。如果同时有几万个连接，那么就需要创建相同数量的线程。相比于多进程和多线程技术，I/O 复用不需要进程线程创建和切换的开销，系统开销更小。</p>
+</li>
+<li><p><img src="http://qnya.pomo16.club/157.png" alt></p>
+</li>
+</ul>
+<h3 id="信号驱动-I-O"><a href="#信号驱动-I-O" class="headerlink" title="信号驱动 I/O"></a>信号驱动 I/O</h3><ul>
+<li><p>应用进程使用 sigaction 系统调用，内核立即返回，应用进程可以继续执行，也就是说等待数据阶段应用进程是非阻塞的。内核在数据到达时向应用进程发送 SIGIO 信号，应用进程收到之后在信号处理程序中调用 recvfrom 将数据从内核复制到应用进程中。</p>
+</li>
+<li><p>相比于非阻塞式 I/O 的轮询方式，信号驱动 I/O 的 CPU 利用率更高。</p>
+</li>
+<li><img src="http://qnya.pomo16.club/158.png" alt></li>
+</ul>
+<h3 id="异步-I-O"><a href="#异步-I-O" class="headerlink" title="异步 I/O"></a>异步 I/O</h3><ul>
+<li>应用进程执行 aio_read 系统调用会立即返回，应用进程可以继续执行，不会被阻塞，内核会在所有操作完成之后向应用进程发送信号。</li>
+<li>异步 I/O 与信号驱动 I/O 的区别在于，异步 I/O 的信号是通知应用进程 I/O 完成，而信号驱动 I/O 的信号是通知应用进程可以开始 I/O。</li>
+<li><img src="http://qnya.pomo16.club/159.png" alt></li>
+</ul>
+<h3 id="五大-I-O-模型比较"><a href="#五大-I-O-模型比较" class="headerlink" title="五大 I/O 模型比较"></a>五大 I/O 模型比较</h3><ul>
+<li>同步 I/O：将数据从内核缓冲区复制到应用进程缓冲区的阶段，应用进程会阻塞。</li>
+<li>异步 I/O：不会阻塞。</li>
+<li>阻塞式 I/O、非阻塞式 I/O、I/O 复用和信号驱动 I/O 都是同步 I/O，它们的主要区别在第一个阶段。</li>
+<li>非阻塞式 I/O 、信号驱动 I/O 和异步 I/O 在第一阶段不会阻塞。</li>
+</ul>
+<p><img src="http://qnya.pomo16.club/160.png" alt></p>
+<h2 id="I-O-复用-1"><a href="#I-O-复用-1" class="headerlink" title="I/O 复用"></a>I/O 复用</h2><p>select/poll/epoll 都是 I/O 多路复用的具体实现，select 出现的最早，之后是 poll，再是 epoll。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">select</span><span class="params">(<span class="keyword">int</span> n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>有三种类型的描述符类型：readset、writeset、exceptset，分别对应读、写、异常条件的描述符集合。</li>
+<li><p>fd_set 使用数组实现，数组大小使用 FD_SETSIZE 定义。</p>
+</li>
+<li><p>timeout 为超时参数，调用 select 会一直阻塞直到有描述符的事件到达或者等待的时间超过 timeout。</p>
+</li>
+<li><p>成功调用返回结果大于 0，出错返回结果为 -1，超时返回结果为 0。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">fd_set fd_in, fd_out;</span><br><span class="line">struct timeval tv;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Reset the sets</span></span><br><span class="line">FD_ZERO( &amp;fd_in );</span><br><span class="line">FD_ZERO( &amp;fd_out );</span><br><span class="line"></span><br><span class="line"><span class="comment">// Monitor sock1 for input events</span></span><br><span class="line">FD_SET( sock1, &amp;fd_in );</span><br><span class="line"></span><br><span class="line"><span class="comment">// Monitor sock2 for output events</span></span><br><span class="line">FD_SET( sock2, &amp;fd_out );</span><br><span class="line"></span><br><span class="line"><span class="comment">// Find out which socket has the largest numeric value as select requires it</span></span><br><span class="line"><span class="keyword">int</span> largest_sock = sock1 &gt; sock2 ? sock1 : sock2;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait up to 10 seconds</span></span><br><span class="line">tv.tv_sec = <span class="number">10</span>;</span><br><span class="line">tv.tv_usec = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Call the select</span></span><br><span class="line"><span class="keyword">int</span> ret = select( largest_sock + <span class="number">1</span>, &amp;fd_in, &amp;fd_out, NULL, &amp;tv );</span><br><span class="line"></span><br><span class="line"><span class="comment">// Check if select actually succeed</span></span><br><span class="line"><span class="keyword">if</span> ( ret == -<span class="number">1</span> )</span><br><span class="line">    <span class="comment">// report error and abort</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ( ret == <span class="number">0</span> )</span><br><span class="line">    <span class="comment">// timeout; no event detected</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ( FD_ISSET( sock1, &amp;fd_in ) )</span><br><span class="line">        <span class="comment">// input event on sock1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( FD_ISSET( sock2, &amp;fd_out ) )</span><br><span class="line">        <span class="comment">// output event on sock2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">poll</span><span class="params">(struct pollfd *fds, unsigned <span class="keyword">int</span> nfds, <span class="keyword">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>pollfd 使用链表实现。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The structure for two events</span></span><br><span class="line">struct pollfd fds[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Monitor sock1 for input</span></span><br><span class="line">fds[<span class="number">0</span>].fd = sock1;</span><br><span class="line">fds[<span class="number">0</span>].events = POLLIN;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Monitor sock2 for output</span></span><br><span class="line">fds[<span class="number">1</span>].fd = sock2;</span><br><span class="line">fds[<span class="number">1</span>].events = POLLOUT;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait 10 seconds</span></span><br><span class="line"><span class="keyword">int</span> ret = poll( &amp;fds, <span class="number">2</span>, <span class="number">10000</span> );</span><br><span class="line"><span class="comment">// Check if poll actually succeed</span></span><br><span class="line"><span class="keyword">if</span> ( ret == -<span class="number">1</span> )</span><br><span class="line">    <span class="comment">// report error and abort</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ( ret == <span class="number">0</span> )</span><br><span class="line">    <span class="comment">// timeout; no event detected</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// If we detect the event, zero it out so we can reuse the structure</span></span><br><span class="line">    <span class="keyword">if</span> ( fds[<span class="number">0</span>].revents &amp; POLLIN )</span><br><span class="line">        fds[<span class="number">0</span>].revents = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// input event on sock1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ( fds[<span class="number">1</span>].revents &amp; POLLOUT )</span><br><span class="line">        fds[<span class="number">1</span>].revents = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// output event on sock2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="select-和-poll-比较"><a href="#select-和-poll-比较" class="headerlink" title="select 和 poll 比较"></a>select 和 poll 比较</h3><ul>
+<li><p>功能</p>
+<ul>
+<li>select 和 poll 的功能基本相同，不过在一些实现细节上有所不同。<ul>
+<li>select 会修改描述符，而 poll 不会；</li>
+<li>select 的描述符类型使用数组实现，FD_SETSIZE 大小默认为 1024，因此默认只能监听 1024 个描述符。如果要监听更多描述符的话，需要修改 FD_SETSIZE 之后重新编译；而 poll 的描述符类型使用链表实现，没有描述符数量的限制；</li>
+<li>poll 提供了更多的事件类型，并且对描述符的重复利用上比 select 高。</li>
+<li>如果一个线程对某个描述符调用了 select 或者 poll，另一个线程关闭了该描述符，会导致调用结果不确定。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>速度</p>
+<ul>
+<li>select 和 poll 速度都比较慢。<ul>
+<li>select 和 poll 每次调用都需要将全部描述符从应用进程缓冲区复制到内核缓冲区。</li>
+<li>select 和 poll 的返回结果中没有声明哪些描述符已经准备好，所以如果返回值大于 0 时，应用进程都需要使用轮询的方式来找到 I/O 完成的描述符。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>可移植性</p>
+<ul>
+<li>几乎所有的系统都支持 select，但是只有比较新的系统支持 poll。</li>
+</ul>
+</li>
+</ul>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_create</span><span class="params">(<span class="keyword">int</span> size)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_ctl</span><span class="params">(<span class="keyword">int</span> epfd, <span class="keyword">int</span> op, <span class="keyword">int</span> fd, struct epoll_event *event)</span>；</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span><span class="params">(<span class="keyword">int</span> epfd, struct epoll_event * events, <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>epoll_ctl() 用于向内核注册新的描述符或者是改变某个文件描述符的状态。已注册的描述符在内核中会被维护在一棵红黑树上，通过回调函数内核会将 I/O 准备好的描述符加入到一个链表中管理，进程调用 epoll_wait() 便可以得到事件完成的描述符。</li>
+<li>从上面的描述可以看出，epoll 只需要将描述符从进程缓冲区向内核缓冲区拷贝一次，并且进程不需要通过轮询来获得事件完成的描述符。</li>
+<li>epoll 仅适用于 Linux OS。</li>
+<li>epoll 比 select 和 poll 更加灵活而且没有描述符数量限制。</li>
+<li>epoll 对多线程编程更有友好，一个线程调用了 epoll_wait() 另一个线程关闭了同一个描述符也不会产生像 select 和 poll 的不确定情况。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create the epoll descriptor. Only one is needed per app, and is used to monitor all sockets.</span></span><br><span class="line"><span class="comment">// The function argument is ignored (it was not before, but now it is), so put your favorite number here</span></span><br><span class="line"><span class="keyword">int</span> pollingfd = epoll_create( <span class="number">0xCAFE</span> );</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ( pollingfd &lt; <span class="number">0</span> )</span><br><span class="line"> <span class="comment">// report error</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Initialize the epoll structure in case more members are added in future</span></span><br><span class="line">struct epoll_event ev = &#123; <span class="number">0</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Associate the connection class instance with the event. You can associate anything</span></span><br><span class="line"><span class="comment">// you want, epoll does not use this information. We store a connection class pointer, pConnection1</span></span><br><span class="line">ev.data.ptr = pConnection1;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Monitor for input, and do not automatically rearm the descriptor after the event</span></span><br><span class="line">ev.events = EPOLLIN | EPOLLONESHOT;</span><br><span class="line"><span class="comment">// Add the descriptor into the monitoring list. We can do it even if another thread is</span></span><br><span class="line"><span class="comment">// waiting in epoll_wait - the descriptor will be properly added</span></span><br><span class="line"><span class="keyword">if</span> ( epoll_ctl( epollfd, EPOLL_CTL_ADD, pConnection1-&gt;getSocket(), &amp;ev ) != <span class="number">0</span> )</span><br><span class="line">    <span class="comment">// report error</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait for up to 20 events (assuming we have added maybe 200 sockets before that it may happen)</span></span><br><span class="line">struct epoll_event pevents[ <span class="number">20</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait for 10 seconds, and retrieve less than 20 epoll_event and store them into epoll_event array</span></span><br><span class="line"><span class="keyword">int</span> ready = epoll_wait( pollingfd, pevents, <span class="number">20</span>, <span class="number">10000</span> );</span><br><span class="line"><span class="comment">// Check if epoll actually succeed</span></span><br><span class="line"><span class="keyword">if</span> ( ret == -<span class="number">1</span> )</span><br><span class="line">    <span class="comment">// report error and abort</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ( ret == <span class="number">0</span> )</span><br><span class="line">    <span class="comment">// timeout; no event detected</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Check if any events detected</span></span><br><span class="line">    <span class="keyword">for</span> ( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ret; i++ )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> ( pevents[i].events &amp; EPOLLIN )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Get back our connection pointer</span></span><br><span class="line">            Connection * c = (Connection*) pevents[i].data.ptr;</span><br><span class="line">            c-&gt;handleReadEvent();</span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h3><p>epoll 的描述符事件有两种触发模式：LT（level trigger）和 ET（edge trigger）。</p>
+<ul>
+<li><p>LT 模式</p>
+<p>当 epoll_wait() 检测到描述符事件到达时，将此事件通知进程，进程可以不立即处理该事件，下次调用 epoll_wait() 会再次通知进程。是默认的一种模式，并且同时支持 Blocking 和 No-Blocking。</p>
+</li>
+<li><p>ET 模式</p>
+<p>和 LT 模式不同的是，通知之后进程必须立即处理事件，下次再调用 epoll_wait() 时不会再得到事件到达的通知。很大程度上减少了 epoll 事件被重复触发的次数，因此效率要比 LT 模式高。只支持 No-Blocking，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。</p>
+</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>很容易产生一种错觉认为只要用 epoll 就可以了，select 和 poll 都已经过时了，其实它们都有各自的使用场景。</p>
+<ul>
+<li><p>select 应用场景</p>
+<ul>
+<li>select 的 timeout 参数精度为 1ns，而 poll 和 epoll 为 1ms，因此 select 更加适用于实时性要求比较高的场景，比如核反应堆的控制。</li>
+<li>select 可移植性更好，几乎被所有主流平台所支持。</li>
+</ul>
+</li>
+<li><p>poll 应用场景</p>
+<ul>
+<li>poll 没有最大描述符数量的限制，如果平台支持并且对实时性要求不高，应该使用 poll 而不是 select。</li>
+</ul>
+</li>
+<li><p>epoll 应用场景</p>
+<ul>
+<li>只需要运行在 Linux 平台上，有大量的描述符需要同时轮询，并且这些连接最好是长连接。</li>
+<li>需要同时监控小于 1000 个描述符，就没有必要使用 epoll，因为这个应用场景下并不能体现 epoll 的优势。</li>
+<li>需要监控的描述符状态变化多，而且都是非常短暂的，也没有必要使用 epoll。因为 epoll 中的所有描述符都存储在内核中，造成每次需要对描述符的状态改变都需要通过 epoll_ctl() 进行系统调用，频繁系统调用降低效率。并且 epoll 的描述符存储在内核，不容易调试。</li>
+</ul>
+</li>
+</ul>
+</div><div class="tags"><a href="/tags/java/">java</a></div><div class="post-nav"><a class="pre" href="/2019/04/03/Java集合常用方法/">Java集合常用方法</a><a class="next" href="/2019/04/02/Java集合框架/">Java集合框架</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

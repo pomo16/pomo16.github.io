@@ -1,0 +1,548 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（三） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（三）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（三）</h1><div class="post-meta">Mar 18, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 4.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 15</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h1 id="虚拟存储概念"><a href="#虚拟存储概念" class="headerlink" title="虚拟存储概念"></a>虚拟存储概念</h1><h3 id="虚拟存储"><a href="#虚拟存储" class="headerlink" title="虚拟存储"></a>虚拟存储</h3><ul>
+<li>概念：基于非连续存储内存分配的基础上，可以把一部分内训放在外存里</li>
+<li>需求<ul>
+<li>计算机系统时常出现内存空间不够用<ul>
+<li>覆盖( overlay )<br>应用程序手动把需要的指令和数据保存在内存中</li>
+<li>交换( swapping )<br>操作系统自动把暂时不能执行的程序保存到外存中</li>
+<li>虚拟存储<br>在有限容量的内存中，以页为单位自动装入更多更大的程序</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="覆盖技术"><a href="#覆盖技术" class="headerlink" title="覆盖技术"></a>覆盖技术</h3><ul>
+<li>目标：在较小的可用内存中运行较大的程序</li>
+<li>方法：依据程序逻辑结构，将程序划分为若干<strong>功能相对独立</strong>的模块；将不会同时执行的模块<strong>共享同一块内存</strong>区域<ul>
+<li>必要部分(常用功能)的代码和数据常驻内存</li>
+<li>可选部分(不常用功能)放在其他程序模块中，只在要用到时装入内存</li>
+<li>不存在调用关系的模块可相互覆盖，共用同一内存区域</li>
+</ul>
+</li>
+<li>不足<ul>
+<li>增加编程困难<ul>
+<li>需程序员划分功能模块，并确定模块间的覆盖关系</li>
+<li>增加了编程的复杂度</li>
+</ul>
+</li>
+<li>增加执行时间<ul>
+<li>从外存装入覆盖模块</li>
+<li>时间换空间</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="交换技术"><a href="#交换技术" class="headerlink" title="交换技术"></a>交换技术</h3><ul>
+<li>目标：增加正在运行或需要运行的程序的内存</li>
+<li>实现方法<ul>
+<li>可将暂时不能运行的程序放到外存</li>
+<li>换入换出的基本单位<ul>
+<li>整个进程的地址空间</li>
+</ul>
+</li>
+<li>换出( swap out )<ul>
+<li>把一个进程的整个地址空间保存到外存</li>
+</ul>
+</li>
+<li>换入( swap in )<ul>
+<li>将外存中某进程的地址空间读入到内存</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>交换技术面临的问题<ul>
+<li>交换时机：何时需要发生交换？<ul>
+<li>只当内存空间不够或有不够的可能时换出</li>
+</ul>
+</li>
+<li>交换区大小<ul>
+<li>存放所有用户进程的所有内存映像的拷贝</li>
+</ul>
+</li>
+<li>程序换入时的重定向：换出后再换入时要放在原处吗？<ul>
+<li>采用动态地址映射的方法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="覆盖和交换的比较"><a href="#覆盖和交换的比较" class="headerlink" title="覆盖和交换的比较"></a>覆盖和交换的比较</h3><ul>
+<li>覆盖<ul>
+<li>只能发生在没有调用关系的模块间</li>
+<li>程序员须给出模块间的逻辑覆盖结构</li>
+<li>发生在运行程序的内部模块间</li>
+</ul>
+</li>
+<li>交换<ul>
+<li>以进程为单位</li>
+<li>不需要模块间的逻辑覆盖结构</li>
+<li>发生在内存进程间</li>
+</ul>
+</li>
+</ul>
+<h3 id="虚拟存储技术的目标"><a href="#虚拟存储技术的目标" class="headerlink" title="虚拟存储技术的目标"></a>虚拟存储技术的目标</h3><ul>
+<li>只把部分程序放到内存中，从而运行比物理内存大的程序<ul>
+<li>由操作系统自动完成，无需程序员的干涉</li>
+</ul>
+</li>
+<li>实现进程在内存与外存之间的交换，从而获得更多的空闲内存空间<ul>
+<li>在内存与外存之间只交换进程的部分内容</li>
+</ul>
+</li>
+</ul>
+<h3 id="局部性原理-principle-of-locality"><a href="#局部性原理-principle-of-locality" class="headerlink" title="局部性原理( principle of locality )"></a>局部性原理( principle of locality )</h3><ul>
+<li>程序在执行过程中的一个较短时期，所执行的指令地址和指令的操作数地址，分别局限于一定区域。<ul>
+<li>时间局部性<ul>
+<li>一条指令的一次执行和下次执行，一个数据的一次访问和下次访问都集中在一个较短时期内</li>
+</ul>
+</li>
+<li>空间局部性<ul>
+<li>当前指令和邻近的几条指令，当前访问的数据和邻近的几个数据都集中在一个较小区域内</li>
+</ul>
+</li>
+<li>分支局部性<ul>
+<li>一条跳转指令的两次执行，很可能跳到相同的内存位置</li>
+</ul>
+</li>
+<li>局部性原理的意义<ul>
+<li>从理论上来说，虚拟存储技术是能够实现的，而且可取得满意的效果</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="虚拟存储的基本概念"><a href="#虚拟存储的基本概念" class="headerlink" title="虚拟存储的基本概念"></a>虚拟存储的基本概念</h3><ul>
+<li>思路：将不常用的部分内存块暂存到外存</li>
+<li>原理<ul>
+<li>装载程序时<ul>
+<li>只将当前指令执行需要的部分页面或段装入内存</li>
+</ul>
+</li>
+<li>指令执行中需要的指令或数据不在内存(称为缺页或缺段)时<ul>
+<li>处理器通知操作系统将相应的页面或段调入内存</li>
+</ul>
+</li>
+<li>操作系统将内存中暂时不用的页面或段保存到外存</li>
+</ul>
+</li>
+<li>实现方式<ul>
+<li>虚拟页式存储</li>
+<li>虚拟段式存储</li>
+</ul>
+</li>
+<li>基本特征<ul>
+<li>不连续性<ul>
+<li>物理内存分配非连续</li>
+<li>虚拟地址空间使用非连续</li>
+</ul>
+</li>
+<li>大用户空间<ul>
+<li>提供给用户的虚拟内存可大于实际的物理内存</li>
+</ul>
+</li>
+<li>部分交换<ul>
+<li>虚拟存储只对部分虚拟地址空间进行调入和调出</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>支持技术<ul>
+<li>硬件：页式或段式存储中的地址转换机制</li>
+<li>操作系统：管理内存和外存间页面或段的换入和换出</li>
+</ul>
+</li>
+</ul>
+<h3 id="虚拟页式存储管理"><a href="#虚拟页式存储管理" class="headerlink" title="虚拟页式存储管理"></a>虚拟页式存储管理</h3><ul>
+<li>在页式存储管理的基础上，增加请求调页和页面置换</li>
+<li>思路<ul>
+<li>当用户程序要装载到内存运行时，只装入部分页面，就启动程序运行</li>
+<li>进程在运行中发现有需要的代码或数据不在内存时，则向系统发出缺页异常请求</li>
+<li>操作系统在处理缺页异常时，将外存中相应的页面调入内存，使得进程能继续运行</li>
+</ul>
+</li>
+<li>虚拟页式存储中的页表项结构<ul>
+<li>驻留位：表示该页是否在内存<ul>
+<li>1表示该页位于内存中，该页表项是有效的，可以使用</li>
+<li>0表示该页当前在外存中，访问该页表项将导致缺页异常</li>
+</ul>
+</li>
+<li>修改位：表示在内存中的该页是否被修改过<ul>
+<li>回收该物理页面时，据此判断是否要把它的内容写回外存</li>
+</ul>
+</li>
+<li>访问位：表示该页面是否被访问过(读或写)<ul>
+<li>用于页面置换算法</li>
+</ul>
+</li>
+<li>保护位：表示该页的允许访问方式<ul>
+<li>只读，可写，可执行等</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚拟页式存储中的外存管理<ul>
+<li>在何处保存未被映射的页？<ul>
+<li>应能方便地找到在外存中的页面内容</li>
+<li>交换空间(磁盘或者文件)<ul>
+<li>采用特殊格式存储未被映射的页面</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚拟页式存储中的外存选择<ul>
+<li>代码段：可执行二进制文件</li>
+<li>动态加载的共享库程序段：动态调用的库文件</li>
+<li>其他段：交换空间</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚拟页式存储管理的性能<ul>
+<li>有效存储访问时间( effective memory access time EAT )<ul>
+<li>EAT = 访存时间 <em> (1-p) + 缺页异常处理时间 </em> 缺页率 p</li>
+</ul>
+</li>
+<li>例子：<ul>
+<li>访存时间：10 ns；磁盘访问时间：5 ms；缺页率 p；页修改概率 q；</li>
+<li>EAT = 10(1-p) + 5,000,000p(1+q)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="缺页异常-缺页中断-的处理流程"><a href="#缺页异常-缺页中断-的处理流程" class="headerlink" title="缺页异常(缺页中断)的处理流程"></a>缺页异常(缺页中断)的处理流程</h3><ol>
+<li>在内存中有空闲物理页面时，分配一物理页帧 f，转第 5 步</li>
+<li>依据页面置换算法选择将被替换的物理页帧 f，对应逻辑页 q</li>
+<li>如 q 被修改过，则把它写回外存</li>
+<li>修改 q 的页表项中驻留位置为 0</li>
+<li>将需要访问的页 p 装入到物理页面 f</li>
+<li>重新执行产生缺页的指令</li>
+</ol>
+<h1 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h1><h3 id="置换算法的功能和目标"><a href="#置换算法的功能和目标" class="headerlink" title="置换算法的功能和目标"></a>置换算法的功能和目标</h3><ul>
+<li>功能<ul>
+<li>当出现缺页异常，需调入新页面而内存已满时，置换算法<strong>选择被置换的物理页面</strong></li>
+</ul>
+</li>
+<li>设计目标<ul>
+<li>尽可能<strong>减少页面的调入调出次数</strong></li>
+<li>把未来不再访问或短期内不访问的页面调出</li>
+</ul>
+</li>
+<li>页面锁定( frame locking )<ul>
+<li>描述必须常驻内存的逻辑页面</li>
+<li>操作系统的关键部分</li>
+<li>要求响应速度的代码和数据</li>
+<li>页表中的锁定标志位( lock bit )</li>
+</ul>
+</li>
+<li>置换算法的评价方法<ul>
+<li>记录进程访问内存的页面轨迹<ul>
+<li>举例：虚拟地址访问用(页号，位移)表示<br>(3,0), (1,9), (4,1), (2,1), (5,3), (2,0), (1,9), (2,4), (3,1), (4,8)</li>
+<li>对应的页面轨迹<br>3，1，4，2，5，2，1，2，3，4<br>替换c，a，d，b，e，b，a，b，c，d</li>
+</ul>
+</li>
+<li>评价方法<ul>
+<li>模拟页面置换行为，记录产生缺页的次数</li>
+<li>更少的缺页，更好的性能</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>页面置换算法分类<ul>
+<li>局部页面置换算法<ul>
+<li>置换页面的选择范围仅限于当前进程占用的物理页面内</li>
+<li>最优算法，先进先出算法，最近最久未使用算法</li>
+<li>时钟算法，最不常用算法</li>
+</ul>
+</li>
+<li>全局页面置换算法<ul>
+<li>置换页面的选择范围是所有可换出的物理页面</li>
+<li>工作集算法，缺页率算法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="最优页面置换算法-OPT，optional"><a href="#最优页面置换算法-OPT，optional" class="headerlink" title="最优页面置换算法( OPT，optional )"></a>最优页面置换算法( OPT，optional )</h3><ul>
+<li>基本思路：置换在未来最长时间不访问的页面</li>
+<li>算法实现<ul>
+<li>缺页时，计算内存中每个逻辑页面的下一次访问时间</li>
+<li>选择<strong>未来最长时间不访问的页面</strong></li>
+</ul>
+</li>
+<li>算法特征<ul>
+<li>缺页最少，是理想情况</li>
+<li>实际系统中<strong>无法实现</strong></li>
+<li>无法预知每个页面在下次访问前的等待时间</li>
+<li>作为置换算法的性能评价依据<ul>
+<li>在模拟器上运行某个程序，并记录每一次的页面访问情况</li>
+<li>第二遍运行时使用最优算法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="先进先出算法-First-In-First-Out，FIFO"><a href="#先进先出算法-First-In-First-Out，FIFO" class="headerlink" title="先进先出算法( First-In First-Out，FIFO )"></a>先进先出算法( First-In First-Out，FIFO )</h3><ul>
+<li>思路：选择<strong>在内存驻留时间最长</strong>的页面进行置换</li>
+<li>实现<ul>
+<li>维护一个记录所有位于内存中的逻辑页面链表</li>
+<li>链表元素<strong>按驻留内存的时间排序</strong>，链首最长，链尾最短</li>
+<li>出现缺页时，选择链首页面进行置换，新页面加到链尾</li>
+</ul>
+</li>
+<li>特征<ul>
+<li>实现简单</li>
+<li>性能较差，调出的页面可能是进场访问的</li>
+<li>进程分配物理页面数增加时，缺页并不一定减少(Belady现象)</li>
+<li>很少单独使用</li>
+</ul>
+</li>
+</ul>
+<h3 id="最近最久未使用算法-Least-Recently-Used，LRU"><a href="#最近最久未使用算法-Least-Recently-Used，LRU" class="headerlink" title="最近最久未使用算法( Least Recently Used，LRU )"></a>最近最久未使用算法( Least Recently Used，LRU )</h3><ul>
+<li>思路<ul>
+<li>选择<strong>最长时间没有被引用</strong>的页面进行置换</li>
+<li>如某些页面长时间未被访问，则它们在将来还可能会长时间不会访问</li>
+</ul>
+</li>
+<li>实现<ul>
+<li>缺页时，计算内存中每个逻辑页面的<strong>上一次</strong>访问时间</li>
+<li>选择<strong>上一次使用到当前时间最长的页面</strong></li>
+</ul>
+</li>
+<li>特征<ul>
+<li>最优置换算法的一种近似</li>
+</ul>
+</li>
+<li>LRU 算法的可能实现方法<ul>
+<li>页面链表<ul>
+<li>系统维护一个按最近一次访问时间排序的页面链表<ul>
+<li>链表首节点是最近刚刚使用过的页面</li>
+<li>链表尾节点是最久未使用的页面</li>
+</ul>
+</li>
+<li>访问内存时，找到相应页面，并把它移到链表之首</li>
+<li>缺页时，置换链表尾节点的页面</li>
+</ul>
+</li>
+<li>活动页面栈<ul>
+<li>访问页面时，将此页号压入栈顶，并栈内相同的页号抽出</li>
+<li>缺页时，置换栈底的页面</li>
+</ul>
+</li>
+<li>LRU 算法特征：开销比较大</li>
+</ul>
+</li>
+</ul>
+<h3 id="时钟置换算法-Clock"><a href="#时钟置换算法-Clock" class="headerlink" title="时钟置换算法( Clock )"></a>时钟置换算法( Clock )</h3><ul>
+<li>思路：仅对页面的访问情况进行大致统计</li>
+<li>数据结构<ul>
+<li>在页表项中增加<strong>访问位</strong>，描述页面在过去一段时间的内访问情况</li>
+<li>各页面组织成<strong>环型链表</strong></li>
+<li><strong>指针</strong>指向最先调入的页面</li>
+</ul>
+</li>
+<li>算法<ul>
+<li>访问页面时，在页表项记录页面访问情况</li>
+<li>缺页时，从指针处开始顺序查找未被访问的页面进行置换</li>
+</ul>
+</li>
+<li>特征：时钟算法是 LRU 和 FIFO 的折中</li>
+<li>实现<ul>
+<li>页面装入内存时，访问位初始化为0</li>
+<li>访问页面(读/写)时，访问位置1</li>
+<li>缺页时，从指针当前位置顺序检查环形链表<ul>
+<li>访问位为0，则置换该页</li>
+<li>访问位为1，则访问位置0，并指针移动到下一个页面，直到找到可置换的页面</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>改进的 Clock 算法<ul>
+<li>思路：减少修改页的缺页处理开销</li>
+<li>算法<ul>
+<li>在页面中增加修改位，并在访问时进行相应修改</li>
+<li>缺页时，修改页面标志位，以跳过有修改的页面</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="最不常用算法-Least-Frequently-Used，LFU"><a href="#最不常用算法-Least-Frequently-Used，LFU" class="headerlink" title="最不常用算法( Least Frequently Used，LFU )"></a>最不常用算法( Least Frequently Used，LFU )</h3><ul>
+<li>思路：缺页时，置换访问次数最少的页面</li>
+<li>实现<ul>
+<li>每个页面设置一个访问计数</li>
+<li>访问页面时，访问计数加1</li>
+<li>缺页时，置换计数最小的页面</li>
+</ul>
+</li>
+<li>特征<ul>
+<li>算法开销大</li>
+<li>开始时频繁使用，但以后不使用的页面很难置换<ul>
+<li>解决方法：计数定期右移</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>LRU 和 LFU 的区别<ul>
+<li>LRU 关注多久未访问，时间越短越好</li>
+<li>LFU 关注访问次数，次数越多越好</li>
+</ul>
+</li>
+</ul>
+<h3 id="Belady现象"><a href="#Belady现象" class="headerlink" title="Belady现象"></a>Belady现象</h3><ul>
+<li>现象：采用 FIFO 等算法时，可能出现分配的物理页面数增加，缺页次数反而升高的异常现象</li>
+<li>原因<ul>
+<li>FIFO 算法的置换特征与进程访问内存的动态特征矛盾</li>
+<li>被它置换出去的页面并不一定是进程近期不会访问的</li>
+</ul>
+</li>
+<li>FIFO 算法有 Belady 现象</li>
+<li>LRU 算法没有 Belady 现象</li>
+</ul>
+<h3 id="LRU，FIFO-和-Clock-的比较"><a href="#LRU，FIFO-和-Clock-的比较" class="headerlink" title="LRU，FIFO 和 Clock 的比较"></a>LRU，FIFO 和 Clock 的比较</h3><ul>
+<li>LRU 算法和 FIFO 本质上都是先进先出的思路<ul>
+<li>LRU 依据页面的最近访问时间排序</li>
+<li>LRU 需要动态地调整顺序</li>
+<li>FIFO 依据页面进入内存的时间排序</li>
+<li>FIFO 的页面进入时间是固定不变的</li>
+</ul>
+</li>
+<li>LRU 可退化成 FIFO<ul>
+<li>如页面进入内存后没有被访问，最近访问时间与进入内存的时间相同</li>
+<li>例如：给进程分配3个物理页面，逻辑页面的访问顺序为1，2，3，4，5，6，1，2，3…</li>
+</ul>
+</li>
+<li>LRU 算法性能较好，但系统开销较大</li>
+<li>FIFO 算法系统开销较小，会发生 Belady 现象</li>
+<li>Clock 算法是它们的折中<ul>
+<li>页面访问时，不动态调整页面在链表中的顺序，仅做标记</li>
+<li>缺页时，再把它移动到链表末尾</li>
+</ul>
+</li>
+<li>对于未被访问的页面，Clock 和 LRU 算法的表现一样好</li>
+<li>对于被访问过的页面，Clock 算法不能记录准确访问顺序，而 LRU 算法可以</li>
+</ul>
+<h3 id="全局页面置换算法"><a href="#全局页面置换算法" class="headerlink" title="全局页面置换算法"></a>全局页面置换算法</h3><ul>
+<li>背景：局部置换算法没有考虑进程访存差异</li>
+<li>思路：全局置换算法为进程分配<strong>可变数目</strong>的物理页面</li>
+<li>全局置换算法要解决的问题<ul>
+<li>进程在不同阶段的内存需求是变化的</li>
+<li>分配给进程的内存也需要在不同阶段有所变化</li>
+<li>全局置换算法需要确定分配给进程的物理页面数</li>
+</ul>
+</li>
+</ul>
+<h3 id="CPU-利用率和并发进程数的关系"><a href="#CPU-利用率和并发进程数的关系" class="headerlink" title="CPU 利用率和并发进程数的关系"></a>CPU 利用率和并发进程数的关系</h3><p><img src="http://qnya.pomo16.club/50.png" alt></p>
+<ul>
+<li>CPU 利用率与并发进程数存在相互促进和制约的关系<ul>
+<li>进程数少时，提高并发进程数，可提高 CPU 利用率</li>
+<li>并发进程导致内存访问增加</li>
+<li>并发进程的内存访问会降低了访存的局部性特征</li>
+<li>局部性特征的下降会导致缺页率上升和 CPU 利用率下降</li>
+</ul>
+</li>
+</ul>
+<h3 id="工作集"><a href="#工作集" class="headerlink" title="工作集"></a>工作集</h3><ul>
+<li>一个进程当前正在使用的逻辑页面集合，可表示为二元函数 W(t,△)<ul>
+<li>t 是当前的执行时刻</li>
+<li>△ 称为工作集窗口 ( working-set window )，即一个定长的页面访问时间窗口</li>
+<li>W(t,△) 是指在当前时刻 t 前的 △ 时间窗口中的所有访问页面所组成的集合</li>
+<li>|W(t,△)| 指工作集的大小，即页面数目</li>
+</ul>
+</li>
+<li>工作集的变化<br><img src="http://qnya.pomo16.club/51.png" alt><ul>
+<li>进程开始执行后，随着访问新页面逐步建立较稳定的工作集</li>
+<li>当内存访问的局部性区域的位置<strong>大致稳定</strong>时，工作集大小也大致稳定</li>
+<li>局部性区域的位置改变时，工作集<strong>快速扩张和收缩</strong>过渡到下一个稳定值</li>
+</ul>
+</li>
+</ul>
+<h3 id="常驻集"><a href="#常驻集" class="headerlink" title="常驻集"></a>常驻集</h3><ul>
+<li>在当前时刻，进程实际驻留在内存当中的页面集合<ul>
+<li>工作集和常驻集的关系<ul>
+<li>工作集是进程在运行过程中固有的性质</li>
+<li>常驻集取决于系统分配给进程的物理页面数目和页面置换算法</li>
+</ul>
+</li>
+<li>缺页率和常驻集的关系<ul>
+<li>常驻集 ⊇ 工作集时，缺页较少</li>
+<li>工作集发生剧烈变动(过渡)时，缺页较多</li>
+<li>进程常驻集大小达到一定数目后，缺页率也不会明显下降</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="工作集置换算法"><a href="#工作集置换算法" class="headerlink" title="工作集置换算法"></a>工作集置换算法</h3><ul>
+<li>思路：换出不在工作集中的页面</li>
+<li>窗口大小 τ<ul>
+<li>当前时刻前 τ 个内存访问的页引用是工作集，τ 被称为窗口大小</li>
+</ul>
+</li>
+<li>实现方法<ul>
+<li>访存链表：维护窗口内的访存页面链表</li>
+<li>访存时，换出不在工作集的页面；更新访存链表</li>
+<li>缺页时，换入页面；更新访存链表</li>
+</ul>
+</li>
+</ul>
+<h3 id="缺页率-page-fault-rate"><a href="#缺页率-page-fault-rate" class="headerlink" title="缺页率( page fault rate )"></a>缺页率( page fault rate )</h3><p>缺页次数  / 内存访问次数 或 缺页平均时间间隔的倒数</p>
+<ul>
+<li>影响缺页率的因素<ul>
+<li>页面置换算法</li>
+<li>分配给进程的物理页面数目</li>
+<li>页面大小</li>
+<li>程序的编写方法</li>
+</ul>
+</li>
+</ul>
+<h3 id="缺页率置换算法-PFF，Page-Fault-Frequency"><a href="#缺页率置换算法-PFF，Page-Fault-Frequency" class="headerlink" title="缺页率置换算法( PFF，Page-Fault-Frequency )"></a>缺页率置换算法( PFF，Page-Fault-Frequency )</h3><p><img src="http://qnya.pomo16.club/52.png" alt></p>
+<ul>
+<li>原理<ul>
+<li>通过调节常驻集大小，使每个进程的缺页率保持在一个合理的范围内<ul>
+<li>若进程缺页率过高，则增加常驻集以分配更多的物理页面</li>
+<li>若进程缺页率过低，则减少常驻集以减少它的物理页面</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实现<ul>
+<li>访存时，设置引用位标志</li>
+<li>缺页时，计算从上次缺页时间 t<sub>last</sub> 到现在 t<sub>current</sub> 的时间间隔<ul>
+<li>如果 t<sub>current</sub> - t<sub>last</sub> &gt; T，则置换所有在 [ t<sub>last</sub> , t<sub>current</sub> ] 时间内没有被引用的页</li>
+<li>如果  t<sub>current</sub> - t<sub>last</sub> &lt;= T，则增加缺失页到常驻集中</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="抖动问题"><a href="#抖动问题" class="headerlink" title="抖动问题"></a>抖动问题</h3><ul>
+<li>抖动<ul>
+<li>进程物理页面太少，不能包含工作集</li>
+<li>造成大量缺页，频繁置换</li>
+<li>进程运行速度变慢</li>
+</ul>
+</li>
+<li>产生抖动的原因<ul>
+<li>随着驻留内存的进程数目增加，分配给每个进程的物理页面数不断减少，缺页率不断上升。</li>
+</ul>
+</li>
+<li>操作系统需在并发水平和缺页率之间达到一个平衡<ul>
+<li>选择一个适当的进程数目和进程需要的物理页面数</li>
+</ul>
+</li>
+</ul>
+<h3 id="负载控制"><a href="#负载控制" class="headerlink" title="负载控制"></a>负载控制</h3><ul>
+<li>通过调节并发进程数 ( MPL ) 来进行系统负载控制<ul>
+<li>∑WSi = 内存大小</li>
+<li>平均缺页间隔时间 ( MTBF ) = 缺页异常处理时间( PFST )<br><img src="http://qnya.pomo16.club/53.png" alt></li>
+</ul>
+</li>
+</ul>
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/18/操作系统（四）/">操作系统（四）</a><a class="next" href="/2019/03/18/操作系统（二）/">操作系统（二）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

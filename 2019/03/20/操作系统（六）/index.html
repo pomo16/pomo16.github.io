@@ -1,0 +1,832 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（六） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（六）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（六）</h1><div class="post-meta">Mar 20, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5.9k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 21</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="信号量与管程"><a href="#信号量与管程" class="headerlink" title="信号量与管程"></a>信号量与管程</h2><h3 id="信号量-semaphore"><a href="#信号量-semaphore" class="headerlink" title="信号量( semaphore )"></a>信号量( semaphore )</h3><p><img src="http://qnya.pomo16.club/84.png" alt></p>
+<ul>
+<li>信号量是操作系统提供的一种协调共享资源访问的方法<ul>
+<li>软件同步是平等线程间的一种同步协商机制</li>
+<li>信号量是和锁同级的一种实现同步的高级抽象方法</li>
+<li>OS 是管理者，地位高于进程</li>
+<li>用信号量表示系统资源的数量</li>
+</ul>
+</li>
+<li><p>早期的操作系统的主要同步机制</p>
+<ul>
+<li>现在很少用(但还是非常重要在计算机科学研究)</li>
+</ul>
+</li>
+<li>信号量是一种抽象数据类型<ul>
+<li>由一个整形( sem )变量和两个原子操作组成</li>
+<li>P() ( Prolaag (荷兰语：尝试减少))<ul>
+<li>sem 减1</li>
+<li>如 sem &lt; 0，进入等待，否则继续</li>
+</ul>
+</li>
+<li>V() ( Verhoog (荷兰语：增加))<ul>
+<li>sem 加1</li>
+<li>如 sem &lt;= 0，唤醒一个等待进程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>信号量的特征<ul>
+<li>信号量是<strong>被保护</strong>的<strong>整数</strong>变量<ul>
+<li>初始化完成后，只能通过 P() 和 V() 操作修改</li>
+<li>由操作系统保证，PV 操作是原子操作</li>
+</ul>
+</li>
+<li>P() 可能阻塞，V() 不会阻塞</li>
+<li>通常假定信号量是”公平的”<ul>
+<li>线程不会被无限期阻塞在 P() 操作</li>
+<li>假定信号量等待按先进先出排队</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>信号量的实现<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">classSemaphore &#123;</span><br><span class="line">  <span class="keyword">int</span> sem;</span><br><span class="line">  WaitQueue q;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Semaphore::P() &#123;</span><br><span class="line">  sem --;</span><br><span class="line">  <span class="keyword">if</span> (sem &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    Add <span class="keyword">this</span> thread t to q;</span><br><span class="line">    block(p);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Semaphore::V() &#123;</span><br><span class="line">  sem ++;</span><br><span class="line">  <span class="keyword">if</span> (sem &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    Remove a thread t from q;</span><br><span class="line">    wakeup(t);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="信号量使用"><a href="#信号量使用" class="headerlink" title="信号量使用"></a>信号量使用</h3><ul>
+<li>信号量分类：可分为两种信号量<ul>
+<li><strong>二进制信号量</strong>：资源数目为0或1</li>
+<li><strong>资源信号量</strong>：资源数目为任何非负值</li>
+<li>两者等价：基于一个可以实现另一个</li>
+</ul>
+</li>
+<li>信号量的使用<ul>
+<li>互斥访问：临界区的互斥访问控制</li>
+<li>条件同步：线程间的事件等待</li>
+</ul>
+</li>
+<li><p>用信号量实现临界区的互斥访问</p>
+<ul>
+<li><p>每类资源设置一个信号量，其初值为1</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mutex = <span class="keyword">new</span> Semaphore(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mutex-&gt;P();</span><br><span class="line">Critical Section;</span><br><span class="line">mutex-&gt;V();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>必须<strong>成对使用</strong> P() 操作和 V() 操作</p>
+<ul>
+<li>P() 操作保证互斥访问临界资源</li>
+<li>V() 操作在使用后释放临界资源</li>
+<li>PV 操作不能次序错误、重复或遗漏</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>用信号量实现条件同步</p>
+<ul>
+<li><p>每个条件同步设置一个信号量，其初值为0</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">condition = <span class="keyword">new</span> Semaphore(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="http://qnya.pomo16.club/85.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者-消费者问题"></a>生产者-消费者问题</h3><p><img src="http://qnya.pomo16.club/86.png" alt></p>
+<ul>
+<li>有界缓冲区的生产者-消费者问题描述<ul>
+<li>一个或多个<strong>生产者</strong>在生成数据后放在一个缓冲区里</li>
+<li>单个<strong>消费者</strong>从缓冲区取出数据处理</li>
+<li>任何时刻<strong>只能有一个</strong>生产者或消费者可访问缓冲区</li>
+</ul>
+</li>
+<li><p>用信号量解决生产者-消费者问题</p>
+<ul>
+<li>问题分析<ul>
+<li>任何时刻只能有一个线程操作缓存区(互斥访问)</li>
+<li>缓冲区空时，消费者必须等待生产者(条件同步)</li>
+<li>缓冲区满时，生产和必须等待消费者(条件同步)</li>
+</ul>
+</li>
+<li>用信号量描述每个约束<ul>
+<li>二进制信号量 mutex</li>
+<li>资源信号量 fullBuffers</li>
+<li>资源信号量 emptyBuffers</li>
+</ul>
+</li>
+<li><p>实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化</span></span><br><span class="line">Class BoundedBuffer &#123;</span><br><span class="line">  mutex = <span class="keyword">new</span> Semaphore(<span class="number">1</span>);</span><br><span class="line">  fullBuffers = <span class="keyword">new</span> Semaphore(<span class="number">0</span>);</span><br><span class="line">  emptyBuffers = <span class="keyword">new</span> Semaphore(n);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 生产者</span></span><br><span class="line">BoundedBuffer::Deposit(c) &#123;</span><br><span class="line">  emptyBuffers-&gt;P();</span><br><span class="line">  mutex-&gt;P();</span><br><span class="line">  Add c to the buffer;</span><br><span class="line">  mutex-&gt;V();</span><br><span class="line">  fullBuffers-&gt;V();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 消费者</span></span><br><span class="line">BoundedBuffer::Remove(c) &#123;</span><br><span class="line">  fullBuffers-&gt;P();</span><br><span class="line">  mutex-&gt;P();</span><br><span class="line">  Remove c from the buffer;</span><br><span class="line">  mutex-&gt;V();</span><br><span class="line">  emptyBuffers-&gt;V();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果 P、V 操作顺序有误，会造成死锁</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>使用信号量的困难<ul>
+<li>读/开发代码比较困难<ul>
+<li>程序员需要能运用信号量机制</li>
+</ul>
+</li>
+<li>容易出错<ul>
+<li>使用的信号量已经被另一个线程占用</li>
+<li>忘记释放信号量</li>
+</ul>
+</li>
+<li>不能够处理死锁问题</li>
+</ul>
+</li>
+</ul>
+<h3 id="管程-Moniter"><a href="#管程-Moniter" class="headerlink" title="管程( Moniter )"></a>管程( Moniter )</h3><p><img src="http://qnya.pomo16.club/87.png" alt></p>
+<ul>
+<li>管程是一种用于多线程互斥访问共享资源的程序结构<ul>
+<li>采用面向对象方法，简化了线程间的同步控制</li>
+<li>任一时刻最多只有一个线程执行管程代码</li>
+<li>正在管程中的线程可临时放弃管程的互斥访问，等待事件出现时恢复</li>
+</ul>
+</li>
+<li>管程的使用<ul>
+<li>在对象/模块中，收集相关共享数据</li>
+<li>定义访问共享数据的方法</li>
+</ul>
+</li>
+<li>管程的组成<br><img src="http://qnya.pomo16.club/88.png" alt><ul>
+<li>一个锁<ul>
+<li>控制管程代码的互斥访问</li>
+</ul>
+</li>
+<li>0 或者多个条件变量<ul>
+<li>管理共享数据的并发访问</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>条件变量( Condition Variable )</p>
+<ul>
+<li>条件变量是管程内的等待机制<ul>
+<li>进入管程的线程因资源被占用而进入等待状态</li>
+<li>每个条件变量表示一种等待原因，对应一个等待队列</li>
+</ul>
+</li>
+<li>Wait() 操作<ul>
+<li>将自己阻塞在等待队列中</li>
+<li>唤醒一个等待者或释放管程的互斥访问</li>
+</ul>
+</li>
+<li>Signal() 操作<ul>
+<li>将等待队列中的一个线程唤醒</li>
+<li>如果等待队列为空，则等同空操作</li>
+</ul>
+</li>
+<li>条件变量的实现<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Class Condition &#123;</span><br><span class="line">  <span class="keyword">int</span> numWaiting = <span class="number">0</span>;</span><br><span class="line">  WaitQueue q;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Condition::Wait(lock) &#123;</span><br><span class="line">  numWaiting++;</span><br><span class="line">  Add <span class="keyword">this</span> thread t to q;</span><br><span class="line">  release(lock)；</span><br><span class="line">  schedule();	<span class="comment">// need mutex</span></span><br><span class="line">  require(lock);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Condition::Signal() &#123;</span><br><span class="line">  <span class="keyword">if</span> (numWaiting &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    Remove a thread t from q;</span><br><span class="line">    wakeup(t);	<span class="comment">//need mutex</span></span><br><span class="line">    numWaiting--;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>用管程解决生产者-消费者问题</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化</span></span><br><span class="line">classBoundedBuffer &#123;</span><br><span class="line">  ...</span><br><span class="line">  Lock lock;</span><br><span class="line">  <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">  Condition notFull, notEmpty;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 生产者</span></span><br><span class="line">BoundedBuffer::Deposit(c) &#123;</span><br><span class="line">  lock-&gt;Acquire();</span><br><span class="line">  <span class="keyword">while</span> (count == n)</span><br><span class="line">  	notFull.Wait(&amp;lock);</span><br><span class="line">  Add c to the buffer;</span><br><span class="line">  count++;</span><br><span class="line">  notEmpty.Signal();</span><br><span class="line">  lock-&gt;Release();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 消费者</span></span><br><span class="line">BoundedBuffer::Remove(c) &#123;</span><br><span class="line">  lock-&gt;Acquire();</span><br><span class="line">  <span class="keyword">while</span> (count == <span class="number">0</span>)</span><br><span class="line">  	notEmpty.Wait(&amp;lock);</span><br><span class="line">  Remove c from the buffer;</span><br><span class="line">  count--;</span><br><span class="line">  notFull.Signal();</span><br><span class="line">  lock-&gt;Release();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>管程条件变量的释放处理方式<br><img src="http://qnya.pomo16.club/89.png" alt></p>
+<ul>
+<li>Hansen 的连续执行效率更高，如图少了一次切换</li>
+<li>Hansen 管程：主要用于真实 OS 和 Java 中</li>
+<li>Hoare 管程：主要见于教材中</li>
+<li>Hansen 管程与 Hoare 管程<ul>
+<li>以生产者-消费者问题的生产者代码为例<br><img src="http://qnya.pomo16.club/90.png" alt><ul>
+<li>Hansen 管程<ul>
+<li>条件变量释放仅是一个提示</li>
+<li>需要重新检查条件</li>
+<li>特点：高效</li>
+</ul>
+</li>
+<li>Hoare 管程<ul>
+<li>条件变量释放同时表示放弃管程访问</li>
+<li>释放后条件变量的状态可用</li>
+<li>特点：低效</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="经典同步问题之哲学家就餐问题"><a href="#经典同步问题之哲学家就餐问题" class="headerlink" title="经典同步问题之哲学家就餐问题"></a>经典同步问题之哲学家就餐问题</h3><p><img src="http://qnya.pomo16.club/91.png" alt></p>
+<ul>
+<li>问题描述<ul>
+<li>5个哲学家围绕一张圆桌而坐<ul>
+<li>桌子上放着5支叉子</li>
+<li>每两个哲学家之间放一支</li>
+</ul>
+</li>
+<li>哲学家的动作包括思考和进餐<ul>
+<li>进餐时需同时拿到左右两边的叉子</li>
+<li>思考时将两支叉子放回原处</li>
+</ul>
+</li>
+<li>如何保证哲学家们的动作有序进行？<ul>
+<li>如：不出现有人永远拿不到叉子</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>方案一<br><img src="http://qnya.pomo16.club/92.png" alt><ul>
+<li>不正确，可能导致死锁</li>
+</ul>
+</li>
+<li>方案二<br><img src="http://qnya.pomo16.club/93.png" alt><ul>
+<li>互斥访问正确，但每次只允许一人进餐</li>
+</ul>
+</li>
+<li>方案三<br><img src="http://qnya.pomo16.club/94.png" alt><ul>
+<li>没有死锁，可有多人同时进餐</li>
+</ul>
+</li>
+</ul>
+<h3 id="经典同步问题之读者-写者问题"><a href="#经典同步问题之读者-写者问题" class="headerlink" title="经典同步问题之读者-写者问题"></a>经典同步问题之读者-写者问题</h3><ul>
+<li>问题描述<ul>
+<li>共享数据的两类使用者<ul>
+<li>读者：只读取数据，不修改</li>
+<li>写者：读取和修改数据</li>
+</ul>
+</li>
+<li>读者-写者问题描述：对共享数据的读写<ul>
+<li>“读 - 读”允许<ul>
+<li>同一时刻，允许有多个读者同时读</li>
+</ul>
+</li>
+<li>“读 - 写”互斥<ul>
+<li>没有写者时读者才能读</li>
+<li>没有读者时写者才能写</li>
+</ul>
+</li>
+<li>“写 - 写”互斥<ul>
+<li>没有其他写者时写者才能写</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>用信号量解决读者-写者问题<ul>
+<li>用信号量描述每个约束<ul>
+<li>信号量 WriteMutex<ul>
+<li>控制读写操作的互斥</li>
+<li>初始化为1</li>
+</ul>
+</li>
+<li>读者技术 Rcount<ul>
+<li>正在进行读操作的读者数目</li>
+<li>初始化为0</li>
+</ul>
+</li>
+<li>信号量 CountMutex<ul>
+<li>控制对读者计数的互斥修改</li>
+<li>初始化为1</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/95.png" alt><ul>
+<li>此实现中，读者优先</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>读者-写者问题：优先策略<ul>
+<li>读者优先策略<ul>
+<li>只要有读者正在读状态，后来的读者都能直接进入</li>
+<li>如读者持续不断进入，则写者就处于饥饿</li>
+</ul>
+</li>
+<li>写者优先策略<ul>
+<li>只要有写者就绪，写者应尽快执行写操作</li>
+<li>如写者持续不断就绪，则读者就处于饥饿</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>用管程解决读者-写者问题</p>
+<ul>
+<li><p>两个基本方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Database::Read() &#123;</span><br><span class="line">  Wait until no writer;</span><br><span class="line">  read database;</span><br><span class="line">  check out - wake up waiting writers;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Database::Write() &#123;</span><br><span class="line">  Wait until no readers/writers;</span><br><span class="line">  write database;</span><br><span class="line">  check out - wake up waiting readers/writers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>管程的状态变量<br><img src="http://qnya.pomo16.club/96.png" alt></p>
+</li>
+<li>解决方案详情：读者<br><img src="http://qnya.pomo16.club/97.png" alt><ul>
+<li>这里 while() 里的条件设置的是有写者在写或有写者申请写就等待，体现的是写者优先</li>
+<li>这里 if() 里的条件设置的是最后一个读者看有没有写者，如果有写者等着，就释放</li>
+</ul>
+</li>
+<li>解决方案详情：写者<br><img src="http://qnya.pomo16.club/98.png" alt><ul>
+<li>这里 while() 里的条件设置的是有写者在写或有读者在读就等待，但是如果继续有读者等着就不管了，所以体现的是写者优先</li>
+<li>这里 if() 里的条件设置的是如果有等待写的就优先唤醒，没有的话才唤醒读者</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="死锁和进程通信"><a href="#死锁和进程通信" class="headerlink" title="死锁和进程通信"></a>死锁和进程通信</h2><h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><ul>
+<li>定义：由于竞争资源或者通信关系，两个或更多线程在执行中出现，永远相互等待只能由其他进程引发的事件</li>
+<li>死锁示例：单向通行桥梁<br><img src="http://qnya.pomo16.club/99.png" alt><ul>
+<li>桥梁只能单向通行</li>
+<li>桥的每个部分可视为一个资源</li>
+<li>可能出现死锁<ul>
+<li>对向行驶车辆在桥中相遇</li>
+<li>解决办法：一个方向的车辆倒退(资源抢占和回退)</li>
+</ul>
+</li>
+<li>可能发生饥饿<ul>
+<li>由于一个方向的持续车流，另一个方向的车辆无法通过桥梁</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="进程访问资源的流程"><a href="#进程访问资源的流程" class="headerlink" title="进程访问资源的流程"></a>进程访问资源的流程</h3><ul>
+<li>资源类型 R1，R2，…，Rm<ul>
+<li>CPU 执行时间、内存空间、I/O 设备等</li>
+</ul>
+</li>
+<li>每类资源 Ri 有 Wi 个实例</li>
+<li>进程访问资源的流程<ul>
+<li>请求/获取：申请空闲资源</li>
+<li>使用/占用：进程占用资源</li>
+<li>释放：资源状态由占有变成空闲</li>
+</ul>
+</li>
+</ul>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><ul>
+<li><p>资源分类</p>
+<ul>
+<li>可重用资源( Reusable Resource )<ul>
+<li>资源不能被删除且在任何时刻只能有一个进程使用</li>
+<li>进程释放资源后，其他进程可重用</li>
+<li>可重用资源示例<ul>
+<li>硬件：处理器，I/O 通道，主和副存储器，设备等</li>
+<li>软件：文件，数据库和信号量等数据结构</li>
+</ul>
+</li>
+<li>可能出现死锁<ul>
+<li>每个进程占用一部分资源并请求其他资源</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>消耗资源( Consumable Resource )<ul>
+<li>资源创建和销毁</li>
+<li>消耗资源示例<ul>
+<li>在 I/O 缓冲区的中断、信号、消息等</li>
+</ul>
+</li>
+<li>可能出现死锁<ul>
+<li>进程间相互等待接受对方的消息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>资源分配图</p>
+<ul>
+<li><strong>描述资源和进程间的分配和占用关系的有向图</strong></li>
+<li><img src="http://qnya.pomo16.club/100.png" height="400px"></li>
+<li>两类顶点<ul>
+<li>系统中的所有进程<br>P = {P<sub>1</sub>，P<sub>2</sub>，…，P<sub>n</sub>}</li>
+<li>系统中的所有资源<br>R = {R<sub>1</sub>，R<sub>2</sub>，…，R<sub>m</sub>}</li>
+</ul>
+</li>
+<li>两类有向边<ul>
+<li>资源请求边<ul>
+<li>进程 P<sub>i</sub> 请求资源 R<sub>j</sub> ：P<sub>i</sub> -&gt; R<sub>j</sub> </li>
+</ul>
+</li>
+<li>资源分配边<ul>
+<li>资源 R<sub>j</sub> 已分配给进程 P<sub>i</sub> ：R<sub>j</sub> -&gt; P<sub>i</sub></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="出现死锁的必要条件"><a href="#出现死锁的必要条件" class="headerlink" title="出现死锁的必要条件"></a>出现死锁的必要条件</h3><ul>
+<li>互斥<ul>
+<li>任何时刻只能有一个进程使用一个资源实例</li>
+</ul>
+</li>
+<li>持有并等待<ul>
+<li>进程保持至少一个资源，并正在等待获取其他进程持有的资源</li>
+</ul>
+</li>
+<li>非抢占<ul>
+<li>资源只能在进程使用后自愿释放</li>
+</ul>
+</li>
+<li>循环等待<ul>
+<li>存在等待进程集合{P<sub>0</sub>，P<sub>1</sub>，…，P<sub>N</sub>}，<br>P<sub>0</sub> 正在等待 P<sub>1</sub> 所占用的资源，<br>P<sub>1</sub> 正在等待 P<sub>2</sub> 所占用的资源，…，<br>P<sub>N-1</sub> 正在等待 P<sub>N</sub> 所占用的资源，<br>P<sub>N</sub> 正在等待 P<sub>0</sub> 所占用的资源</li>
+</ul>
+</li>
+<li>现学现用<br><img src="http://qnya.pomo16.club/101.png" alt></li>
+</ul>
+<h3 id="死锁处理方法"><a href="#死锁处理方法" class="headerlink" title="死锁处理方法"></a>死锁处理方法</h3><ul>
+<li>死锁预防( Deadlock Prevention )：确保系统永远不会进入死锁状态</li>
+<li>死锁避免( Deadlock Avoidance )：在使用前进行判断，只允许不会出现死锁的进程请求资源</li>
+<li>死锁检测和恢复( Deadlock Detection &amp; Recovery )：在检测到运行系统进入死锁状态后，进行恢复</li>
+<li>由应用进程处理死锁<ul>
+<li>通常操作系统忽略死锁：大多数操作系统(包括 UNIX )的做法</li>
+</ul>
+</li>
+</ul>
+<h3 id="死锁预防"><a href="#死锁预防" class="headerlink" title="死锁预防"></a>死锁预防</h3><ul>
+<li>预防是采用某种策略，<strong>限制</strong>并发进程对资源的请求，使系统在任何时刻都<strong>不满足死锁的必要条件</strong></li>
+<li>互斥：把互斥的共享资源封装成可同时访问</li>
+<li>持有并等待<ul>
+<li>进程请求资源时，要求它不持有任何其他资源</li>
+<li>仅允许进程在开始执行时，一次请求所有需要的资源</li>
+<li>资源利用率低</li>
+</ul>
+</li>
+<li>非抢占<ul>
+<li>如进程请求不能立即分配的资源，则释放已占用资源</li>
+<li>只在能够同时获得所有需要资源时，才执行分配操作</li>
+</ul>
+</li>
+<li>循环等待<ul>
+<li>对资源排序，要求进程按顺序请求资源</li>
+</ul>
+</li>
+</ul>
+<h3 id="死锁避免"><a href="#死锁避免" class="headerlink" title="死锁避免"></a>死锁避免</h3><ul>
+<li>方法一：利用额外的先验信息，在分配资源时判断是否会出现死锁，只在不会死锁时分配资源<ul>
+<li>要求进程声明需要资源的<strong>最大数目</strong></li>
+<li>限定<strong>提供</strong>与<strong>分配</strong>的资源数量，确保满足进程的<strong>最大</strong>需求</li>
+<li><strong>动态检查</strong>资源分配状态，确保不会出现环形等待</li>
+</ul>
+</li>
+<li>方法二：当进程请求资源时，系统判断分配后是否处于安全状态<ul>
+<li>系统处于安全状态<ul>
+<li>针对所有已占用进程，存在安全序列</li>
+</ul>
+</li>
+<li>序列 &lt;P<sub>1</sub>，P<sub>2</sub>，…，P<sub>N</sub>&gt; 是安全的<ul>
+<li>P<sub>i</sub> 要求的资源 &lt;= 当前可用资源 + 所有 P<sub>j</sub> 持有资源其中 j &lt; i</li>
+<li>如 P<sub>i</sub> 的资源请求不能立即分配，则 P<sub>i</sub> 等待所有 P<sub>j</sub> ( j &lt; i )完成</li>
+<li>P<sub>i</sub> 完成后，P<sub>i</sub> + 1可得到所需资源，执行并释放所分配的资源</li>
+<li>最终整个序列的所有  P<sub>i</sub> 都能获得所需资源</li>
+</ul>
+</li>
+<li>安全状态与死锁的关系<ul>
+<li><img src="http://qnya.pomo16.club/102.png" height="400px"></li>
+<li>系统处于安全状态，一定没有死锁</li>
+<li>系统处于不安全状态，可能出现死锁<ul>
+<li>避免死锁就是确保系统不会进入不安全状态</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="银行家算法-Banker’s-Algorithm"><a href="#银行家算法-Banker’s-Algorithm" class="headerlink" title="银行家算法( Banker’s Algorithm )"></a>银行家算法( Banker’s Algorithm )</h3><ul>
+<li>银行家算法是一个避免死锁产生的算法。以银行借贷分配策略为基础，判断并保证系统处于安全状态<ul>
+<li>客户在第一次申请贷款时，声明所需最大资金量，在满足所有贷款要求并完成项目时，及时归还</li>
+<li>在客户贷款数量不超过银行拥有的最大值时，银行家尽量满足客户需求</li>
+<li>类比<ul>
+<li>银行家 ↔ 操作系统</li>
+<li>资金 ↔ 资源</li>
+<li>客户 ↔ 申请资源的线程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>银行家算法：数据结构<ul>
+<li>n = 线程数量，m = 资源类型数量</li>
+<li>Max (总需求量)：n * m 矩阵<ul>
+<li>线程 T<sub>i</sub> 最多请求类型 R<sub>j</sub> 的资源 Max[i, j] 个实例</li>
+</ul>
+</li>
+<li>Available (剩余空闲量)：长度为 m 的向量<ul>
+<li>当前有 Available[i] 个类型  R<sub>j</sub> 的资源实例可用</li>
+</ul>
+</li>
+<li>Allocation (已分配量)：n * m 矩阵<ul>
+<li>线程 T<sub>i</sub> 当前分配了Allocation[i, j] 个 R<sub>j</sub> 的实例</li>
+</ul>
+</li>
+<li>Need (未来需要量)：n * m 矩阵<ul>
+<li>线程 T<sub>i</sub> 未来需要 Need[i, j] 个 R<sub>j</sub> 资源实例</li>
+</ul>
+</li>
+<li><strong>Need[i, j] = Max[i, j] - Allocation[i, j]</strong></li>
+</ul>
+</li>
+<li><p>银行家算法核心：安全状态判断</p>
+<ol>
+<li><p><strong>Work</strong> 和 <strong>Finish</strong> 分别是长度为 m 和 n 的向量初始化</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Work = Available	<span class="comment">//当前资源剩余空闲量</span></span><br><span class="line">Finish[i] = <span class="literal">false</span> <span class="keyword">for</span> i : <span class="number">1</span>,<span class="number">2</span>, …, n.	<span class="comment">//线程 i 没结束</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>寻找线程 T<sub>i</sub> 满足</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Finish[i] = <span class="literal">false</span>		<span class="comment">//接下来找出 Need 比 Work 小的线程 i</span></span><br><span class="line">Need[i] &lt;= Work</span><br></pre></td></tr></table></figure>
+<p>没有找到满足条件的 T<sub>i</sub>  ，转4</p>
+</li>
+<li><p>改成 true 表示线程结束</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Work = Work + Allocation[i]		<span class="comment">//线程 i 的资源需求量小于当前剩余空闲资源量，所以配置给它再回收</span></span><br><span class="line">Finish[i] = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>转2</p>
+</li>
+<li>如所有线程 T<sub>i</sub> 满足 Finish[i] == true，则系统处于安全状态</li>
+</ol>
+</li>
+<li><p>银行家算法</p>
+<ul>
+<li>初始化<ul>
+<li>Request<sub>i</sub> 线程 T<sub>i</sub> 的资源请求向量</li>
+<li>Request<sub>i</sub>[j] 线程 T<sub>i</sub> 请求资源 R<sub>j</sub> 的实例</li>
+</ul>
+</li>
+<li><p>循环</p>
+<ol>
+<li>如果 Request<sub>i</sub> &lt;= Need[i]，转到步骤2。否则，拒绝资源申请，因为线程已经超过了其最大要求</li>
+<li>如果  Request<sub>i</sub> &lt;= Available，转到步骤3。否则，T<sub>i</sub> 必须等待，因为资源不可用</li>
+<li><p>通过安全状态判断来确定是否分配资源给 T<sub>i</sub> ：</p>
+<ul>
+<li>生成一个需要判断状态是否安全的资源分配环境<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Available = Available - Requesti;</span><br><span class="line">Allocation[i] = Allocation[i] + Requesti;</span><br><span class="line">Need[i] = Need[i] - Requesti;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>调用安全状态判断</p>
+<ul>
+<li>如果返回结果是<strong>安全</strong>，将资源分配给 T<sub>i</sub> </li>
+<li>如果返回结果是<strong>不安全</strong>，系统会拒绝 T<sub>i</sub> 的资源请求</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="死锁检测和恢复"><a href="#死锁检测和恢复" class="headerlink" title="死锁检测和恢复"></a>死锁检测和恢复</h3><ul>
+<li>死锁检测简述<ul>
+<li>允许系统进入死锁状态</li>
+<li>维护系统的资源分配图</li>
+<li>定期调用死锁检测算法来搜索图中是否存在死锁</li>
+<li>出现死锁时，用死锁恢复机制进行恢复</li>
+</ul>
+</li>
+<li>死锁检测算法：数据结构<ul>
+<li>Available：长度为 m 的向量<ul>
+<li>每种类型可用资源的数量</li>
+</ul>
+</li>
+<li>Allocation：一个 n * m 矩阵<ul>
+<li>当前分配给各个进程每种类型资源的数量</li>
+<li>进程 P<sub>i</sub> 拥有资源 R<sub>i</sub> 的 Allocation[i, j] 个实例</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>死锁检测算法<ol>
+<li><strong>Work</strong> 和 <strong>Finish</strong> 分别是长度为 m 和 n 的向量初始化<ul>
+<li>Work = Available    //work 为当前空闲资源量</li>
+<li>Allocation[i] &gt; 0 时，Finish[i] = false; 否则，Finish[i] = true;    //finish 为线程是否结束</li>
+</ul>
+</li>
+<li>寻找线程 T<sub>i</sub>  满足<ul>
+<li>Finish[i] = false    //线程没有结束，且此线程将需要的资源量小于当前空闲资源量</li>
+<li>Request<sub>i</sub> &lt;= Work<br>没有找到这样的 i ，转到4</li>
+</ul>
+</li>
+<li>Work = Work + Allocation[i]    //把找到的线程拥有的资源释放到当前空闲资源中<br>Finish[i] = true<br>转到2</li>
+<li>如果某个 Finish[i] == false，系统处于死锁状态<br><strong>算法需要O(m*n<sup>2</sup>)操作检测系统是否处于死锁状态</strong></li>
+</ol>
+</li>
+<li>死锁检测算法的使用<ul>
+<li>死锁检测的时间和周期选择依据<ul>
+<li>死锁多久可能会发生</li>
+<li>多少进程需要被回滚</li>
+</ul>
+</li>
+<li>资源图可能有多个循环<ul>
+<li>难以分辨”造成”死锁的关键进程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>死锁恢复：进程终止<ul>
+<li>终止所有的死锁进程</li>
+<li>一次只终止一个进程直到死锁清除</li>
+<li>终止进程的顺序应该是<ul>
+<li>进程的优先级</li>
+<li>进程已运行时间以及还需运行时间</li>
+<li>进程已占用资源</li>
+<li>进程完成需要的资源</li>
+<li>终止进程数目</li>
+<li>进程是交互还是批处理</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>死锁恢复：资源抢占<ul>
+<li>选择被抢占进程<ul>
+<li>最小成本目标</li>
+</ul>
+</li>
+<li>进程回退<ul>
+<li>返回到一些安全状态，重启进程到安全状态</li>
+</ul>
+</li>
+<li>可能出现饥饿<ul>
+<li>同一进程可能一直被选作被抢占者</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="进程通信-IPC，Inter-Process-Communication"><a href="#进程通信-IPC，Inter-Process-Communication" class="headerlink" title="进程通信( IPC，Inter-Process Communication )"></a>进程通信( IPC，Inter-Process Communication )</h3><ul>
+<li>进程通信是进程进行通信和同步的机制</li>
+<li>IPC 提供2个基本操作<ul>
+<li>发送操作：send(message)</li>
+<li>接收操作：receive(message)</li>
+</ul>
+</li>
+<li>进程通信流程<ul>
+<li>在通信进程间建立通信链路</li>
+<li>通过 send/receive 交换信息</li>
+</ul>
+</li>
+<li>进程链路特征<ul>
+<li>物理(如：共享内存，硬件总线)</li>
+<li>逻辑(如：逻辑属性)</li>
+</ul>
+</li>
+<li>通信方式<br><img src="http://qnya.pomo16.club/103.png" alt><ul>
+<li>直接通信<ul>
+<li>进程必须正确的命名对方<ul>
+<li>send(P, message)：发送信息到进程 P</li>
+<li>receive(Q, message)：从进程 Q 接受消息</li>
+</ul>
+</li>
+<li>通信链路的属性<ul>
+<li>自动建立链路</li>
+<li>一条链路恰好对应一对通信进程</li>
+<li>每对进程之间只有一个链接存在</li>
+<li>链接可以是单向的，但通常为双向的</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>间接通信<ul>
+<li>通过操作系统维护的消息队列实现进程间的消息接收和发送<ul>
+<li>每个消息队列都有一个唯一的标识</li>
+<li>只有共享了相同消息队列的进程，才能够通信</li>
+</ul>
+</li>
+<li>通信链路的属性<ul>
+<li>只有共享了相同消息队列的进程，才建立连接</li>
+<li>连接可以是单向或双向</li>
+<li>消息队列可以与多个进程相关联</li>
+<li>每对进程可以共享多个消息队列</li>
+</ul>
+</li>
+<li>通信流程<ul>
+<li>创建一个新的消息队列</li>
+<li>通过消息队列发送和接收消息</li>
+<li>销毁消息队列</li>
+</ul>
+</li>
+<li>基本通信操作<ul>
+<li>send(A, message)：发送消息到队列 A</li>
+<li>receive(A, message)：从队列 A 接收消息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>阻塞与非阻塞通信<ul>
+<li>进程通信可划分为阻塞(同步)或非阻塞(异步)</li>
+<li>阻塞通信<ul>
+<li>阻塞发送：发送者在发送消息后进入等待，直到接受者成功收到</li>
+<li>阻塞接收：接收者在请求接收消息后进入等待，直到成功收到一个消息</li>
+</ul>
+</li>
+<li>非阻塞通信<ul>
+<li>非阻塞发送：发送者在消息发送后，可立即进行其他操作</li>
+<li>非阻塞接收：没有消息发送时，接受者在请求接收消息后，接收不到任何消息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>通信链路缓冲<ul>
+<li>进程发送的消息在链路上可能有3种缓冲方式<ul>
+<li>0容量：发送方必须等待接收方</li>
+<li>有限容量：通信链路缓冲队列满时，发送方必须等待</li>
+<li>无限容量：发送方不需要等待</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="信号-Signal"><a href="#信号-Signal" class="headerlink" title="信号( Signal )"></a>信号( Signal )</h3><ul>
+<li>信号<ul>
+<li>进程间的软件中断通知和处理机制</li>
+<li>如：SIGKILL，SIGSTOP，SIGCONT等</li>
+</ul>
+</li>
+<li>信号的接收处理<ul>
+<li>捕获( Catch )：执行进程指定的信号处理函数被调用</li>
+<li>忽略( Ignore )：执行操作系统指定的缺省操作<ul>
+<li>例如：进程终止、进程挂起等</li>
+</ul>
+</li>
+<li>屏蔽( Mask )：禁止进程接收和处理信号<ul>
+<li>可能是暂时的(当处理同样类型的信号)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>不足<ul>
+<li>传送的信息量小，只有一个信号类型</li>
+</ul>
+</li>
+<li>信号的实现<br><img src="http://qnya.pomo16.club/104.png" alt></li>
+<li>信号使用示例<br><img src="http://qnya.pomo16.club/105.png" alt></li>
+</ul>
+<h3 id="管道-pipe"><a href="#管道-pipe" class="headerlink" title="管道( pipe )"></a>管道( pipe )</h3><ul>
+<li>进程间基于内存文件的通信机制<ul>
+<li>子进程从父进程继承文件描述符</li>
+<li>缺省文件描述符：0 stdin，1 stdout，2 stderr</li>
+</ul>
+</li>
+<li>进程不知道(或不关心！)的另一端<ul>
+<li>可能从键盘、文件、程序读取</li>
+<li>可能写入到终端、文件、程序</li>
+</ul>
+</li>
+<li>与管道相关的系统调用<ul>
+<li>读管道：read(fd, buffer, nbytes)<ul>
+<li>scanf() 是基于它实现的</li>
+</ul>
+</li>
+<li>写管道：write(fd, buffer, nbytes)<ul>
+<li>printf() 是基于它实现的</li>
+</ul>
+</li>
+<li>创建管道：pipe(rgfd)<ul>
+<li>rgfd 是2个文件描述符组成的数组</li>
+<li>rgfd[0] 是读文件描述符</li>
+<li>rgfd[1] 是写文件描述符</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>管道示例<ul>
+<li>% ls | more<br><img src="http://qnya.pomo16.club/106.png" alt><ul>
+<li>shell<ol>
+<li>创建管道</li>
+<li>为 ls 创建一个进程，设置 stdout 为管道写端</li>
+<li>为 more 创建一个进程，设置 stdin 为管道读端</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><ul>
+<li>消息队列是由操作系统维护的以字节序列为基本单位的间接通信机制<ul>
+<li>每个消息( Message )是一个字节序列</li>
+<li>相同标识的消息组成按先进先出顺序组成一个消息队列( Message Queues )<br><img src="http://qnya.pomo16.club/107.png" alt></li>
+</ul>
+</li>
+<li>消息队列的系统调用<ul>
+<li>msgget ( key, flags )：获取消息队列标识</li>
+<li>msgsnd ( QID, buf, size, flags )：发送消息</li>
+<li>msgrcv ( QID, buf, size, type, flags )：接收消息</li>
+<li>msgctl ( … )：消息队列控制</li>
+</ul>
+</li>
+</ul>
+<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><ul>
+<li>共享内存是把同一个物理内存区域同时映射到多个进程的内存地址空间的通信机制</li>
+<li>进程<ul>
+<li>每个进程都有私有内存地址空间</li>
+<li>每个进程的内存地址空间需明确设置共享内存段</li>
+</ul>
+</li>
+<li>线程<ul>
+<li>同一进程中的线程总是共享相同的内存地址空间</li>
+</ul>
+</li>
+<li>优点：快捷、方便地共享数据</li>
+<li>不足：必须用额外的同步机制来协调数据访问</li>
+<li>共享内存的实现<br><img src="http://qnya.pomo16.club/108.png" alt><ul>
+<li>最快的方法</li>
+<li>一个进程写另外一个进程立即可见</li>
+<li>没有系统调用干预</li>
+<li>没有数据复制</li>
+<li>不提供同步：由程序员提供同步</li>
+</ul>
+</li>
+<li>共享内存系统调用<ul>
+<li>shmget ( key, size, flags )：创建共享段</li>
+<li>shmat ( shmid, *shmaddr, flags )：把共享段映射到进程地址空间</li>
+<li>shmdt ( *shmaddr )：取消共享段到进程地址空间的映射</li>
+<li>shmctl ( … )：共享段控制</li>
+<li>需要信号量等机制协调共享内存的访问冲突</li>
+</ul>
+</li>
+</ul>
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/20/操作系统（七）/">操作系统（七）</a><a class="next" href="/2019/03/20/操作系统（五）/">操作系统（五）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

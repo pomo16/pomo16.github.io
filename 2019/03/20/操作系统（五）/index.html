@@ -1,0 +1,786 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（五） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（五）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（五）</h1><div class="post-meta">Mar 20, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 17</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="处理机调度"><a href="#处理机调度" class="headerlink" title="处理机调度"></a>处理机调度</h2><h3 id="CPU-资源的时分复用"><a href="#CPU-资源的时分复用" class="headerlink" title="CPU 资源的时分复用"></a>CPU 资源的时分复用</h3><ul>
+<li>进程切换：CPU 资源的当前占用者切换<ul>
+<li>保存当前进程在 PCB 中的执行上下文(CPU状态)</li>
+<li>恢复下一个进程的执行上下文</li>
+</ul>
+</li>
+<li>处理及调度<ul>
+<li>从就绪队列中<strong>挑选</strong>下一个占用 CPU 运行的<strong>进程</strong></li>
+<li>从多个可用 CPU 中<strong>挑选</strong>就绪进程可使用的 CPU <strong>资源</strong></li>
+</ul>
+</li>
+<li>调度程序：挑选就绪进程的内核函数<ul>
+<li>调度策略：依据什么原则挑选进程/线程？</li>
+<li>调度时机：什么时候进行调度？</li>
+</ul>
+</li>
+</ul>
+<h3 id="调度时机"><a href="#调度时机" class="headerlink" title="调度时机"></a>调度时机</h3><p>在进程/线程的生命周期中的什么时候进行调度？</p>
+<ul>
+<li>内核运行调度程序的条件<ul>
+<li>进程从运行状态切换到等待状态</li>
+<li>进程被终结了</li>
+</ul>
+</li>
+<li>非抢占系统<ul>
+<li>当前进程主动放弃 CPU 时</li>
+</ul>
+</li>
+<li>可抢占系统<ul>
+<li>中断请求被服务例程响应完成时</li>
+<li>当前进程被抢占<ul>
+<li>进程时间片用完</li>
+<li>进程从等待切换到就绪</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="调度策略"><a href="#调度策略" class="headerlink" title="调度策略"></a>调度策略</h3><ul>
+<li>调度策略：确定如何从就绪队列中选择下一个执行进程</li>
+<li>调度策略要解决的问题<ul>
+<li>挑选就绪队列中的哪一个进程？</li>
+<li>通过什么样的准则来选择？</li>
+</ul>
+</li>
+<li>调度算法：在调度程序中实现的调度策略</li>
+<li>比较调度算法的准则：哪一个策略/算法较好？</li>
+</ul>
+<h3 id="处理机资源的使用模式"><a href="#处理机资源的使用模式" class="headerlink" title="处理机资源的使用模式"></a>处理机资源的使用模式</h3><ul>
+<li>进程在 CPU 计算和 I/O 操作间交替<ul>
+<li>每次调度决定在下一个 CPU 计算时将哪个工作交给 CPU</li>
+<li>在时间片机制下，进程可能在结束当前 CPU 计算前被迫放弃 CPU</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/69.png" alt></li>
+</ul>
+<h3 id="比较调度算法的准则"><a href="#比较调度算法的准则" class="headerlink" title="比较调度算法的准则"></a>比较调度算法的准则</h3><ul>
+<li>CPU 使用率：CPU 处于忙状态的<strong>时间百分比</strong></li>
+<li>吞吐量：单位时间内完成的<strong>进程数量</strong></li>
+<li>周转时间：进程从初始化到结束(包括等待)的<strong>总时间</strong></li>
+<li>等待时间：进程在就绪队列中的<strong>总时间</strong></li>
+<li>响应时间：从提交请求到产生响应所花费的<strong>总时间</strong></li>
+</ul>
+<h3 id="处理机调度策略的响应时间目标"><a href="#处理机调度策略的响应时间目标" class="headerlink" title="处理机调度策略的响应时间目标"></a>处理机调度策略的响应时间目标</h3><ul>
+<li>减少响应时间<ul>
+<li>及时处理用户的输入请求，尽快将输出反馈给用户</li>
+</ul>
+</li>
+<li>减少平均响应时间的波动<ul>
+<li>在交互系统中，可预测性比高差异的平均更重要</li>
+</ul>
+</li>
+<li>低延迟调度改善了用户的交互体验<ul>
+<li>如果移动鼠标时，屏幕中的光标没动，用户可能会重启电脑</li>
+</ul>
+</li>
+<li>响应时间是操作系统的计算延迟</li>
+</ul>
+<h3 id="处理机调度策略的吞吐量目标"><a href="#处理机调度策略的吞吐量目标" class="headerlink" title="处理机调度策略的吞吐量目标"></a>处理机调度策略的吞吐量目标</h3><ul>
+<li>增加吞吐量<ul>
+<li>减少开销(操作系统开销，上下文切换)</li>
+<li>系统资源的高效利用( CPU，I/O 设备 )</li>
+</ul>
+</li>
+<li>减少等待时间<ul>
+<li>减少每个进程的等待时间</li>
+</ul>
+</li>
+<li>操作系统需要保证吞吐量不受用户交互的影响<ul>
+<li>操作系统必须不时进行调度，即使存在许多交互任务</li>
+</ul>
+</li>
+<li>吞吐量是操作系统的计算带宽</li>
+</ul>
+<h3 id="处理机调度的公平性目标"><a href="#处理机调度的公平性目标" class="headerlink" title="处理机调度的公平性目标"></a>处理机调度的公平性目标</h3><ul>
+<li>公平的定义<ul>
+<li>保证每个进程占用相同的 CPU 时间</li>
+<li>保证每个进程的等到时间相同</li>
+</ul>
+</li>
+<li>公平通常会增加平均响应时间</li>
+</ul>
+<h3 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h3><ul>
+<li>先来先服务算法<ul>
+<li>FCFS：First Come，First Served</li>
+</ul>
+</li>
+<li>短进程优先算法<ul>
+<li>SPN：Shortest Process Next</li>
+<li>SJF：Shortest Job First (短作业优先算法)</li>
+<li>SRT：Shortest Remaining Time(短剩余时间优先算法)</li>
+</ul>
+</li>
+<li>最高响应比优先算法<ul>
+<li>HRRN：Highest Response Ratio Next</li>
+</ul>
+</li>
+<li>时间片轮转算法<ul>
+<li>RR：Round Robin</li>
+</ul>
+</li>
+<li>多级反馈队列算法<ul>
+<li>MFQ：Multilevel Feedback Queues</li>
+</ul>
+</li>
+<li>公平共享调度算法<ul>
+<li>FSS：Fair Share Scheduling</li>
+</ul>
+</li>
+</ul>
+<h3 id="先来先服务算法-First-Come-First-Served，FCFS"><a href="#先来先服务算法-First-Come-First-Served，FCFS" class="headerlink" title="先来先服务算法( First Come First Served，FCFS"></a>先来先服务算法( First Come First Served，FCFS</h3><ul>
+<li>依据进程进入就绪状态的先后顺序排列<ul>
+<li>进程进入等待或结束状态时，就绪队列中的下一个进程占用 CPU</li>
+</ul>
+</li>
+<li>FCFS 算法的周转时间<ul>
+<li>示例：3个进程，计算时间分别为12，3，3<br><img src="http://qnya.pomo16.club/70.png" alt></li>
+</ul>
+</li>
+<li>FCFS 算法的特征<ul>
+<li>优点：简单</li>
+<li>缺点<ul>
+<li>平均等待时间波动较大<ul>
+<li>短进程可能排在长进程后面</li>
+</ul>
+</li>
+<li>I/O 资源和 CPU 资源的利用率较低<ul>
+<li>CPU 密集型进程会导致 I/O 设备闲置时 I/O 密集型进程也等待</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="短进程优先算法-SPN"><a href="#短进程优先算法-SPN" class="headerlink" title="短进程优先算法( SPN )"></a>短进程优先算法( SPN )</h3><ul>
+<li>选择就绪队列中执行时间最短进程占用 CPU 进入运行状态<ul>
+<li>就绪队列按预期的执行时间来排序</li>
+<li><img src="http://qnya.pomo16.club/71.png" alt></li>
+</ul>
+</li>
+<li>短剩余时间优先算法( SRT )<ul>
+<li>SPN 算法的可抢占改进</li>
+</ul>
+</li>
+<li>短进程优先算法具有最优平均周转时间<ul>
+<li>SPN 算法中一组进程的平均周转时间</li>
+<li><img src="http://qnya.pomo16.club/72.png" alt><ul>
+<li>修改顺序后平均等待时间更大</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SPN 的特征<ul>
+<li>优点：具有最优平均周转时间</li>
+<li>缺点<ul>
+<li>可能导致饥饿：连续的短进程流会使长进程无法获得 CPU 资源</li>
+<li>需要预知未来<ul>
+<li>如何预估下一个 CPU 计算的持续时间？</li>
+<li>简单的解决办法：询问用户<ul>
+<li>用户欺骗就杀死相应进程</li>
+<li>用户不知道怎么办？</li>
+</ul>
+</li>
+<li>SPN 的执行时间预估<ul>
+<li>用历史的执行时间来预估未来的执行时间</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="最高响应比优先算法-HRRN"><a href="#最高响应比优先算法-HRRN" class="headerlink" title="最高响应比优先算法( HRRN )"></a>最高响应比优先算法( HRRN )</h3><ul>
+<li>选择就绪队列中响应比 R 值最高的进程<ul>
+<li>R = (w+s)/s</li>
+<li>w：等待时间(waiting time)</li>
+<li>s：执行时间(service time</li>
+</ul>
+</li>
+<li>特征<ul>
+<li>在短进程优先算法的基础上改进</li>
+<li>不可抢占</li>
+<li>关注进程的等待时间</li>
+<li>防止无限期推迟</li>
+</ul>
+</li>
+</ul>
+<h3 id="时间片轮转算法-RR，Round-Robin"><a href="#时间片轮转算法-RR，Round-Robin" class="headerlink" title="时间片轮转算法(RR，Round-Robin)"></a>时间片轮转算法(RR，Round-Robin)</h3><ul>
+<li>时间片：分配处理机资源的基本时间单元<br><img src="http://qnya.pomo16.club/73.png" alt></li>
+<li>算法思路<ul>
+<li>时间片结束后，按 FCFS 算法切换到下一个就绪进程</li>
+<li>每隔 ( n - 1 ) 个时间片进程执行一个时间片 q</li>
+</ul>
+</li>
+<li>时间片为20的 RR 算法示例<ul>
+<li>4个进程的执行时间如下：<ul>
+<li>P1：53；P2：8；P3：68；P4：24；</li>
+</ul>
+</li>
+<li>甘特图<br><img src="http://qnya.pomo16.club/74.png" alt></li>
+<li>等待时间<ul>
+<li>P1 = ( 68 - 20 ) + ( 112 - 88 ) = 72</li>
+<li>P2 = ( 20 - 0 ) = 20</li>
+<li>P3 = ( 28 - 0 ) + ( 88 - 48 ) + ( 125 - 108 ) = 85</li>
+<li>P4 = ( 48 - 0 ) + ( 108 - 68 ) = 88</li>
+</ul>
+</li>
+<li>平均等待时间 = ( 72 + 20 + 85 + 88 ) / 4 = 66.25</li>
+</ul>
+</li>
+<li>RR 算法的时间片长度<ul>
+<li>RR 算法开销：额外的上下文切换</li>
+<li>时间片太大<ul>
+<li>等待时间过长</li>
+<li>极限情况退化成 FCFS</li>
+</ul>
+</li>
+<li>时间片太小<ul>
+<li>反应迅速，但产生大量上下文切换</li>
+<li>大量上下文切换开销影响到系统吞吐量</li>
+</ul>
+</li>
+<li>时间片长度选择目标<ul>
+<li>选择一个合适的时间片长度</li>
+<li>经验规则：维持上下文切换开销处于 1% 以内</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>比较 FCFS 和 RR<ul>
+<li>示例：4个进程的执行时间如下：<ul>
+<li>P1：53；P2：8；P3：68；P4：24；</li>
+<li>假设上下文切换时间为0，FCFS 和 RR 各自的平均等待时间是多少？</li>
+<li><img src="http://qnya.pomo16.club/75.png" alt></li>
+<li>这里两个极端中的 BestFCFS 即短进程优先算法，WorstFCFS 即长进程优先算法。表中可以看出，FCFS 抖动较大，而 RR 相对稳定</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="多级队列调度算法-MQ"><a href="#多级队列调度算法-MQ" class="headerlink" title="多级队列调度算法( MQ )"></a>多级队列调度算法( MQ )</h3><ul>
+<li>就绪队列被划分成多个独立的子序列<ul>
+<li>如：前台(交互)、后台(批处理)</li>
+</ul>
+</li>
+<li>每个队列拥有自己的调度策略<ul>
+<li>如：前台-RR，后台-FCFS</li>
+</ul>
+</li>
+<li>队列间的调度<ul>
+<li>固定优先级<ul>
+<li>先处理前台，然后处理后台</li>
+<li>可能导致饥饿</li>
+</ul>
+</li>
+<li>时间片轮转<ul>
+<li>每个队列都得到一个确定的能够调度其进程的 CPU 总时间</li>
+<li>如：80% CPU 时间用于前台，20% CPU 时间用于后台</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="多级反馈队列算法-MLFQ"><a href="#多级反馈队列算法-MLFQ" class="headerlink" title="多级反馈队列算法( MLFQ )"></a>多级反馈队列算法( MLFQ )</h3><ul>
+<li>进程可在不同队列间移动的多级队列算法<ul>
+<li>时间片大小随优先级级别增加而增加</li>
+<li>如进程在当前的时间片没有完成，则降到下一个优先级</li>
+<li><img src="http://qnya.pomo16.club/76.png" alt></li>
+</ul>
+</li>
+<li>MLFQ 算法的特征<ul>
+<li>CPU 密集型进程的优先级下降很快</li>
+<li>I/O 密集型进程停留在高优先级</li>
+</ul>
+</li>
+</ul>
+<h3 id="公平分享调度-FSS，Fair-Share-Scheduling"><a href="#公平分享调度-FSS，Fair-Share-Scheduling" class="headerlink" title="公平分享调度(FSS，Fair Share Scheduling)"></a>公平分享调度(FSS，Fair Share Scheduling)</h3><ul>
+<li>FSS 控制用户对系统资源的访问<ul>
+<li>一些用户组比其他用户组更重要</li>
+<li>保证不重要的组无法垄断资源</li>
+<li>未使用的资源按比例分配</li>
+<li>没有达到资源使用率目标的组获得更高的优先级</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/77.png" alt></li>
+</ul>
+<h3 id="传统调度算法总结"><a href="#传统调度算法总结" class="headerlink" title="传统调度算法总结"></a>传统调度算法总结</h3><ul>
+<li>先来先服务算法<ul>
+<li>不公平，平均等待时间较差</li>
+</ul>
+</li>
+<li>短进程优先算法<ul>
+<li>不公平，平均周转时间最小</li>
+<li>需要精准预测计算时间</li>
+<li>可能导致饥饿</li>
+</ul>
+</li>
+<li>最高响应比优先算法<ul>
+<li>基于 SPN 调度</li>
+<li>不可抢占</li>
+</ul>
+</li>
+<li>时间片轮转算法<ul>
+<li>公平，但是平均等待时间较差</li>
+</ul>
+</li>
+<li>多级反馈队列<ul>
+<li>多种算法的集成</li>
+</ul>
+</li>
+<li>公平共享调度<ul>
+<li>公平是第一要素</li>
+</ul>
+</li>
+</ul>
+<h3 id="实时操作系统"><a href="#实时操作系统" class="headerlink" title="实时操作系统"></a>实时操作系统</h3><ul>
+<li>实时操作系统的定义<ul>
+<li>正确性依赖于其<strong>时间</strong>和<strong>功能</strong>两方面的操作系统</li>
+</ul>
+</li>
+<li>实时操作系统的性能指标<ul>
+<li><strong>时间约束的及时性( deadlines )</strong></li>
+<li>速度和平均性能相对不重要</li>
+</ul>
+</li>
+<li>实时系统的特性<ul>
+<li>时间约束的可预测性</li>
+</ul>
+</li>
+<li>实时任务<ul>
+<li>任务(工作单元)<ul>
+<li>一次计算，一次文件读取，一次信息传递等等</li>
+</ul>
+</li>
+<li>任务属性<ul>
+<li>完成任务所需要的资源</li>
+<li>定时参数</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/78.png" alt></li>
+</ul>
+</li>
+<li>周期实时任务：一系列相似的任务<ul>
+<li>任务有规律地重复</li>
+<li>周期 p = 任务请求时间间隔(0 &lt; p)</li>
+<li>执行时间 e = 最大执行时间(0 &lt; e &lt; p)</li>
+<li>使用率 U = e / p</li>
+<li><img src="http://qnya.pomo16.club/79.png" alt></li>
+</ul>
+</li>
+<li>软时限和硬时限<ul>
+<li>硬时限( Hard deadline )<ul>
+<li>错过任务时限会导致灾难性或非常严重的后果</li>
+<li>必须验证，在最坏情况下能够满足时限</li>
+</ul>
+</li>
+<li>软时限( Soft deadline )<ul>
+<li>通常能满足任务实现<ul>
+<li>如有时不能满足，则降低要求</li>
+</ul>
+</li>
+<li>尽力保证满足任务时限</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可调度性<ul>
+<li>可调度表示一个实时操作系统能够满足任务时限要求<ul>
+<li>需要确定实时任务的执行顺序</li>
+<li>静态优先级调度</li>
+<li>动态优先级调度</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实时调度<ul>
+<li>速率单调调度算法( RM，Rate Monotonic)<ul>
+<li>通过<strong>周期</strong>安排优先级</li>
+<li>周期越短优先级越高</li>
+<li>执行周期最短的任务</li>
+</ul>
+</li>
+<li>最早截止时间优先算法( EDF，Earliest Deadline First )<ul>
+<li>截止时间越早优先级越高</li>
+<li>执行截止时间最早的任务</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="多处理器调度"><a href="#多处理器调度" class="headerlink" title="多处理器调度"></a>多处理器调度</h3><ul>
+<li>多处理机调度的特征<ul>
+<li>多个处理机组成一个多处理机系统</li>
+<li>处理机间可负载共享</li>
+</ul>
+</li>
+<li>对称多处理器( SMP，Symmetric multiprocessing )调度<ul>
+<li>截止时间越早优先级越高每个处理器运行自己的调度程序</li>
+<li>调度程序对共享资源的访问需要进行同步</li>
+</ul>
+</li>
+<li>对称多处理器的进程分配<ul>
+<li>静态进程分配<ul>
+<li>进程从开始到结束都被分配到一个固定的处理机上执行</li>
+<li>每个处理机有自己的就绪队列</li>
+<li>调度开销小</li>
+<li>各处理机可能忙闲不均</li>
+</ul>
+</li>
+<li>动态进程分配<ul>
+<li>进程在执行中可分配到任意空闲处理机执行</li>
+<li>所有处理机共享一个公共的就绪队列</li>
+<li>调度开销大</li>
+<li>各处理机的负载时均衡的</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="优先级反置-Priority-Inversion"><a href="#优先级反置-Priority-Inversion" class="headerlink" title="优先级反置( Priority Inversion )"></a>优先级反置( Priority Inversion )</h3><ul>
+<li>操作系统中出现高优先级进程长时间等待低优先级进程所占用资源的现象</li>
+<li>基于优先级的可抢占调度算法存在优先级反置<br><img src="http://qnya.pomo16.club/80.png" alt></li>
+<li>解决方法<ul>
+<li>优先级继承( Priority Inheritance )<ul>
+<li>占用资源的低优先级进程继承申请资源的高优先级进程的优先级<ul>
+<li>只在占有资源的低优先级进程被阻塞时，才提高占有资源进程的优先级</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>优先级天花板协议( Priority Ceiling Protocol )<ul>
+<li>占用资源进程的优先级和所有可能申请该资源的进程的最高优先级相同<ul>
+<li>不管是否发生等待，都提升占用资源进程的优先级</li>
+<li>优先级高于系统中所有被锁定的资源的优先级上限，任务执行临界区时就不会被阻塞</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="同步互斥"><a href="#同步互斥" class="headerlink" title="同步互斥"></a>同步互斥</h2><h3 id="并发进程的正确性"><a href="#并发进程的正确性" class="headerlink" title="并发进程的正确性"></a>并发进程的正确性</h3><ul>
+<li>独立进程<ul>
+<li>不和其他进程共享资源或状态</li>
+<li><strong>确定性</strong>：输入状态决定结果</li>
+<li><strong>可重现</strong>：能够重现起始条件</li>
+<li>调度顺序不重要</li>
+</ul>
+</li>
+<li>并发进程<ul>
+<li>在多个进程间有资源共享</li>
+<li>不确定性</li>
+<li>不可重现</li>
+</ul>
+</li>
+<li>并发进程的正确性<ul>
+<li>执行过程是不确定性和不可重现的</li>
+<li>程序错误可能是间歇性发生的</li>
+</ul>
+</li>
+</ul>
+<h3 id="进程并发执行的好处"><a href="#进程并发执行的好处" class="headerlink" title="进程并发执行的好处"></a>进程并发执行的好处</h3><ul>
+<li>进程需要与计算机中的其他进程和设备进行协作</li>
+<li>好处1：共享资源<ul>
+<li>多个用户使用同一台计算机</li>
+<li>银行账号存款余额在多台 ATM 机操作</li>
+<li>机器人上的嵌入式系统协调手臂和手的动作</li>
+</ul>
+</li>
+<li>好处2：加速<ul>
+<li>I/O 操作和 CPU 计算机可以重叠(并行)</li>
+<li>程序可划分成多个模块放在多个处理器上并行执行</li>
+</ul>
+</li>
+<li>好处3：模块化<ul>
+<li>将大程序分解成小程序<ul>
+<li>以编译为例，gcc 会调用 cpp，cc1，cc2，as，Id</li>
+</ul>
+</li>
+<li>使系统易于复用和扩展</li>
+</ul>
+</li>
+</ul>
+<h3 id="并发创建新进程时的标识分配"><a href="#并发创建新进程时的标识分配" class="headerlink" title="并发创建新进程时的标识分配"></a>并发创建新进程时的标识分配</h3><ul>
+<li><p>程序可以调用函数 fork() 来创建一个新的进程</p>
+<ul>
+<li>操作系统需要分配一个新的并且唯一的进程 ID</li>
+<li><p>在内核中，这个系统调用会运行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_pid = next_pid++</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>翻译成机器指令</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">LOAD next_pid Reg1</span><br><span class="line">STORE Reg1 new_pid</span><br><span class="line">INC Reg1</span><br><span class="line">STORE Reg1 next_pid</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>两个进程并发执行时的预期结果(假定 next_pid = 100)</p>
+<ul>
+<li>一个进程得到的 ID 应该是100</li>
+<li>另一个进程的 ID 应该是101</li>
+<li>next_pid 应该增加到102</li>
+</ul>
+</li>
+</ul>
+<h3 id="原子操作-Atomic-Operation"><a href="#原子操作-Atomic-Operation" class="headerlink" title="原子操作( Atomic Operation )"></a>原子操作( Atomic Operation )</h3><ul>
+<li>原子操作是指一次不存在任何中断或者失败的操作<ul>
+<li>要么操作成功完成</li>
+<li>或者操作没有执行</li>
+<li>不会出现部分执行的状态</li>
+</ul>
+</li>
+<li><strong>操作系统需要利用同步机制在并发执行的同时，保证一些操作是原子操作</strong></li>
+</ul>
+<h3 id="进程的交互关系：相互感知程度"><a href="#进程的交互关系：相互感知程度" class="headerlink" title="进程的交互关系：相互感知程度"></a>进程的交互关系：相互感知程度</h3><table>
+<thead>
+<tr>
+<th>相互感知的程度</th>
+<th>交互关系</th>
+<th>进程间的影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>相互不感知(完全不了解其他进程的存在)</td>
+<td>独立</td>
+<td>一个进程的操作对其他进程的结果无影响</td>
+</tr>
+<tr>
+<td>间接感知(双方都与第三方交互，如共享资源)</td>
+<td>通过共享进行协作</td>
+<td>一个进程的结果依赖于共享资源的状态</td>
+</tr>
+<tr>
+<td>直接感知(双方直接交互，如通信)</td>
+<td>通过通信进行协作</td>
+<td>一个进程的结果依赖于从其他进程获得的信息</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>互斥( mutual exclusion )<ul>
+<li>一个进程占用资源，其他进程不会使用</li>
+</ul>
+</li>
+<li>死锁( deadlock )<ul>
+<li>多个进程各占用部分资源，形成循环等待</li>
+</ul>
+</li>
+<li>饥饿( starvation )<ul>
+<li>其他进程可能轮流占用资源，一个进程一直得不到资源</li>
+</ul>
+</li>
+</ul>
+<h3 id="临界区-Critical-Section"><a href="#临界区-Critical-Section" class="headerlink" title="临界区( Critical Section )"></a>临界区( Critical Section )</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">entry section</span><br><span class="line">	critical section</span><br><span class="line"><span class="built_in">exit</span> section</span><br><span class="line">	remainder section</span><br></pre></td></tr></table></figure>
+<ul>
+<li>临界区 ( critical section )<ul>
+<li>进程中访问临界资源的一段需要互斥执行的代码</li>
+</ul>
+</li>
+<li>进入区 ( entry section )<ul>
+<li>检查可否进入临界区的一段代码</li>
+<li>如可进入，设置相应”正在访问临界区”标志</li>
+</ul>
+</li>
+<li>退出区 ( exit section )<ul>
+<li>清除”正在访问临界区”标志</li>
+</ul>
+</li>
+<li>剩余区 ( remainder section )<ul>
+<li>代码中的其余部分</li>
+</ul>
+</li>
+</ul>
+<h3 id="临界区的访问规则"><a href="#临界区的访问规则" class="headerlink" title="临界区的访问规则"></a>临界区的访问规则</h3><ul>
+<li>空闲则入<ul>
+<li>没有进程在临界区时，任何进程可进入</li>
+</ul>
+</li>
+<li>忙则等待<ul>
+<li>有进程在临界区时，其他进程均不能进入临界区</li>
+</ul>
+</li>
+<li>有限等待<ul>
+<li>等待进入临界区的进程不能无限期等待</li>
+</ul>
+</li>
+<li>让权等待(可选)<ul>
+<li>不能进入临界区的进程，应释放 CPU (如转换到阻塞状态)</li>
+</ul>
+</li>
+</ul>
+<h3 id="临界区的实现方法-同步方法"><a href="#临界区的实现方法-同步方法" class="headerlink" title="临界区的实现方法(同步方法)"></a>临界区的实现方法(同步方法)</h3><ul>
+<li><p>禁用中断</p>
+<ul>
+<li><p>没有中断，没有上下文切换，因此没有并发</p>
+<ul>
+<li>硬件将中断处理延迟到中断被启动之后</li>
+<li>现代计算机体系结构都提供指令来实现禁用中断</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">local_irq_save(<span class="keyword">unsigned</span> <span class="keyword">long</span> flags);</span><br><span class="line">critical section</span><br><span class="line">local_irq_restore(<span class="keyword">unsigned</span> <span class="keyword">long</span> flags);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入临界区：禁止所有中断，并保存标志</p>
+</li>
+<li>离开临界区：使能所有中断，并恢复标志</li>
+<li>缺点<ul>
+<li>禁用中断后，进程无法被停止<ul>
+<li>整个系统都会为此停下来</li>
+<li>可能导致其他进程处于饥饿状态</li>
+</ul>
+</li>
+<li>临界区可能很长<ul>
+<li>无法确定响应中断所需的时间(可能存在硬件影响)</li>
+</ul>
+</li>
+<li>要小心使用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>软件方法</p>
+<ul>
+<li>线程可通过共享一些共有变量来同步它们的行为</li>
+<li><p>Peterson 算法</p>
+<ul>
+<li>满足线程 Ti 和 Tj 之间互斥的经典的基于软件的解决方法(1981年)</li>
+<li><p>共享变量</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> turn;	<span class="comment">//表示该谁进入临界区</span></span><br><span class="line">boolean flag[]；	<span class="comment">//表示进程是否准备好进入临界区</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入区代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flag[i] = <span class="literal">true</span>;</span><br><span class="line"><span class="literal">true</span> = j;</span><br><span class="line"><span class="keyword">while</span> (flag[j] &amp;&amp; turn == j);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>退出区代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag[i] = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>线程 Ti 的完整代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">  flag[i] = <span class="literal">true</span>;</span><br><span class="line">  <span class="literal">true</span> = j;</span><br><span class="line">  <span class="keyword">while</span> (flag[j] &amp;&amp; turn == j);</span><br><span class="line">  		CRITICAL SECTION</span><br><span class="line">  flag[i] = <span class="literal">false</span>;</span><br><span class="line">  		REMAINDER SECTION</span><br><span class="line">&#125; <span class="keyword">while</span> (<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>Dekkers 算法</p>
+<ul>
+<li>线程 Ti 的代码<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">flag[<span class="number">0</span>] := <span class="literal">false</span>;flag[<span class="number">1</span>] := <span class="literal">false</span>;turn := <span class="number">0</span>;	<span class="comment">//orl</span></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">  flag[i] = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">while</span> flag[j] == <span class="literal">true</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> turn != i &#123;</span><br><span class="line">      flag[i] := <span class="literal">false</span></span><br><span class="line">      <span class="keyword">while</span> turn != i &#123; &#125;</span><br><span class="line">      flag[i] := <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  	CRITICAL SECTION</span><br><span class="line">  turn := j</span><br><span class="line">  flag[i] = <span class="literal">false</span>;</span><br><span class="line">  	EMAINDER SECTION</span><br><span class="line">&#125; <span class="keyword">while</span> (<span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>N 线程的软件方法( Eisenbery 和 McGuire )<br><img src="http://qnya.pomo16.club/81.png" alt></p>
+</li>
+<li>缺点<ul>
+<li>复杂：需要两个进程间的共享数据项</li>
+<li>需要忙等待：浪费 CPU 时间</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>更高级的抽象方法<ul>
+<li>硬件提供了一些同步原语<ul>
+<li>中断禁用，原子操作指令等</li>
+</ul>
+</li>
+<li>操作系统提供更高级的编程抽象来简化进程同步<ul>
+<li>例如：锁、信号量</li>
+<li>用硬件原语来构建</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>不同的临界区实现机制的比较<ul>
+<li>性能：并发级别</li>
+</ul>
+</li>
+</ul>
+<h3 id="锁-lock"><a href="#锁-lock" class="headerlink" title="锁( lock )"></a>锁( lock )</h3><ul>
+<li>锁是一个抽象的数据结构<ul>
+<li>一个二进制变量(锁定/解锁)</li>
+<li>Lock::Acquire()<ul>
+<li>锁被释放前一直等待，然后得到锁</li>
+</ul>
+</li>
+<li>Lock::Release()<ul>
+<li>释放锁，唤醒任何等待的进程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>使用锁来控制临界区访问<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lock_next_pid-&gt;Acquire();</span><br><span class="line">new_pid = next_pid++;</span><br><span class="line">lock_next_pid-&gt;Release();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="原子操作指令"><a href="#原子操作指令" class="headerlink" title="原子操作指令"></a>原子操作指令</h3><ul>
+<li>现代 CPU 体系结构都提供一些特殊的原子操作指令</li>
+<li><p>测试和置位( Test-and-Set )指令</p>
+<ul>
+<li>从内存单元中读取值</li>
+<li>测试该值是否为1(然后返回真或假)</li>
+<li>内存单元值设置为1<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">boolean <span class="title">TestAndSet</span> <span class="params">(boolean *target)</span></span>&#123;</span><br><span class="line">  boolean rv = *target;</span><br><span class="line">  *target = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">return</span> rv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>交换指令( exchange )</p>
+<ul>
+<li>交换内存中的两个值<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Exchange</span> <span class="params">(boolean *a, boolean *b)</span></span>&#123;</span><br><span class="line">  boolean temp = *a;</span><br><span class="line">  *a = *b;</span><br><span class="line">  *b = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>使用 TS 指令实现自旋锁( spinlock )<br><img src="http://qnya.pomo16.club/82.png" alt> </p>
+<ul>
+<li>线程在等待的时候需要消耗 CPU 时间</li>
+</ul>
+</li>
+<li>使用 TS 指令实现无忙等待锁<br><img src="http://qnya.pomo16.club/83.png" alt></li>
+<li>原子操作指令锁的特征<ul>
+<li>优点<ul>
+<li>适用于单处理器或者共享生存的<strong>多处理器</strong>中<strong>任意数量的进程同步</strong></li>
+<li>简单并且容易证明</li>
+<li>支持多临界区</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>忙等待消耗处理器时间</li>
+<li>可能导致饥饿：进程离开临界区时有多个等待进程的情况</li>
+<li>死锁<ul>
+<li>拥有临界区的低优先级进程</li>
+<li>请求访问临界区的高优先级进程获得处理器并等待临界区</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="同步方法总结"><a href="#同步方法总结" class="headerlink" title="同步方法总结"></a>同步方法总结</h3><ul>
+<li>并发问题<ul>
+<li>多线程并发导致资源竞争</li>
+</ul>
+</li>
+<li>同步概念<ul>
+<li>协调多线程对共享数据的访问</li>
+<li>任何时刻只能有一个线程执行临界区代码</li>
+</ul>
+</li>
+<li>确保同步正确的方法<ul>
+<li>底层硬件支持</li>
+<li>高层次的编程抽象</li>
+</ul>
+</li>
+<li>锁是一种高级的同步抽象方法<ul>
+<li>互斥可以使用锁来实现</li>
+<li>需要硬件支持</li>
+</ul>
+</li>
+<li>常用的三种同步实现方法<ul>
+<li>禁用中断(仅限于单处理器)</li>
+<li>软件方法(复杂)</li>
+<li>原子操作指令(单处理器或多处理器均可)</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/84.png" alt></li>
+</ul>
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/20/操作系统（六）/">操作系统（六）</a><a class="next" href="/2019/03/18/操作系统（四）/">操作系统（四）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

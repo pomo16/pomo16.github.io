@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>BIO,NIO和AIO | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">BIO,NIO和AIO</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">BIO,NIO和AIO</h1><div class="post-meta">May 20, 2019<span> | </span><span class="category"><a href="/categories/web/">web</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 3.5k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 12</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在 Java 中，有三种 IO 模型: BIO, NIO, AIO。介绍这三种 IO 模型之前，需要介绍一下同步，异步与阻塞，非阻塞的概念，然后再从 Java 和 Linux OS 的角度去分析 BIO, NIO 和 AIO。</p>
+<h2 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h2><h4 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h4><p>同步就是发起一个调用后，<strong>被调用者</strong>未处理完请求之前，调用不返回。</p>
+<h4 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h4><p>异步就是发起一个调用后，立刻得到<strong>被调用者</strong>的回应表示已接收到请求，但是被调用者并没有返回结果，此时我们可以处理其他的请求，被调用者通常<strong>依靠事件，回调</strong>等机制来通知调用者其返回结果。</p>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h4><p>同步与异步最大的区别就是<strong>被调用方</strong>的<strong>执行方式</strong>和<strong>返回时机</strong>，同步指的是<strong>被调用方</strong>做完事情之后再返回，异步指的是<strong>被调用方</strong>先返回，然后再做事情，做完之后再想办法通知调用方。</p>
+<h2 id="阻塞和非阻塞"><a href="#阻塞和非阻塞" class="headerlink" title="阻塞和非阻塞"></a>阻塞和非阻塞</h2><h4 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h4><p>阻塞就是发起一个请求，<strong>调用者</strong>一直等待请求结果返回，也就是当前线程会被挂起，无法从事其他任务，只有当条件就绪才能继续。</p>
+<h4 id="非阻塞"><a href="#非阻塞" class="headerlink" title="非阻塞"></a>非阻塞</h4><p>非阻塞就是发起一个请求，<strong>调用者</strong>不用一直等着结果返回，可以先去干其他事情。</p>
+<h2 id="同步、异步和阻塞、非阻塞的区别"><a href="#同步、异步和阻塞、非阻塞的区别" class="headerlink" title="同步、异步和阻塞、非阻塞的区别"></a>同步、异步和阻塞、非阻塞的区别</h2><p>阻塞和同步不是一回事，同步，异步与阻塞，非阻塞针对的对象是不一样的，<strong>阻塞,非阻塞是说的调用者，同步，异步说的是被调用者</strong>。</p>
+<h2 id="BIO、NIO、AIO概览"><a href="#BIO、NIO、AIO概览" class="headerlink" title="BIO、NIO、AIO概览"></a>BIO、NIO、AIO概览</h2><ul>
+<li><strong>BIO(Blocking I/O)</strong>：BIO 也就是传统的同步阻塞 IO 模型，对应 Java.io 包，它提供了很多 IO 功能，比如输入输出流，对文件进行操作。在网络编程( Socket 通信)中也同样进行 IO 操作。</li>
+<li><strong>NIO(New I/O)</strong>: NIO 是一种同步非阻塞的 I/O 模型，在 Java 1.4 中引入了 NIO 框架，对应 java.nio 包，提供了 Channel , Selector，Buffer 等抽象。</li>
+<li><strong>AIO</strong>: AIO 也就是 NIO 2。在 Java 7 中引入了 NIO 的改进版 NIO 2,它是异步非阻塞的 IO 模型。</li>
+</ul>
+<h2 id="Linux的5种-I-O模型"><a href="#Linux的5种-I-O模型" class="headerlink" title="Linux的5种 I/O模型"></a>Linux的5种 I/O模型</h2><p>上面简单介绍了 Java 中的三种 IO 模型，三种模型提供的与 IO 有关的 API，在文件处理时，底层实际上是依赖操作系统层面的 IO 操作实现的，比如在 Linux 2.6 以后，Java 中的 NIO 和 AIO 都是通过 epoll 来实现的，关于 epoll 等概念后面也会阐述。</p>
+<p>而实际上在 Linux(Unix) 操作系统中，共有五种 IO 模型，分别是：<strong>阻塞 IO 模型</strong>、<strong>非阻塞 IO 模型</strong>、<strong>IO 复用模型</strong>、<strong>信号驱动 IO 模型</strong>以及<strong>异步 IO 模型</strong>，而4种都是同步的，只有最后一种是异步的。</p>
+<h4 id="阻塞IO模型-BIO"><a href="#阻塞IO模型-BIO" class="headerlink" title="阻塞IO模型 - BIO"></a>阻塞IO模型 - BIO</h4><p><img src="http://qnya.pomo16.club/213.png" alt></p>
+<p>一个输入操作通常包括两个不同的阶段：</p>
+<ul>
+<li>等待数据准备好</li>
+<li>从内核向进程复制数据</li>
+</ul>
+<p>对于一个套接字上的输入操作，第一步通常涉及等待数据从网络中到达，当所等待分组到达时，它被复制到内核中的某个缓冲区，第二步就是把数据从内核缓冲区复制到应用进程缓冲区。</p>
+<p>从上图可以看出，<strong>应用进程通过系统调用 <code>recvfrom</code> 去接收数据，而由于内核数据没有准备好，应用进程就会阻塞，直到内核准备好数据并将其从内核复制到应用进程的缓冲区中或者发生错误才返回</strong>。最常见的错误就是系统调用被信号中断。进程从调用 recvfrom 开始到它返回的整段时间内是被阻塞的。</p>
+<p>Linux下的阻塞式 I/O 模型就对应了 Java下的 BIO 模型，BIO 的底层实现是调用操作系统的 API 去执行的，也就是调用操作系统的 Socket 套接字。</p>
+<h4 id="非阻塞式I-O模型-NIO"><a href="#非阻塞式I-O模型-NIO" class="headerlink" title="非阻塞式I/O模型 - NIO"></a>非阻塞式I/O模型 - NIO</h4><p><img src="http://qnya.pomo16.club/214.png" alt></p>
+<p>应用进程通过系统调用 <code>recvfrom</code> 不断的去和内核交互，直到内核数据报准备好，而如果内核无数据准备好，转而立即返回一个 <code>EWOULDBLOCK</code> 的错误，过一段时间再次发送 <code>recvfrom</code> 请求，在此期间进程可以做其他事情，不用一直等待，这就是非阻塞。</p>
+<p>当一个应用进程循环调用 <code>recvfrom</code> 时，我们称之为<strong>轮询(polling)</strong>，应用进程持续轮询内核，以查看某个操作是否就绪。Java 的 NIO 映射到 Linux 操作系统就是如上图所示的非阻塞 I/O  模型。</p>
+<h4 id="I-O复用模型"><a href="#I-O复用模型" class="headerlink" title="I/O复用模型"></a>I/O复用模型</h4><p><img src="http://qnya.pomo16.club/215.png" alt></p>
+<p>IO 多路复用使用 <code>select/poll/epoll</code> 函数，多个进程的 IO 都可以注册在同一个  <code>select</code> 上，当用户进程调用该 <code>select</code> 时，<code>select</code> 去监听所有注册好的 IO,<strong>如果所有被监听的 IO 需要的数据都没有准备好，那么 select 调用进程会被阻塞</strong>，只要任意一个 IO 的数据报套接字变为可读，即数据报已经准备好，<code>select</code> 就返回套接字可读这一条件，然后调用 <code>recvfrom</code> 把所读数据报复制到应用进程缓冲区。</p>
+<p><strong>强调一点就是，IO 多路复用模型并没有涉及到非阻塞</strong>，进程在发出 <code>select</code> 后，要一直阻塞等待其监听的所有 IO 操作至少有一个数据准备好才返回，强调阻塞状态，不存在非阻塞。</p>
+<p>而在 Java NIO 中也可以实现多路复用，主要是利用多路复用器 <strong>Selector</strong>，与这里的 <code>select</code>函数类型，<strong>Selector</strong> 会不断轮询注册在其上的通道 Channel，如果有某一个 Channel 上面发生读或写事件，这个 Channel 处于就绪状态，就会被 Selector 轮询出来。关于 Java NIO 实现多路复用更多的介绍请查询相关文章。</p>
+<p><strong>I/O 多路复用的主要应用场景</strong></p>
+<ul>
+<li>服务器需要同时处理多个处于监听状态或者多个连接状态的套接字</li>
+<li>服务器需要同时处理多种网络协议的套接字</li>
+</ul>
+<p><strong>I/O多路复用的系统调用函数</strong></p>
+<p>目前支持 I/O 多路复用的系统调用函数有 <code>select，pselect，poll，epoll</code>。在 Linux 网络编程中，很长一段时间都使用 <code>select</code> 做轮询和网络事件通知。然而因为 <code>select</code> 的一些固有缺陷导致它的应用受到了很大的限制，比如 <code>select</code> 单个进程打开的最大句柄数是有限的。最终在 Linux 2.6 选择 <code>epoll</code> 替代了 <code>select</code>，Java NIO 和 AIO 底层就是用 <code>epoll</code>。</p>
+<h4 id="信号驱动式I-O模型"><a href="#信号驱动式I-O模型" class="headerlink" title="信号驱动式I/O模型"></a>信号驱动式I/O模型</h4><p><img src="http://qnya.pomo16.club/216.png" alt></p>
+<p>应用进程预先向内核安装一个信号处理函数，然后立即返回，进程继续工作，不阻塞，当数据报准备好读取时，内核就为该进程产生一个信号通知进程，然后进程再调用 <code>recvfrom</code> 读取数据报。</p>
+<p><strong>信号驱动式IO不是异步的</strong></p>
+<p>信号驱动式 IO 在数据准备阶段是异步的，当内核中有数据报准备后再通知进程，但是在调用  <strong>recvfrom</strong> 操作进行数据拷贝时是同步的，所以总体来说，整个 IO 过程不能是异步的。</p>
+<h4 id="异步I-O模型-AIO"><a href="#异步I-O模型-AIO" class="headerlink" title="异步I/O模型 - AIO"></a>异步I/O模型 - AIO</h4><p><img src="http://qnya.pomo16.club/217.png" alt></p>
+<p>应用进程调用 <code>aio_read</code> 函数，给内核传递描述符，缓存区指针，缓存区大小和文件偏移，并告诉内核当整个操作完成时如何通知进程，然后该系统调用立即返回，而且在等待 I/O 完成期间，我们的进程不被阻塞，进程可以去干其他事情，然后内核开始等待数据准备，数据准备好以后再拷贝数据到进程缓冲区，最后通知整个 IO 操作已完成。</p>
+<p>Java 的 AIO 提供了异步通道 API，其操作系统底层实现就是这个异步 I/O 模型。</p>
+<p><strong>与信号驱动式I/O的区别</strong></p>
+<p>主要区别在于: 信号驱动式 I/O 是由内核通知我们何时去启动一个 I/O 操作，而异步 I/O 模型是由内核通知我们 I/O 操作何时完成。</p>
+<h4 id="5种I-O模型的比较"><a href="#5种I-O模型的比较" class="headerlink" title="5种I/O模型的比较"></a>5种I/O模型的比较</h4><p><img src="http://qnya.pomo16.club/218.png" alt></p>
+<p>由上图可以再次看出，IO操作主要分为两个阶段:</p>
+<ul>
+<li>等待数据报准备阶段</li>
+<li>数据拷贝阶段</li>
+</ul>
+<p><strong>前4种 IO 模型都是同步 IO 模型，为什么说都是同步的，因为它们在第二步数据拷贝阶段都是阻塞的，这会导致整个请求进程存在阻塞的情况，所以是同步的，而异步 IO 模型不会导致请求进程阻塞。</strong></p>
+<h2 id="I-O复用的实现"><a href="#I-O复用的实现" class="headerlink" title="I/O复用的实现"></a>I/O复用的实现</h2><p>select/poll/epoll 都是 I/O 多路复用的具体实现，select 出现的最早，之后是 poll，再是 epoll。</p>
+<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><p>有三种类型的描述符类型：readset、writeset、exceptset，分别对应读、写、异常条件的描述符集合。fd_set 使用数组实现，数组大小使用 FD_SETSIZE 定义。</p>
+<p>timeout 为超时参数，调用 select 会一直阻塞直到有描述符的事件到达或者等待的时间超过 timeout。</p>
+<p>成功调用返回结果大于 0，出错返回结果为 -1，超时返回结果为 0。</p>
+<h4 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h4><p>pollfd 使用链表实现。</p>
+<h4 id="select-和-poll-比较"><a href="#select-和-poll-比较" class="headerlink" title="select 和 poll 比较"></a>select 和 poll 比较</h4><ol>
+<li><p>功能</p>
+<p>select 和 poll 的功能基本相同，不过在一些实现细节上有所不同。</p>
+<ul>
+<li>select 会修改描述符，而 poll 不会；</li>
+<li>select 的描述符类型使用数组实现，FD_SETSIZE 大小默认为 1024，因此默认只能监听 1024 个描述符。如果要监听更多描述符的话，需要修改 FD_SETSIZE 之后重新编译；而 poll 的描述符类型使用链表实现，没有描述符数量的限制；</li>
+<li>poll 提供了更多的事件类型，并且对描述符的重复利用上比 select 高。</li>
+<li>如果一个线程对某个描述符调用了 select 或者 poll，另一个线程关闭了该描述符，会导致调用结果不确定。</li>
+</ul>
+</li>
+<li><p>速度</p>
+<p>select 和 poll 速度都比较慢。</p>
+<ul>
+<li>select 和 poll 每次调用都需要将全部描述符从应用进程缓冲区复制到内核缓冲区。</li>
+<li>select 和 poll 的返回结果中没有声明哪些描述符已经准备好，所以如果返回值大于 0 时，应用进程都需要使用轮询的方式来找到 I/O 完成的描述符。</li>
+</ul>
+</li>
+<li><p>可移植性</p>
+<p>几乎所有的系统都支持 select，但是只有比较新的系统支持 poll。</p>
+</li>
+</ol>
+<h4 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h4><p>epoll_ctl() 用于向内核注册新的描述符或者是改变某个文件描述符的状态。已注册的描述符在内核中会被维护在一棵红黑树上，通过回调函数内核会将 I/O 准备好的描述符加入到一个链表中管理，进程调用 epoll_wait() 便可以得到事件完成的描述符。</p>
+<p>从上面的描述可以看出，epoll 只需要将描述符从进程缓冲区向内核缓冲区拷贝一次，并且进程不需要通过轮询来获得事件完成的描述符。</p>
+<p>epoll 仅适用于 Linux OS。</p>
+<p>epoll 比 select 和 poll 更加灵活而且没有描述符数量限制。</p>
+<p>epoll 对多线程编程更有友好，一个线程调用了 epoll_wait() 另一个线程关闭了同一个描述符也不会产生像 select 和 poll 的不确定情况。</p>
+<h4 id="epoll工作模式"><a href="#epoll工作模式" class="headerlink" title="epoll工作模式"></a>epoll工作模式</h4><p>epoll 的描述符事件有两种触发模式：LT（level trigger）和 ET（edge trigger）。</p>
+<ol>
+<li><p>LT 模式</p>
+<p>当 epoll_wait() 检测到描述符事件到达时，将此事件通知进程，进程可以不立即处理该事件，下次调用 epoll_wait() 会再次通知进程。是默认的一种模式，并且同时支持 Blocking 和 No-Blocking。</p>
+</li>
+<li><p>ET 模式</p>
+<p>和 LT 模式不同的是，通知之后进程必须立即处理事件，下次再调用 epoll_wait() 时不会再得到事件到达的通知。</p>
+<p>很大程度上减少了 epoll 事件被重复触发的次数，因此效率要比 LT 模式高。只支持 No-Blocking，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。</p>
+</li>
+</ol>
+<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>很容易产生一种错觉认为只要用 epoll 就可以了，select 和 poll 都已经过时了，其实它们都有各自的使用场景。</p>
+<ol>
+<li><p>select 应用场景</p>
+<p>select 的 timeout 参数精度为 1ns，而 poll 和 epoll 为 1ms，因此 select 更加适用于实时性要求比较高的场景，比如核反应堆的控制。</p>
+<p>select 可移植性更好，几乎被所有主流平台所支持。</p>
+</li>
+<li><p>poll 应用场景</p>
+<p>poll 没有最大描述符数量的限制，如果平台支持并且对实时性要求不高，应该使用 poll 而不是 select。</p>
+</li>
+<li><p>epoll 应用场景</p>
+<p>只需要运行在 Linux 平台上，有大量的描述符需要同时轮询，并且这些连接最好是长连接。</p>
+<p>需要同时监控小于 1000 个描述符，就没有必要使用 epoll，因为这个应用场景下并不能体现 epoll 的优势。</p>
+<p>需要监控的描述符状态变化多，而且都是非常短暂的，也没有必要使用 epoll。因为 epoll 中的所有描述符都存储在内核中，造成每次需要对描述符的状态改变都需要通 epoll_ctl() 进行系统调用，频繁系统调用降低效率。并且 epoll 的描述符存储在内核，不容易调试。</p>
+</li>
+</ol>
+</div><div class="tags"><a href="/tags/java/">java</a><a href="/tags/IO/">IO</a></div><div class="post-nav"><a class="pre" href="/2019/06/01/秒杀系统服务器优化思路/">秒杀系统服务器优化思路</a><a class="next" href="/2019/04/27/Redis/">Redis</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>

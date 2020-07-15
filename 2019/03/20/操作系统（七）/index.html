@@ -1,0 +1,914 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（七） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（七）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（七）</h1><div class="post-meta">Mar 20, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5.9k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 20</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><h3 id="文件系统和文件"><a href="#文件系统和文件" class="headerlink" title="文件系统和文件"></a>文件系统和文件</h3><ul>
+<li>文件系统是操作系统中管理持久性数据的子系统，提供数据存储和访问功能<ul>
+<li>组织、检索、读写访问数据</li>
+<li>大多数计算机系统都有文件系统</li>
+<li>Google 也是一个文件系统</li>
+</ul>
+</li>
+<li>文件是具有符号名，由字节序列构成的数据项集合<ul>
+<li>文件系统的基本数据单位</li>
+<li>文件名是文件的标识符号</li>
+</ul>
+</li>
+<li>文件系统的功能<ul>
+<li>分配文件磁盘空间<ul>
+<li>管理文件块(位置和顺序)</li>
+<li>管理空闲空间(位置)</li>
+<li>分配算法(策略)</li>
+</ul>
+</li>
+<li>管理文件集合<ul>
+<li>定位：文件及其内容</li>
+<li>命名：通过名字找到文件</li>
+<li>文件系统结构：文件组织方式</li>
+</ul>
+</li>
+<li>数据可靠和安全<ul>
+<li>安全：多层次保护数据安全</li>
+<li>可靠<ul>
+<li>持久保存文件</li>
+<li>避免系统崩溃、媒体错误、攻击等</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>文件属性<ul>
+<li>名称、类型、位置、大小、保护、创建者、创建时间、最近修改时间，…</li>
+<li>文件头：文件系统元数据中的文件信息<ul>
+<li>文件属性</li>
+<li>文件存储位置和顺序</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="打开文件"><a href="#打开文件" class="headerlink" title="打开文件"></a>打开文件</h3><ul>
+<li>文件访问模式<ul>
+<li>进程访问文件数据前必须先”打开”文件</li>
+</ul>
+</li>
+<li>内核跟踪进程打开的所有文件<ul>
+<li>操作系统为每个进程维护一个打开文件表</li>
+<li>文件描述符是打开文件的标识<br><img src="http://qnya.pomo16.club/109.png" alt></li>
+</ul>
+</li>
+</ul>
+<h3 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h3><ul>
+<li>操作系统在打开文件表中维护的打开文件状态和信息<ul>
+<li>文件指针<ul>
+<li>最近一次读写位置</li>
+<li>每个进程分别维护自己的打开文件指针</li>
+</ul>
+</li>
+<li>文件打开计数<ul>
+<li>当前打开文件的次数</li>
+<li>最后一个进程关闭文件时，将其从打开文件表中移除</li>
+</ul>
+</li>
+<li>文件的磁盘位置<ul>
+<li>缓存数据访问信息</li>
+</ul>
+</li>
+<li>访问权限<ul>
+<li>每个进程的文件访问模式信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件的用户视图和系统视图"><a href="#文件的用户视图和系统视图" class="headerlink" title="文件的用户视图和系统视图"></a>文件的用户视图和系统视图</h3><ul>
+<li>文件的用户视图<ul>
+<li>持久的<strong>数据结构</strong></li>
+</ul>
+</li>
+<li>系统访问接口<ul>
+<li><strong>字节序列</strong>的集合( UNIX )</li>
+<li>系统不关心存储在磁盘上的数据结构</li>
+</ul>
+</li>
+<li>操作系统的文件视图<ul>
+<li>数据块的集合</li>
+<li>数据块是逻辑存储单元，而扇区是物理存储单元</li>
+<li>块大小 &lt; &gt; 扇区大小</li>
+</ul>
+</li>
+<li>用户视图到系统视图的转换<ul>
+<li>进程读文件<ul>
+<li>获取字节所在的数据块</li>
+<li>返回数据块内对应部分</li>
+</ul>
+</li>
+<li>进程写文件<ul>
+<li>获取数据块</li>
+<li>修改数据块中对应部分</li>
+<li>写回数据块</li>
+</ul>
+</li>
+<li><strong>文件系统中的基本操作单位是数据块</strong><ul>
+<li>例如，getc() 和 putc() 即使每次只访问1字节的数据，也需要缓存目标数据4096字节</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="访问模式"><a href="#访问模式" class="headerlink" title="访问模式"></a>访问模式</h3><ul>
+<li>操作系统需要了解进程如何访问文件</li>
+<li><strong>顺序访问</strong>：按字节依次读取<ul>
+<li>大多数的文件访问都是顺序访问</li>
+</ul>
+</li>
+<li><strong>随机访问</strong>：从中间读写<ul>
+<li>不常用，但仍然重要<ul>
+<li>例如：虚拟内存中把内存页存储在文件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>索引访问</strong>：依据数据特征索引<ul>
+<li>通常操作系统不完整提供索引访问</li>
+<li>数据库是建立在索引内容的磁盘访问上</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件内部结构"><a href="#文件内部结构" class="headerlink" title="文件内部结构"></a>文件内部结构</h3><ul>
+<li>无结构：单词、字节序列</li>
+<li>简单记录结构<ul>
+<li>分列</li>
+<li>固定长度</li>
+<li>可变长度</li>
+</ul>
+</li>
+<li>复杂结构<ul>
+<li>格式化的文档(如，MS Word，PDF)</li>
+<li>可执行文件</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件共享和访问控制"><a href="#文件共享和访问控制" class="headerlink" title="文件共享和访问控制"></a>文件共享和访问控制</h3><ul>
+<li><strong>多用户系统</strong>中的文件共享是很必要的</li>
+<li>访问控制<ul>
+<li>每个用户能够获得哪些文件的哪些访问权限</li>
+<li>访问模式：读、写、执行、删除、列表等</li>
+</ul>
+</li>
+<li>文件访问控制列表( ACL )：&lt;文件实体，权限&gt;</li>
+<li>Unix 模式<ul>
+<li>&lt;用户|组|所有人，读|写|可执行&gt;</li>
+<li><strong>用户标识 ID</strong> ：标识用户，表明每个用户所允许的权限以及保护模式</li>
+<li><strong>组标识 ID </strong>：允许用户组成组，并指定了组访问权限</li>
+</ul>
+</li>
+</ul>
+<h3 id="语义一致性"><a href="#语义一致性" class="headerlink" title="语义一致性"></a>语义一致性</h3><ul>
+<li>规定多进程如何同时访问共享文件<ul>
+<li>与同步算法类似</li>
+<li>因磁盘 I/O 和网络延迟而设计简单</li>
+</ul>
+</li>
+<li>Unix 文件系统( UFS )语义<ul>
+<li>对打开文件的写入内容立即对其他打开同一文件的其他用户可见</li>
+<li>共享文件指针允许多用户同时读取和写入文件</li>
+</ul>
+</li>
+<li>会话语义：写入内容只有当文件关闭时可见</li>
+<li>读写锁：一些操作系统和文件系统提供该功能</li>
+</ul>
+<h3 id="分层文件系统"><a href="#分层文件系统" class="headerlink" title="分层文件系统"></a>分层文件系统</h3><ul>
+<li>文件以目录的方式组织起来</li>
+<li>目录是一类特殊的文件<ul>
+<li>目录的内容是文件索引表&lt;文件名，指向文件的指针&gt;</li>
+</ul>
+</li>
+<li>目录和文件的树形结构<ul>
+<li>早起的文件系统是扁平的(只有一层目录)</li>
+<li><img src="http://qnya.pomo16.club/110.png" alt></li>
+</ul>
+</li>
+</ul>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ul>
+<li>目录操作<ul>
+<li>典型目录操作<ul>
+<li>搜索文件</li>
+<li>创建文件</li>
+<li>删除文件</li>
+<li>列目录</li>
+<li>重命名文件</li>
+<li>遍历路径</li>
+</ul>
+</li>
+<li>操作系统应该只允许内核修改目录<ul>
+<li>确保映射的完整性</li>
+<li>应用程序通过系统调用访问目录</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>目录实现<ul>
+<li>文件名的线性列表，包涵了指向数据块的指针<ul>
+<li>编程简单</li>
+<li>执行耗时</li>
+</ul>
+</li>
+<li><strong>哈希表</strong>：哈希数据结构的线性表<ul>
+<li>减少目录搜索时间</li>
+<li>冲突 - 两个文件名的哈希值相同</li>
+<li>固定大小</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件别名"><a href="#文件别名" class="headerlink" title="文件别名"></a>文件别名</h3><ul>
+<li>两个或多个文件名关联同一个文件<br><img src="http://qnya.pomo16.club/111.png" alt></li>
+<li><strong>硬链接</strong>：多个文件项指向一个文件</li>
+<li><strong>软链接</strong>：以”快捷方式”指向其他文件<ul>
+<li>通过存储真实文件的逻辑名称来实现</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件目录中的循环"><a href="#文件目录中的循环" class="headerlink" title="文件目录中的循环"></a>文件目录中的循环</h3><p><img src="http://qnya.pomo16.club/112.png" alt></p>
+<ul>
+<li>如何保证没有循环?<ul>
+<li>只允许到文件的链接，不允许在子目录的链接</li>
+<li>增加链接时，用循环检测算法确定是否合理</li>
+</ul>
+</li>
+<li>更多实践<ul>
+<li>限制路径可遍历文件目录的数量</li>
+</ul>
+</li>
+</ul>
+<h3 id="名字解析-路径遍历"><a href="#名字解析-路径遍历" class="headerlink" title="名字解析(路径遍历)"></a>名字解析(路径遍历)</h3><ul>
+<li>名字解析：把逻辑名字转换成物理资源(如文件)<ul>
+<li>依据路径名，在文件系统中找到实际文件位置</li>
+<li>遍历文件目录直到找到目标文件</li>
+</ul>
+</li>
+<li>举例：解析”/bin/ls”<ul>
+<li>读取根目录的文件头(在磁盘固定位置)</li>
+<li>读取根目录的数据块，搜索 “bin” 项</li>
+<li>读取 bin 的文件头</li>
+<li>读取 bin 的数据块；搜索 “ls” 项</li>
+<li>读取 ls 大的文件头</li>
+</ul>
+</li>
+<li>当前工作目录( PWD )<ul>
+<li>每个进程都会指向一个文件目录用于解析文件名</li>
+<li>允许用户指定相对路径来代替绝对路径<ul>
+<li>如，用 PWD = “/bin” 能够解析 “ls”</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件系统挂载"><a href="#文件系统挂载" class="headerlink" title="文件系统挂载"></a>文件系统挂载</h3><ul>
+<li>文件系统需要先挂载才能被访问</li>
+<li>未挂载的文件系统被挂载在挂载点上</li>
+<li><img src="http://qnya.pomo16.club/113.png" height="400px"></li>
+</ul>
+<h3 id="文件系统种类"><a href="#文件系统种类" class="headerlink" title="文件系统种类"></a>文件系统种类</h3><ul>
+<li>磁盘文件系统<ul>
+<li>文件存储在数据存储设备上，如磁盘</li>
+<li>例如：FAT，NTFS，ext2/3，ISO9660等</li>
+</ul>
+</li>
+<li>数据库文件系统<ul>
+<li>文件特征是可被寻址(辨识)的</li>
+<li>例如：WinFS</li>
+</ul>
+</li>
+<li>日志文件系统<ul>
+<li>记录文件系统的修改/事件</li>
+</ul>
+</li>
+<li>网络/分布式文件系统<ul>
+<li>例如：NFS，SMB，AFS，GFS</li>
+<li>文件可以通过网络被共享<ul>
+<li>文件位于远程服务器</li>
+<li>客户端远程挂载服务器文件系统</li>
+<li>标准系统文件访问被转换成远程访问</li>
+<li>标准文件共享协议：NFS for Unix，CIFS for Windows</li>
+</ul>
+</li>
+<li>分布式文件系统的挑战<ul>
+<li>客户端和客户端上的用户辨别起来很复杂<ul>
+<li>例如：NFS 是不安全的</li>
+</ul>
+</li>
+<li><strong>一致性</strong>问题</li>
+<li>错误处理模式</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>特殊/虚拟文件系统</li>
+</ul>
+<h3 id="虚拟文件系统"><a href="#虚拟文件系统" class="headerlink" title="虚拟文件系统"></a>虚拟文件系统</h3><ul>
+<li>虚拟文件系统的实现<ul>
+<li>分层结构<ul>
+<li>虚拟(逻辑)文件系统( VFS，Virtual File System )</li>
+<li>特定文件系统模块<br><img src="http://qnya.pomo16.club/114.png" alt></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚拟文件系统( VFS )<ul>
+<li>目的：对所有不同文件系统的抽象</li>
+<li>功能<ul>
+<li>提供相同的文件和文件系统<strong>接口</strong></li>
+<li>管理所有文件和文件系统关联的<strong>数据结构</strong></li>
+<li>高效查询<strong>例程</strong>，遍历文件系统</li>
+<li>与特定文件系统模块的<strong>交互</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件系统基本数据结构"><a href="#文件系统基本数据结构" class="headerlink" title="文件系统基本数据结构"></a>文件系统基本数据结构</h3><ul>
+<li>文件卷控制块( Unix：”<strong>superblock</strong>“ )<ul>
+<li>每个文件系统一个</li>
+<li>文件系统详细信息</li>
+<li>块、块大小、空余块、计数/指针等</li>
+</ul>
+</li>
+<li>文件控制块( Unix：”vnode” or “<strong>inode</strong>“ )<ul>
+<li>每个文件一个</li>
+<li>文件详细信息</li>
+<li>访问权限、拥有者、大小、数据块位置等</li>
+</ul>
+</li>
+<li>目录项( Linux：”dentry” )<ul>
+<li>每个目录项一个(目录和文件)</li>
+<li>将目录项数据结构及树形布局编码成树形数据结构</li>
+<li>指向文件控制块、父目录、子目录等</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件系统的存储结构"><a href="#文件系统的存储结构" class="headerlink" title="文件系统的存储结构"></a>文件系统的存储结构</h3><ul>
+<li>文件系统数据结构<ul>
+<li>卷控制块(每个文件系统一个)</li>
+<li>文件控制块(每个文件一个)</li>
+<li>目录节点(每个目录项一个)</li>
+</ul>
+</li>
+<li>持久存储在外存中：存储设备的数据块中</li>
+<li>当需要时加载进内存<ul>
+<li>卷控制模块：当文件系统挂载时进入内存</li>
+<li>文件控制块：当文件被访问时进入内存</li>
+<li>目录节点：在遍历一个文件路径时进入内存</li>
+</ul>
+</li>
+<li>文件系统的存储视图<br><img src="http://qnya.pomo16.club/115.png" alt></li>
+</ul>
+<h3 id="文件缓存"><a href="#文件缓存" class="headerlink" title="文件缓存"></a>文件缓存</h3><ul>
+<li>多种磁盘缓存位置<br><img src="http://qnya.pomo16.club/116.png" alt></li>
+<li>数据块缓存<ul>
+<li>数据块按需读入内存<ul>
+<li>提供 read() 操作</li>
+<li>预读：预先读取后面的数据块</li>
+</ul>
+</li>
+<li>数据块使用后被缓存<ul>
+<li>假设数据将会再次用到</li>
+<li>写操作可能被缓存和延迟写入</li>
+</ul>
+</li>
+<li>两种数据块缓存方式<ul>
+<li>数据块缓存</li>
+<li>页缓存：同一缓存数据块和内存页</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/117.png" alt></li>
+</ul>
+</li>
+<li>页缓存<ul>
+<li>虚拟页式存储：在虚拟地址空间中虚拟页面可映射到本地外存文件中</li>
+<li>文件数据块的页缓存<ul>
+<li>在虚拟内存中文件数据块被映射成页</li>
+<li>文件的读/写操作被转换成对内存的访问</li>
+<li>可能导致缺页和/或设置为脏页</li>
+<li>问题：页置换算法需要协调虚拟存储和页缓存间的页面数</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/118.png" alt></li>
+<li><img src="http://qnya.pomo16.club/119.png" alt></li>
+</ul>
+</li>
+</ul>
+<h3 id="文件系统中打开文件的数据结构"><a href="#文件系统中打开文件的数据结构" class="headerlink" title="文件系统中打开文件的数据结构"></a>文件系统中打开文件的数据结构</h3><ul>
+<li>文件描述符<ul>
+<li>每个被打开的文件都有一个文件描述符</li>
+<li>文件状态信息：目录项、当前文件指针、文件操作设置等</li>
+</ul>
+</li>
+<li>打开文件表<ul>
+<li>每个进程有一个进程打开文件表</li>
+<li>一个系统级的打开文件表</li>
+<li>有文件被打开时，文件卷就不能被卸载</li>
+<li><img src="http://qnya.pomo16.club/120.png" alt></li>
+</ul>
+</li>
+<li>打开文件锁<ul>
+<li>一些文件系统提供文件锁，用于协调多线程的文件访问<ul>
+<li><strong>强制</strong>：根据锁保持情况和访问需求确定是否拒绝访问</li>
+<li><strong>劝告</strong>：进程可以查找锁的状态来决定怎么做</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="文件分配"><a href="#文件分配" class="headerlink" title="文件分配"></a>文件分配</h3><ul>
+<li>文件大小<ul>
+<li>大多数文件都很小<ul>
+<li>需要对小文件提供很好的支持</li>
+<li>块空间不能太大</li>
+</ul>
+</li>
+<li>一些文件非常大<ul>
+<li>必须支持大文件(64位文件偏移)</li>
+<li>大文件访问需要高效</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>文件分配<ul>
+<li>如何表示分配给一个文件数据块的位置和顺序</li>
+<li>分配方式<ul>
+<li>连续分配</li>
+<li>链式分配</li>
+<li>索引分配</li>
+</ul>
+</li>
+<li>指标<ul>
+<li>存储效率：外部碎片等</li>
+<li>读写性能：访问速度</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>连续分配<ul>
+<li>文件头指定起始块和长度<br><img src="http://qnya.pomo16.club/121.png" alt></li>
+<li>分配策略：最先匹配，最佳匹配，…</li>
+<li>优点<ul>
+<li>文件读取表现好</li>
+<li>高效的顺序和随机访问</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>碎片！</li>
+<li>文件增长问题(预分配？按需分配？)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>链式分配<ul>
+<li>文件以数据块链表方式存储</li>
+<li>文件头包含了到第一块和最后一块的指针<br><img src="http://qnya.pomo16.club/122.png" alt></li>
+<li>优点<ul>
+<li>创建、增大、缩小很容易</li>
+<li>没有碎片</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>无法实现真正的随机访问</li>
+<li>可靠性差：破坏一个链，后面的数据块就丢了</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>索引分配<ul>
+<li>为每个文件创建一个<strong>索引数据块</strong>：指向文件数据块的指针列表</li>
+<li>文件头包含了索引数据块指针<br><img src="http://qnya.pomo16.club/123.png" alt></li>
+<li>优点<ul>
+<li>创建、增大、缩小很容易</li>
+<li>没有碎片</li>
+<li>支持直接访问</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>当文件很小时，存储索引的<strong>开销</strong></li>
+<li>如何处理大文件？</li>
+</ul>
+</li>
+<li>大文件的索引分配<ul>
+<li>链式索引块( IB + IB + … )<br><img src="http://qnya.pomo16.club/124.png" alt></li>
+<li>多级索引块( IB <em> IB </em> … )<br><img src="http://qnya.pomo16.club/125.png" alt></li>
+</ul>
+</li>
+<li>UFS 多级索引分配<ul>
+<li>文件头包含13个指针<ul>
+<li>10个指针指向数据块</li>
+<li>第11个指针指向索引快</li>
+<li>第12个指针指向二级索引块</li>
+<li>第13个指针指向三级索引块</li>
+</ul>
+</li>
+<li>效果<ul>
+<li>提高了文件大小限制阈值</li>
+<li>动态分配数据块，文件扩展很容易</li>
+<li>小文件开销小</li>
+<li>只为大文件分配间接数据块，大文件在访问数据块时需要大量查询</li>
+</ul>
+</li>
+<li><img src="http://qnya.pomo16.club/126.png" alt></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="空闲空间管理"><a href="#空闲空间管理" class="headerlink" title="空闲空间管理"></a>空闲空间管理</h3><ul>
+<li>跟踪记录文件卷中未分配的数据块<ul>
+<li>采用什么数据结构表示空闲空间列表？</li>
+</ul>
+</li>
+<li>空闲空间组织：位图<ul>
+<li>用位图代表空闲数据块列表<ul>
+<li>11111111111111111111100111010101110011111…..</li>
+<li>D<sub>i</sub> = 0 表明数据块 i 是空闲，否则，表示已分配</li>
+</ul>
+</li>
+<li>使用简单但是可能会是一个很大的向量表<ul>
+<li>160 GB 磁盘 -&gt; 40 M 数据块 -&gt; 5 MB 位图</li>
+<li>假定空闲空间在磁盘中均匀分布，则找到”0”之前要扫面 n/r<ul>
+<li>n = 磁盘上数据块的总数</li>
+<li>r = 空闲块的数目</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其余空闲空间组织方式<br><img src="http://qnya.pomo16.club/127.png" alt></li>
+</ul>
+<h3 id="冗余磁盘阵列-RAID"><a href="#冗余磁盘阵列-RAID" class="headerlink" title="冗余磁盘阵列 RAID"></a>冗余磁盘阵列 RAID</h3><ul>
+<li>磁盘分区<ul>
+<li>通常磁盘通过分区来最大限度减小寻道时间<ul>
+<li>分区是一组柱面的集合</li>
+<li>每个分区都可视为逻辑上独立的磁盘</li>
+<li><img src="http://qnya.pomo16.club/128.png" alt></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>一个典型的磁盘文件系统组织<ul>
+<li>文件卷：一个拥有完整文件系统实例的外存空间，通常常驻在磁盘的单个分区上<br><img src="http://qnya.pomo16.club/129.png" alt></li>
+</ul>
+</li>
+<li>多磁盘管理<ul>
+<li>使用多磁盘可改善<ul>
+<li>吞吐量(通过并行)</li>
+<li>可靠性和可用性(通过冗余)</li>
+</ul>
+</li>
+<li>冗余磁盘阵列( RAID，Redundant Array of Inexpensive Disks )<ul>
+<li>多种磁盘管理技术</li>
+<li>RAID 分类，如：RAID - 0，RAID - 1，RAID - 5</li>
+</ul>
+</li>
+<li>冗余磁盘阵列的实现<ul>
+<li>软件：操作系统内核的文件卷管理</li>
+<li>硬件：RAID 硬件控制器( I/O )</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RAID - 0：磁盘条带化<ul>
+<li>把数据块分成多个子块，存储在独立的磁盘中<ul>
+<li>通过独立磁盘上并行数据块访问提供更大的磁盘带宽<br><img src="http://qnya.pomo16.club/130.png" alt></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RAID - 1：磁盘镜像<ul>
+<li>向两个磁盘写入，从任何一个读取<ul>
+<li>可靠性成倍增长</li>
+<li>读取性能线性增长</li>
+<li><img src="http://qnya.pomo16.club/131.png" alt></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RAID - 4：带校验的磁盘条带化<ul>
+<li>数据块级的磁盘条带化加专用奇偶校验磁盘<ul>
+<li>允许从任意一个故障磁盘中恢复</li>
+<li><img src="http://qnya.pomo16.club/132.png" alt></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RAID - 5：带分布式校验的磁盘条带化<ul>
+<li><img src="http://qnya.pomo16.club/133.png" alt></li>
+</ul>
+</li>
+<li>基于位和基于块的磁盘条带化<ul>
+<li>条带化和奇偶校验按”<strong>字节</strong>“或者”<strong>位</strong>“<ul>
+<li>RAID - 0/4/5：基于数据块</li>
+<li>RAID - 3：基于位</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可纠正多个磁盘错误的冗余磁盘阵列<ul>
+<li>RAID - 5：每组条带块有一个奇偶校验块<ul>
+<li>允许一个磁盘错误</li>
+</ul>
+</li>
+<li>RAID - 6：每组条带块有两个冗余块<ul>
+<li>允许两个磁盘错误</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RAID 嵌套<ul>
+<li>RAID 0 + 1<br><img src="http://qnya.pomo16.club/134.png" alt></li>
+<li>RAID 1 + 0<br><img src="http://qnya.pomo16.club/135.png" alt></li>
+</ul>
+</li>
+</ul>
+<h2 id="I-O-子系统"><a href="#I-O-子系统" class="headerlink" title="I/O 子系统"></a>I/O 子系统</h2><h3 id="三种常见设备接口类型"><a href="#三种常见设备接口类型" class="headerlink" title="三种常见设备接口类型"></a>三种常见设备接口类型</h3><ul>
+<li>字符设备：如，键盘/鼠标，串口等<ul>
+<li>访问特征：以字节为单位顺序访问</li>
+<li>I/O 命令<ul>
+<li>get()、put()等</li>
+<li>通常使用文件访问接口和语义</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>块设备：如，磁盘驱动器，磁带驱动器，光驱等<ul>
+<li>访问特征：均匀的数据块访问</li>
+<li>I/O 命令<ul>
+<li>原始 I/O 或文件系统接口</li>
+<li>内存映射文件访问</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>网络设备：如，以太网，无线，蓝牙等<ul>
+<li>访问特征：格式化报文交换</li>
+<li>I/O 命令<ul>
+<li>send/receive 网络报文</li>
+<li>通过网络接口支持多种网络协议</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="同步和异步-I-O"><a href="#同步和异步-I-O" class="headerlink" title="同步和异步 I/O"></a>同步和异步 I/O</h3><ul>
+<li>阻塞 I/O ：”<strong>Wait</strong>“<ul>
+<li>读数据( read )时，进程将进入等待状态，直到完成数据读出</li>
+<li>写数据( write )时，进程将进入等待状态，直到设备完成数据写入处理</li>
+<li><img src="http://qnya.pomo16.club/136.png" height="400px"></li>
+</ul>
+</li>
+<li>非阻塞 I/O ：”<strong>Don’t Wait</strong>“<ul>
+<li>立即从 read 或 write 系统调用返回，返回值为成功传输字节数</li>
+<li>read 或 write 的传输字节数可能为零</li>
+<li><img src="http://qnya.pomo16.club/137.png" height="400px"></li>
+</ul>
+</li>
+<li>异步 I/O ：”<strong>Tell Me Later</strong>“<ul>
+<li>读数据时，使用指针标记好用户缓冲区，立即返回；稍后内核将填充缓冲区并通知用户</li>
+<li>写数据时，使用指针标记好用户缓冲区，立即返回；稍后内核将处理数据并通知用户</li>
+<li><img src="http://qnya.pomo16.club/138.png" height="400px"></li>
+</ul>
+</li>
+</ul>
+<h3 id="I-O-结构"><a href="#I-O-结构" class="headerlink" title="I/O 结构"></a>I/O 结构</h3><ul>
+<li>一个实际例子<br><img src="http://qnya.pomo16.club/139.png" alt></li>
+<li>CPU 与设备的连接<ul>
+<li><img src="http://qnya.pomo16.club/140.png" alt></li>
+<li>补充：设备控制器<ul>
+<li>CPU 和 I/O 设备间的接口</li>
+<li>向 CPU 提供特殊指令和寄存器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>I/O 指令和内存映射 I/O<ul>
+<li>I/O 指令<ul>
+<li>通过 I/O 端口号访问设备寄存器</li>
+<li>特殊的 CPU 指令<ul>
+<li>out 0x21,AL</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>内存映射 I/O<ul>
+<li>设备的寄存器/存储被映射到内存物理地址空间中</li>
+<li>通过内存 load/store 指令完成  I/O 操作</li>
+<li>MMU 设置映射，硬件跳线或程序在启动时设置地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>内核 I/O 结构<br><img src="http://qnya.pomo16.club/141.png" alt></li>
+<li>I/O 请求生存周期<br><img src="http://qnya.pomo16.club/142.png" alt></li>
+</ul>
+<h3 id="I-O-数据传输"><a href="#I-O-数据传输" class="headerlink" title="I/O 数据传输"></a>I/O 数据传输</h3><ul>
+<li>CPU 与设备控制器的数据传输<ul>
+<li>程序控制 I/O (PIO，Programmed I/O )<ul>
+<li>通过 CPU 的 in/out 或者 load/store 传输所有数据</li>
+<li>特点<ul>
+<li>硬件简单，编程容易</li>
+<li>消耗的 CPU 时间和数据量成正比</li>
+</ul>
+</li>
+<li>适用于简单的、小型的设备 I/O</li>
+</ul>
+</li>
+<li>直接内存访问( DMA )<ul>
+<li>设备控制器可直接访问系统总线</li>
+<li>控制器直接与内存互相传输数据</li>
+<li>特点<ul>
+<li>设备传输数据不影响 CPU</li>
+<li>需要 CPU 参与设置</li>
+</ul>
+</li>
+<li>适用于高吞吐量 I/O</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>通过直接 I/O 寻址读取磁盘数据的步骤<br><img src="http://qnya.pomo16.club/143.png" alt></li>
+<li>I/O 设备通知操作系统的机制<ul>
+<li>操作系统需要了解设备状态<ul>
+<li>I/O 操作完成时间</li>
+<li>I/O 操作遇到错误</li>
+</ul>
+</li>
+<li>两种方式<ul>
+<li>CPU 主动轮询</li>
+<li>设备中断</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>轮询<ul>
+<li>I/O 设备在特定的<strong>状态寄存器</strong>中放置状态和错误信息</li>
+<li>操作系统<strong>定期检测</strong>状态寄存器</li>
+<li>特点<ul>
+<li>简单</li>
+<li>I/O 操作频繁或不可预测时，开销大和延时长</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>设备中断<ul>
+<li>设备中断处理流程<ul>
+<li>CPU 在 I/O 之前设置任务参数</li>
+<li>CPU 发出 I/O 请求后，继续执行其他任务</li>
+<li>I/O 设备处理 I/O 请求</li>
+<li>I/O 设备处理完成时，触发 CPU 中断请求</li>
+<li>CPU 接收中断，分发到相应中断处理例程</li>
+</ul>
+</li>
+<li>特点<ul>
+<li>处理不可预测事件效果好</li>
+<li>开销相对较高</li>
+</ul>
+</li>
+<li>一些设备可能结合了轮询和设备中断<ul>
+<li>如：高宽带网络设备<ul>
+<li>第一个传入数据包到达前采用中断</li>
+<li>轮询后面的数据包直到硬件缓存为空</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>设备中断 I/O 处理流程<br><img src="http://qnya.pomo16.club/144.png" alt><ul>
+<li>第6步CPU 恢复被中断进程的执行后可能又会调用另一个 I/O 然后又回到第1步</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="磁盘调度"><a href="#磁盘调度" class="headerlink" title="磁盘调度"></a>磁盘调度</h3><ul>
+<li>磁盘工作机制和性能参数<ul>
+<li>读取或写入时，磁头必须被定位在<strong>期望的磁道</strong>，并从所<strong>期望的柱面和扇区</strong>开始<br><img src="http://qnya.pomo16.club/145.png" alt></li>
+<li>寻道时间：定位到期望的磁道所花费的时间</li>
+<li>旋转延迟：从零扇区开始处到达目的地花费的时间</li>
+<li><strong>平均旋转延迟时间 = 磁盘旋转一周时间的一半</strong></li>
+</ul>
+</li>
+<li>磁盘 I/O 传输时间<br><img src="http://qnya.pomo16.club/146.png" alt><ul>
+<li>T<sub>a</sub> ：访问时间</li>
+<li>T<sub>s</sub> ：寻道时间</li>
+<li>1/2r ：旋转延迟，1/r = 旋转一周的时间</li>
+<li>b/rN：传输时间，b = 传输的比特数；N = 磁道上的比特数；r = 磁盘转速</li>
+</ul>
+</li>
+<li>磁盘调度算法<ul>
+<li>通过优化磁盘访问请求顺序来提高磁盘访问性能<ul>
+<li>寻道时间是磁盘访问最耗时的部分</li>
+<li>同时会有多个在同一磁盘上的 I/O 请求</li>
+<li>随机处理磁盘访问请求的性能表现很差</li>
+</ul>
+</li>
+<li>先进先出( FIFO )算法<ul>
+<li>按顺序处理请求</li>
+<li>公平对待所有进程</li>
+<li>在有很多进程的情况下，接近随机调度的性能</li>
+<li>示例<br><img src="http://qnya.pomo16.club/147.png" alt></li>
+</ul>
+</li>
+<li>最短服务时间优先( SSTF )<ul>
+<li>选择从磁臂当前位置需要移动最少的 I/O 请求</li>
+<li>总是选择最短寻道时间</li>
+<li>示例<br><img src="http://qnya.pomo16.club/148.png" alt></li>
+</ul>
+</li>
+<li>扫描算法( SCAN )<ul>
+<li>磁臂在一个方向上移动，访问所有未完成的请求，直到磁臂到达该方向上最后的磁道</li>
+<li>调换方向</li>
+<li>也称为电梯算法( elevator algorithm )</li>
+<li>示例<br><img src="http://qnya.pomo16.club/149.png" alt></li>
+</ul>
+</li>
+<li>循环扫描算法( C - SCAN )<ul>
+<li>限制了仅在一个方向上扫描</li>
+<li>当最后一个磁道也被访问过了后，磁臂返回到磁盘的另外一端再次进行</li>
+</ul>
+</li>
+<li>C - LOOK 算法<ul>
+<li>磁臂先到达该方向上最后一个请求处，然后立即反转，而不是先到最后点路径上的所有请求</li>
+</ul>
+</li>
+<li>N 步扫描( N - step - SCAN )算法<ul>
+<li>磁头粘着( Arm Stickiness )现象<ul>
+<li>SSTF，SCAN 及 CSCAN 等算法中，可能出现磁头停留在某处不动的情况</li>
+<li>如：进程反复请求对某一磁道的 I/O 操作</li>
+</ul>
+</li>
+<li>N 步扫描算法<ul>
+<li>将磁盘请求队列分成长度为 N 的子队列</li>
+<li>按 FIFO 算法依次处理所有子队列</li>
+<li>扫描算法处理每个队列</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双队列扫描( FSCAN )算法<ul>
+<li>FSCAN 算法是 N 步扫描算法的简化<ul>
+<li>FSCAN 只将磁盘请求队列分成两个子队列</li>
+</ul>
+</li>
+<li>FSCAN 算法<ul>
+<li>把磁盘 I/O 请求分成两个队列</li>
+<li>交替使用扫描算法处理一个队列</li>
+<li>新生成的磁盘 I/O 请求放入另一队列中，所有的新请求都将被推迟到下一次扫描的处理</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="磁盘缓存"><a href="#磁盘缓存" class="headerlink" title="磁盘缓存"></a>磁盘缓存</h3><ul>
+<li>缓存：数据传输双方访问速度差异较大时，引入的速度匹配中间层</li>
+<li>磁盘缓存是磁盘扇区在内存中的缓存区<ul>
+<li>磁盘缓存的调度算法很类似虚拟存储调度算法</li>
+<li>磁盘的访问频率远低于虚拟存储中的内存访问频率</li>
+<li>通常磁盘缓存调度算法会比虚拟存储复杂</li>
+</ul>
+</li>
+<li>单缓存与双缓存<br><img src="http://qnya.pomo16.club/150.png" alt></li>
+<li>访问频率置换算法( Frequency-based Replacement )<ul>
+<li>问题：在一段密集磁盘访问后，LFU 算法的引用计数变化无法反映当前的引用情况</li>
+<li>算法思路<ul>
+<li>考虑磁盘访问的密集特征，对密集引用不计数</li>
+<li>在短周期中使用 LRU 算法，而在长周期中使用 LFU 算法</li>
+</ul>
+</li>
+<li>具体做法<br><img src="http://qnya.pomo16.club/151.png" alt><ul>
+<li>把 LRU 算法中的特殊栈分成三部分，并在每个缓存块增加一个引用计数<ul>
+<li>新区域( New Section )</li>
+<li>中间区域( Middle Section )</li>
+<li>旧区域( Old Section )</li>
+</ul>
+</li>
+<li>栈中缓存块被访问时移到栈顶；如果该块在新区域，引用计数不变；否则，引用计数加1<ul>
+<li>在新区域中引用计数不变的目的是避免密集访问对引用计数不利影响</li>
+<li>在中间区域和旧区域中引用计数加1是为了使用 LFU 算法</li>
+</ul>
+</li>
+<li>未缓存数据块读入后放在栈顶，引用计数为1</li>
+<li>在旧区域中引用计数最小的缓存块被置换<ul>
+<li>中间区域的定义是为了避免新读入的缓存块在第一次出新区域时马上被置换掉，有一个过渡期</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/25/Java的Object类/">Java的Object类</a><a class="next" href="/2019/03/20/操作系统（六）/">操作系统（六）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script><!-- 添加点击爱心功能--><script type="text/javascript" src="/js/clicklove.js?v=0.0.0"></script></div></body></html>
