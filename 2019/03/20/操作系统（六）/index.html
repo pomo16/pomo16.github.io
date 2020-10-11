@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（六） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（六）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（六）</h1><div class="post-meta">Mar 20, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5.9k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 21</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="信号量与管程"><a href="#信号量与管程" class="headerlink" title="信号量与管程"></a>信号量与管程</h2><h3 id="信号量-semaphore"><a href="#信号量-semaphore" class="headerlink" title="信号量( semaphore )"></a>信号量( semaphore )</h3><p><img src="http://qnya.pomo16.club/84.png" alt></p>
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>操作系统（六） | Atlantis</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/8.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">操作系统（六）</h1><a id="logo" href="/.">Atlantis</a><p class="description">pomo16的博客</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/toolbox/"><i class="fa fa-book"> 工具箱</i></a><a href="/community/"><i class="fa fa-comments"> 常用社区</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">操作系统（六）</h1><div class="post-meta">Mar 20, 2019<span> | </span><span class="category"><a href="/categories/操作系统/">操作系统</a></span><span class="post-time"><span class="post-meta-item-text"> | </span><span class="post-meta-item-icon"><i class="fa fa-keyboard-o"></i><span class="post-count"> 5.9k</span><span class="post-meta-item-text"> 字</span></span></span><span class="post-time"> | <span class="post-meta-item-icon"><i class="fa fa-hourglass-half"></i><span class="post-count"> 21</span><span class="post-meta-item-text"> 分钟</span></span></span></div><div class="post-content"><h2 id="信号量与管程"><a href="#信号量与管程" class="headerlink" title="信号量与管程"></a>信号量与管程</h2><h3 id="信号量-semaphore"><a href="#信号量-semaphore" class="headerlink" title="信号量( semaphore )"></a>信号量( semaphore )</h3><p><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/84.png" alt></p>
 <ul>
 <li>信号量是操作系统提供的一种协调共享资源访问的方法<ul>
 <li>软件同步是平等线程间的一种同步协商机制</li>
@@ -74,12 +74,12 @@
 <ul>
 <li><p>每个条件同步设置一个信号量，其初值为0</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">condition = <span class="keyword">new</span> Semaphore(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p><img src="http://qnya.pomo16.club/85.png" alt></p>
+<p><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/85.png" alt></p>
 </li>
 </ul>
 </li>
 </ul>
-<h3 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者-消费者问题"></a>生产者-消费者问题</h3><p><img src="http://qnya.pomo16.club/86.png" alt></p>
+<h3 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者-消费者问题"></a>生产者-消费者问题</h3><p><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/86.png" alt></p>
 <ul>
 <li>有界缓冲区的生产者-消费者问题描述<ul>
 <li>一个或多个<strong>生产者</strong>在生成数据后放在一个缓冲区里</li>
@@ -123,7 +123,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="管程-Moniter"><a href="#管程-Moniter" class="headerlink" title="管程( Moniter )"></a>管程( Moniter )</h3><p><img src="http://qnya.pomo16.club/87.png" alt></p>
+<h3 id="管程-Moniter"><a href="#管程-Moniter" class="headerlink" title="管程( Moniter )"></a>管程( Moniter )</h3><p><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/87.png" alt></p>
 <ul>
 <li>管程是一种用于多线程互斥访问共享资源的程序结构<ul>
 <li>采用面向对象方法，简化了线程间的同步控制</li>
@@ -136,7 +136,7 @@
 <li>定义访问共享数据的方法</li>
 </ul>
 </li>
-<li>管程的组成<br><img src="http://qnya.pomo16.club/88.png" alt><ul>
+<li>管程的组成<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/88.png" alt><ul>
 <li>一个锁<ul>
 <li>控制管程代码的互斥访问</li>
 </ul>
@@ -171,13 +171,13 @@
 <li><p>用管程解决生产者-消费者问题</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化</span></span><br><span class="line">classBoundedBuffer &#123;</span><br><span class="line">  ...</span><br><span class="line">  Lock lock;</span><br><span class="line">  <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">  Condition notFull, notEmpty;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 生产者</span></span><br><span class="line">BoundedBuffer::Deposit(c) &#123;</span><br><span class="line">  lock-&gt;Acquire();</span><br><span class="line">  <span class="keyword">while</span> (count == n)</span><br><span class="line">  	notFull.Wait(&amp;lock);</span><br><span class="line">  Add c to the buffer;</span><br><span class="line">  count++;</span><br><span class="line">  notEmpty.Signal();</span><br><span class="line">  lock-&gt;Release();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 消费者</span></span><br><span class="line">BoundedBuffer::Remove(c) &#123;</span><br><span class="line">  lock-&gt;Acquire();</span><br><span class="line">  <span class="keyword">while</span> (count == <span class="number">0</span>)</span><br><span class="line">  	notEmpty.Wait(&amp;lock);</span><br><span class="line">  Remove c from the buffer;</span><br><span class="line">  count--;</span><br><span class="line">  notFull.Signal();</span><br><span class="line">  lock-&gt;Release();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>管程条件变量的释放处理方式<br><img src="http://qnya.pomo16.club/89.png" alt></p>
+<li><p>管程条件变量的释放处理方式<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/89.png" alt></p>
 <ul>
 <li>Hansen 的连续执行效率更高，如图少了一次切换</li>
 <li>Hansen 管程：主要用于真实 OS 和 Java 中</li>
 <li>Hoare 管程：主要见于教材中</li>
 <li>Hansen 管程与 Hoare 管程<ul>
-<li>以生产者-消费者问题的生产者代码为例<br><img src="http://qnya.pomo16.club/90.png" alt><ul>
+<li>以生产者-消费者问题的生产者代码为例<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/90.png" alt><ul>
 <li>Hansen 管程<ul>
 <li>条件变量释放仅是一个提示</li>
 <li>需要重新检查条件</li>
@@ -197,7 +197,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="经典同步问题之哲学家就餐问题"><a href="#经典同步问题之哲学家就餐问题" class="headerlink" title="经典同步问题之哲学家就餐问题"></a>经典同步问题之哲学家就餐问题</h3><p><img src="http://qnya.pomo16.club/91.png" alt></p>
+<h3 id="经典同步问题之哲学家就餐问题"><a href="#经典同步问题之哲学家就餐问题" class="headerlink" title="经典同步问题之哲学家就餐问题"></a>经典同步问题之哲学家就餐问题</h3><p><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/91.png" alt></p>
 <ul>
 <li>问题描述<ul>
 <li>5个哲学家围绕一张圆桌而坐<ul>
@@ -216,15 +216,15 @@
 </li>
 </ul>
 </li>
-<li>方案一<br><img src="http://qnya.pomo16.club/92.png" alt><ul>
+<li>方案一<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/92.png" alt><ul>
 <li>不正确，可能导致死锁</li>
 </ul>
 </li>
-<li>方案二<br><img src="http://qnya.pomo16.club/93.png" alt><ul>
+<li>方案二<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/93.png" alt><ul>
 <li>互斥访问正确，但每次只允许一人进餐</li>
 </ul>
 </li>
-<li>方案三<br><img src="http://qnya.pomo16.club/94.png" alt><ul>
+<li>方案三<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/94.png" alt><ul>
 <li>没有死锁，可有多人同时进餐</li>
 </ul>
 </li>
@@ -273,7 +273,7 @@
 </li>
 </ul>
 </li>
-<li><img src="http://qnya.pomo16.club/95.png" alt><ul>
+<li><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/95.png" alt><ul>
 <li>此实现中，读者优先</li>
 </ul>
 </li>
@@ -297,14 +297,14 @@
 <li><p>两个基本方法</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Database::Read() &#123;</span><br><span class="line">  Wait until no writer;</span><br><span class="line">  read database;</span><br><span class="line">  check out - wake up waiting writers;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Database::Write() &#123;</span><br><span class="line">  Wait until no readers/writers;</span><br><span class="line">  write database;</span><br><span class="line">  check out - wake up waiting readers/writers;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>管程的状态变量<br><img src="http://qnya.pomo16.club/96.png" alt></p>
+<li><p>管程的状态变量<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/96.png" alt></p>
 </li>
-<li>解决方案详情：读者<br><img src="http://qnya.pomo16.club/97.png" alt><ul>
+<li>解决方案详情：读者<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/97.png" alt><ul>
 <li>这里 while() 里的条件设置的是有写者在写或有写者申请写就等待，体现的是写者优先</li>
 <li>这里 if() 里的条件设置的是最后一个读者看有没有写者，如果有写者等着，就释放</li>
 </ul>
 </li>
-<li>解决方案详情：写者<br><img src="http://qnya.pomo16.club/98.png" alt><ul>
+<li>解决方案详情：写者<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/98.png" alt><ul>
 <li>这里 while() 里的条件设置的是有写者在写或有读者在读就等待，但是如果继续有读者等着就不管了，所以体现的是写者优先</li>
 <li>这里 if() 里的条件设置的是如果有等待写的就优先唤醒，没有的话才唤醒读者</li>
 </ul>
@@ -314,7 +314,7 @@
 </ul>
 <h2 id="死锁和进程通信"><a href="#死锁和进程通信" class="headerlink" title="死锁和进程通信"></a>死锁和进程通信</h2><h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><ul>
 <li>定义：由于竞争资源或者通信关系，两个或更多线程在执行中出现，永远相互等待只能由其他进程引发的事件</li>
-<li>死锁示例：单向通行桥梁<br><img src="http://qnya.pomo16.club/99.png" alt><ul>
+<li>死锁示例：单向通行桥梁<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/99.png" alt><ul>
 <li>桥梁只能单向通行</li>
 <li>桥的每个部分可视为一个资源</li>
 <li>可能出现死锁<ul>
@@ -376,7 +376,7 @@
 <li><p>资源分配图</p>
 <ul>
 <li><strong>描述资源和进程间的分配和占用关系的有向图</strong></li>
-<li><img src="http://qnya.pomo16.club/100.png" height="400px"></li>
+<li><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/100.png" height="400px"></li>
 <li>两类顶点<ul>
 <li>系统中的所有进程<br>P = {P<sub>1</sub>，P<sub>2</sub>，…，P<sub>n</sub>}</li>
 <li>系统中的所有资源<br>R = {R<sub>1</sub>，R<sub>2</sub>，…，R<sub>m</sub>}</li>
@@ -413,7 +413,7 @@
 <li>存在等待进程集合{P<sub>0</sub>，P<sub>1</sub>，…，P<sub>N</sub>}，<br>P<sub>0</sub> 正在等待 P<sub>1</sub> 所占用的资源，<br>P<sub>1</sub> 正在等待 P<sub>2</sub> 所占用的资源，…，<br>P<sub>N-1</sub> 正在等待 P<sub>N</sub> 所占用的资源，<br>P<sub>N</sub> 正在等待 P<sub>0</sub> 所占用的资源</li>
 </ul>
 </li>
-<li>现学现用<br><img src="http://qnya.pomo16.club/101.png" alt></li>
+<li>现学现用<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/101.png" alt></li>
 </ul>
 <h3 id="死锁处理方法"><a href="#死锁处理方法" class="headerlink" title="死锁处理方法"></a>死锁处理方法</h3><ul>
 <li>死锁预防( Deadlock Prevention )：确保系统永远不会进入死锁状态</li>
@@ -463,7 +463,7 @@
 </ul>
 </li>
 <li>安全状态与死锁的关系<ul>
-<li><img src="http://qnya.pomo16.club/102.png" height="400px"></li>
+<li><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/102.png" height="400px"></li>
 <li>系统处于安全状态，一定没有死锁</li>
 <li>系统处于不安全状态，可能出现死锁<ul>
 <li>避免死锁就是确保系统不会进入不安全状态</li>
@@ -645,7 +645,7 @@
 <li>逻辑(如：逻辑属性)</li>
 </ul>
 </li>
-<li>通信方式<br><img src="http://qnya.pomo16.club/103.png" alt><ul>
+<li>通信方式<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/103.png" alt><ul>
 <li>直接通信<ul>
 <li>进程必须正确的命名对方<ul>
 <li>send(P, message)：发送信息到进程 P</li>
@@ -735,8 +735,8 @@
 <li>传送的信息量小，只有一个信号类型</li>
 </ul>
 </li>
-<li>信号的实现<br><img src="http://qnya.pomo16.club/104.png" alt></li>
-<li>信号使用示例<br><img src="http://qnya.pomo16.club/105.png" alt></li>
+<li>信号的实现<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/104.png" alt></li>
+<li>信号使用示例<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/105.png" alt></li>
 </ul>
 <h3 id="管道-pipe"><a href="#管道-pipe" class="headerlink" title="管道( pipe )"></a>管道( pipe )</h3><ul>
 <li>进程间基于内存文件的通信机制<ul>
@@ -767,7 +767,7 @@
 </ul>
 </li>
 <li>管道示例<ul>
-<li>% ls | more<br><img src="http://qnya.pomo16.club/106.png" alt><ul>
+<li>% ls | more<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/106.png" alt><ul>
 <li>shell<ol>
 <li>创建管道</li>
 <li>为 ls 创建一个进程，设置 stdout 为管道写端</li>
@@ -782,7 +782,7 @@
 <h3 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h3><ul>
 <li>消息队列是由操作系统维护的以字节序列为基本单位的间接通信机制<ul>
 <li>每个消息( Message )是一个字节序列</li>
-<li>相同标识的消息组成按先进先出顺序组成一个消息队列( Message Queues )<br><img src="http://qnya.pomo16.club/107.png" alt></li>
+<li>相同标识的消息组成按先进先出顺序组成一个消息队列( Message Queues )<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/107.png" alt></li>
 </ul>
 </li>
 <li>消息队列的系统调用<ul>
@@ -806,7 +806,7 @@
 </li>
 <li>优点：快捷、方便地共享数据</li>
 <li>不足：必须用额外的同步机制来协调数据访问</li>
-<li>共享内存的实现<br><img src="http://qnya.pomo16.club/108.png" alt><ul>
+<li>共享内存的实现<br><img src="https://pomo-blog.oss-cn-shenzhen.aliyuncs.com/article/108.png" alt><ul>
 <li>最快的方法</li>
 <li>一个进程写另外一个进程立即可见</li>
 <li>没有系统调用干预</li>
@@ -823,7 +823,7 @@
 </ul>
 </li>
 </ul>
-</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/20/操作系统（七）/">操作系统（七）</a><a class="next" href="/2019/03/20/操作系统（五）/">操作系统（五）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-nav"><a class="pre" href="/2019/03/20/操作系统（七）/">操作系统（七）</a><a class="next" href="/2019/03/20/操作系统（五）/">操作系统（五）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ElasticSearch/">ElasticSearch</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/blog/">blog</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/data/">data</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">19</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/Redis/">Redis</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/">jsp</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/jsp/Servlet/">Servlet</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/projects/">projects</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/web/docker/">docker</a><span class="category-list-count">2</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/微信小程序/">微信小程序</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/操作系统/">操作系统</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a> <a href="/tags/ElasticSearch/" style="font-size: 15px;">ElasticSearch</a> <a href="/tags/Eclipse/" style="font-size: 15px;">Eclipse</a> <a href="/tags/go/" style="font-size: 15px;">go</a> <a href="/tags/http/" style="font-size: 15px;">http</a> <a href="/tags/java/" style="font-size: 15px;">java</a> <a href="/tags/jsp/" style="font-size: 15px;">jsp</a> <a href="/tags/JavaWeb/" style="font-size: 15px;">JavaWeb</a> <a href="/tags/rpc/" style="font-size: 15px;">rpc</a> <a href="/tags/git/" style="font-size: 15px;">git</a> <a href="/tags/vim/" style="font-size: 15px;">vim</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/七牛云/" style="font-size: 15px;">七牛云</a> <a href="/tags/CDN/" style="font-size: 15px;">CDN</a> <a href="/tags/blog/" style="font-size: 15px;">blog</a> <a href="/tags/RSS/" style="font-size: 15px;">RSS</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/ftp/" style="font-size: 15px;">ftp</a> <a href="/tags/设计模式/" style="font-size: 15px;">设计模式</a> <a href="/tags/projects/" style="font-size: 15px;">projects</a> <a href="/tags/jre/" style="font-size: 15px;">jre</a> <a href="/tags/jdk/" style="font-size: 15px;">jdk</a> <a href="/tags/微信小程序/" style="font-size: 15px;">微信小程序</a> <a href="/tags/Servlet/" style="font-size: 15px;">Servlet</a> <a href="/tags/IO/" style="font-size: 15px;">IO</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/集合/" style="font-size: 15px;">集合</a> <a href="/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/数组/" style="font-size: 15px;">数组</a> <a href="/tags/String/" style="font-size: 15px;">String</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/mysql/" style="font-size: 15px;">mysql</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/JVM/" style="font-size: 15px;">JVM</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/15/Hadoop核心组件/">Hadoop核心组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/05/Docker安装ES及IK分词器/">Docker安装ES相关</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/03/Go-数组和切片/">Go 数组、字符串和切片</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/06/02/Go-struct-类型Channel/">Go struct{}类型Channel</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/05/16/Concurrency-in-Go/">Concurrency in Go</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/22/Docker搭建FTP/">Docker搭建FTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/30/Go-Garbage-Collection/">Go Garbage Collection</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/20/git/">git</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/18/ElasticSearch/">ElasticSearch</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://github.com/pomo16" title="我的Github" target="_blank">我的Github</a><ul></ul><a href="https://blog.csdn.net/pomo16" title="我的CSDN" target="_blank">我的CSDN</a><ul></ul><a href="http://pomo16.coding.me/" title="我的老博客(荒废已久)" target="_blank">我的老博客(荒废已久)</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">Atlantis.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.3.5/jquery.fancybox.min.css"><script type="text/javascript" src="/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
 if (search_path.length == 0) {
    search_path = 'search.xml';
 }
